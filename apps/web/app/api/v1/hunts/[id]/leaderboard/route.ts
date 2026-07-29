@@ -6,7 +6,7 @@ import { getIP, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { getAllProgressForHunt } from "@/lib/progressData";
 
 export const GET = withErrorHandling<{
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }>(async (req, { params }) => {
   const ip = getIP(req);
   const { success, reset } = rateLimit(ip, { limit: 100, windowMs: 60 * 1000 });

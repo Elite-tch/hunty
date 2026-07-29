@@ -12,8 +12,7 @@ import { Page } from "@playwright/test";
  * `requestAccess` all succeed.
  */
 
-export const MOCK_PUBLIC_KEY =
-  "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI";
+export const MOCK_PUBLIC_KEY = "GBZXN7PIRZGNMHGA7MUUUF4GWPY5AYPV6LY4UV2GL6VJGIQRXFDNMADI";
 
 export async function injectMockWallet(page: Page) {
   await page.addInitScript((publicKey: string) => {
@@ -25,10 +24,7 @@ export async function injectMockWallet(page: Page) {
 
     // 3. Intercept Freighter extension message requests and reply with mocks
     window.addEventListener("message", (event) => {
-      if (
-        event.source !== window ||
-        event.data?.source !== "FREIGHTER_EXTERNAL_MSG_REQUEST"
-      ) {
+      if (event.source !== window || event.data?.source !== "FREIGHTER_EXTERNAL_MSG_REQUEST") {
         return;
       }
 
@@ -206,11 +202,7 @@ export async function mockApiErrorResponse(
  * Mock API responses to timeout after a delay.
  * Useful for testing timeout handling and loading states.
  */
-export async function mockApiTimeout(
-  page: Page,
-  pattern: string,
-  delayMs: number = 10000
-) {
+export async function mockApiTimeout(page: Page, pattern: string, delayMs: number = 10000) {
   await page.route(pattern, async (route) => {
     await new Promise((resolve) => setTimeout(resolve, delayMs));
     route.abort("timedout");
@@ -243,12 +235,9 @@ export async function injectCorruptedHuntData(page: Page) {
 /**
  * Wait for a successful wallet connection and verify it worked.
  */
-export async function verifyWalletConnected(
-  page: Page,
-  publicKey: string = MOCK_PUBLIC_KEY
-) {
+export async function verifyWalletConnected(page: Page, publicKey: string = MOCK_PUBLIC_KEY) {
   const shortKey = `${publicKey.slice(0, 6)}...${publicKey.slice(-6)}`;
-  
+
   // Check that shortened wallet address is visible
   await page.locator(`text=${shortKey}`).waitFor({ state: "visible", timeout: 10000 });
 }

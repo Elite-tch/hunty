@@ -1,49 +1,49 @@
-"use client"
+"use client";
 
-import { Clock } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import { Clock } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 interface SeasonCountdownProps {
-  endTime: number
-  className?: string
+  endTime: number;
+  className?: string;
 }
 
 interface TimeRemaining {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 function calculateTimeRemaining(endTime: number): TimeRemaining {
-  const now = Math.floor(Date.now() / 1000)
-  const remaining = Math.max(0, endTime - now)
+  const now = Math.floor(Date.now() / 1000);
+  const remaining = Math.max(0, endTime - now);
 
-  const days = Math.floor(remaining / 86400)
-  const hours = Math.floor((remaining % 86400) / 3600)
-  const minutes = Math.floor((remaining % 3600) / 60)
-  const seconds = remaining % 60
+  const days = Math.floor(remaining / 86400);
+  const hours = Math.floor((remaining % 86400) / 3600);
+  const minutes = Math.floor((remaining % 3600) / 60);
+  const seconds = remaining % 60;
 
-  return { days, hours, minutes, seconds }
+  return { days, hours, minutes, seconds };
 }
 
 export function SeasonCountdown({ endTime, className }: SeasonCountdownProps) {
   const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>(
     calculateTimeRemaining(endTime)
-  )
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining(endTime))
-    }, 1000)
+      setTimeRemaining(calculateTimeRemaining(endTime));
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [endTime])
+    return () => clearInterval(interval);
+  }, [endTime]);
 
-  const { days, hours, minutes, seconds } = timeRemaining
-  const isExpired = days === 0 && hours === 0 && minutes === 0 && seconds === 0
+  const { days, hours, minutes, seconds } = timeRemaining;
+  const isExpired = days === 0 && hours === 0 && minutes === 0 && seconds === 0;
 
   if (isExpired) {
     return (
@@ -51,7 +51,7 @@ export function SeasonCountdown({ endTime, className }: SeasonCountdownProps) {
         <Clock className="w-4 h-4" />
         <span className="font-medium">Season Ended</span>
       </div>
-    )
+    );
   }
 
   return (
@@ -76,5 +76,5 @@ export function SeasonCountdown({ endTime, className }: SeasonCountdownProps) {
         <span className="text-slate-600 dark:text-slate-400">s</span>
       </div>
     </div>
-  )
+  );
 }

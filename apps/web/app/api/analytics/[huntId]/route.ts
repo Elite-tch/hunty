@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
-import { getHuntAnalytics, buildAnalyticsCsv } from "@/lib/huntAnalytics"
+import { NextRequest, NextResponse } from "next/server";
+import { getHuntAnalytics, buildAnalyticsCsv } from "@/lib/huntAnalytics";
 
 /**
  * GET /api/analytics/[huntId]
@@ -27,28 +27,28 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ huntId: string }> }
 ) {
-  const { huntId: huntIdParam } = await params
-  const huntId = Number(huntIdParam)
+  const { huntId: huntIdParam } = await params;
+  const huntId = Number(huntIdParam);
 
   if (!Number.isFinite(huntId) || huntId <= 0) {
-    return NextResponse.json({ error: "Invalid huntId" }, { status: 400 })
+    return NextResponse.json({ error: "Invalid huntId" }, { status: 400 });
   }
 
-  const analytics = await getHuntAnalytics(Math.floor(huntId))
+  const analytics = await getHuntAnalytics(Math.floor(huntId));
 
-  const url = new URL(request.url)
-  const format = url.searchParams.get("format")
+  const url = new URL(request.url);
+  const format = url.searchParams.get("format");
 
   if (format === "csv") {
-    const csv = buildAnalyticsCsv(analytics)
+    const csv = buildAnalyticsCsv(analytics);
     return new NextResponse(csv, {
       status: 200,
       headers: {
         "Content-Type": "text/csv; charset=utf-8",
         "Content-Disposition": `attachment; filename="hunt-${huntId}-analytics.csv"`,
       },
-    })
+    });
   }
 
-  return NextResponse.json(analytics)
+  return NextResponse.json(analytics);
 }

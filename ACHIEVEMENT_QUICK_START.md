@@ -20,9 +20,9 @@ A badge/achievement system that rewards players for completing hunts and reachin
 In `GameCompleteModal.tsx` (already implemented):
 
 ```typescript
-import { checkAndAwardAchievements } from "@/lib/achievements/service"
-import { ACHIEVEMENTS } from "@/lib/achievements/config"
-import { toast } from "sonner"
+import { checkAndAwardAchievements } from "@/lib/achievements/service";
+import { ACHIEVEMENTS } from "@/lib/achievements/config";
+import { toast } from "sonner";
 
 // When hunt completes
 const earned = checkAndAwardAchievements(playerAddress, {
@@ -30,16 +30,16 @@ const earned = checkAndAwardAchievements(playerAddress, {
   totalHuntsWon: 1,
   totalNftsEarned: 0,
   fastestCompletionSeconds: 250,
-})
+});
 
 // Show toast for each new achievement
 earned.forEach((achievementId) => {
-  const achievement = ACHIEVEMENTS[achievementId]
+  const achievement = ACHIEVEMENTS[achievementId];
   toast.success(`🎉 Achievement Unlocked: ${achievement.title}!`, {
     description: achievement.description,
     duration: 5000,
-  })
-})
+  });
+});
 ```
 
 ### 2. Display Achievements on Profile
@@ -57,19 +57,19 @@ import { BadgeWall } from "@/components/BadgeWall"
 ### 3. Check Individual Achievement
 
 ```typescript
-import { hasAchievement } from "@/lib/achievements/service"
+import { hasAchievement } from "@/lib/achievements/service";
 
 if (hasAchievement(playerAddress, "first_hunt_completed")) {
-  console.log("Player has completed their first hunt!")
+  console.log("Player has completed their first hunt!");
 }
 ```
 
 ### 4. Get All Achievements with Status
 
 ```typescript
-import { getAllAchievementsWithStatus } from "@/lib/achievements/service"
+import { getAllAchievementsWithStatus } from "@/lib/achievements/service";
 
-const allAchievements = getAllAchievementsWithStatus(playerAddress)
+const allAchievements = getAllAchievementsWithStatus(playerAddress);
 // Returns array with earned status for each achievement
 ```
 
@@ -77,25 +77,26 @@ const allAchievements = getAllAchievementsWithStatus(playerAddress)
 
 ```typescript
 type AchievementId =
-  | "first_hunt_completed"  // Complete 1 hunt
-  | "first_win"             // Win 1 hunt
-  | "five_wins"             // Win 5 hunts
-  | "ten_wins"              // Win 10 hunts
-  | "twenty_five_wins"      // Win 25 hunts
-  | "first_nft"             // Earn 1 NFT
-  | "high_scorer"           // Top score in a month
-  | "speed_hunter"          // Complete hunt in <5 min
-  | "veteran"               // Complete 50 hunts
-  | "legend"                // Win 100 hunts
+  | "first_hunt_completed" // Complete 1 hunt
+  | "first_win" // Win 1 hunt
+  | "five_wins" // Win 5 hunts
+  | "ten_wins" // Win 10 hunts
+  | "twenty_five_wins" // Win 25 hunts
+  | "first_nft" // Earn 1 NFT
+  | "high_scorer" // Top score in a month
+  | "speed_hunter" // Complete hunt in <5 min
+  | "veteran" // Complete 50 hunts
+  | "legend"; // Win 100 hunts
 ```
 
 ## 🎨 Achievement Rarities
 
 ```typescript
-type Rarity = "common" | "uncommon" | "rare" | "epic" | "legendary"
+type Rarity = "common" | "uncommon" | "rare" | "epic" | "legendary";
 ```
 
 Each rarity has a unique color gradient:
+
 - **Common** (slate) - Basic achievements
 - **Uncommon** (green) - Moderate difficulty
 - **Rare** (blue) - Challenging
@@ -105,6 +106,7 @@ Each rarity has a unique color gradient:
 ## 💾 Storage
 
 Achievements are stored in browser localStorage:
+
 - Key: `hunty_achievements_{playerAddress}`
 - Format: JSON with earned achievements and timestamps
 - Persists across sessions
@@ -147,7 +149,7 @@ export type AchievementId =
   | "first_hunt_completed"
   | "first_win"
   // ... existing achievements
-  | "new_achievement"  // Add here
+  | "new_achievement"; // Add here
 
 export const ACHIEVEMENTS: Record<AchievementId, Achievement> = {
   // ... existing achievements
@@ -159,26 +161,23 @@ export const ACHIEVEMENTS: Record<AchievementId, Achievement> = {
     rarity: "rare",
     condition: "Condition to earn this",
   },
-}
+};
 ```
 
 2. **Add logic to service.ts:**
 
 ```typescript
-export function checkAndAwardAchievements(
-  address: string,
-  stats: { /* ... */ }
-): AchievementId[] {
+export function checkAndAwardAchievements(address: string, stats: {/* ... */}): AchievementId[] {
   // ... existing checks
-  
+
   // New achievement check
   if (stats.someCondition && !hasAchievement(address, "new_achievement")) {
     if (awardAchievement(address, "new_achievement")) {
-      newAchievements.push("new_achievement")
+      newAchievements.push("new_achievement");
     }
   }
-  
-  return newAchievements
+
+  return newAchievements;
 }
 ```
 
@@ -188,11 +187,11 @@ export function checkAndAwardAchievements(
 it("should award new_achievement when condition is met", () => {
   const newAchievements = checkAndAwardAchievements(testAddress, {
     // ... stats that trigger condition
-  })
+  });
 
-  expect(newAchievements).toContain("new_achievement")
-  expect(hasAchievement(testAddress, "new_achievement")).toBe(true)
-})
+  expect(newAchievements).toContain("new_achievement");
+  expect(hasAchievement(testAddress, "new_achievement")).toBe(true);
+});
 ```
 
 ## 🎯 Common Tasks
@@ -200,18 +199,18 @@ it("should award new_achievement when condition is met", () => {
 ### Get player's earned achievements count
 
 ```typescript
-import { getEarnedAchievements } from "@/lib/achievements/service"
+import { getEarnedAchievements } from "@/lib/achievements/service";
 
-const earned = getEarnedAchievements(playerAddress)
-console.log(`Player has earned ${earned.length} achievements`)
+const earned = getEarnedAchievements(playerAddress);
+console.log(`Player has earned ${earned.length} achievements`);
 ```
 
 ### Check if player is a "Legend"
 
 ```typescript
-import { hasAchievement } from "@/lib/achievements/service"
+import { hasAchievement } from "@/lib/achievements/service";
 
-const isLegend = hasAchievement(playerAddress, "legend")
+const isLegend = hasAchievement(playerAddress, "legend");
 if (isLegend) {
   // Show special badge or status
 }
@@ -220,9 +219,9 @@ if (isLegend) {
 ### Clear achievements (testing only)
 
 ```typescript
-import { clearAchievements } from "@/lib/achievements/service"
+import { clearAchievements } from "@/lib/achievements/service";
 
-clearAchievements(playerAddress) // Removes all achievements
+clearAchievements(playerAddress); // Removes all achievements
 ```
 
 ## 🐛 Troubleshooting

@@ -1,4 +1,5 @@
-export type HuntLifecycleStatus = "Draft" | "Scheduled" | "Active" | "Ended" | "Completed" | "Cancelled"
+export type HuntLifecycleStatus =
+  "Draft" | "Scheduled" | "Active" | "Ended" | "Completed" | "Cancelled";
 
 /**
  * Normalizes a status string to the app's canonical, capitalized form.
@@ -8,25 +9,25 @@ export type HuntLifecycleStatus = "Draft" | "Scheduled" | "Active" | "Ended" | "
  * scheduling states ("Scheduled" / "Ended").
  */
 export function normalizeHuntStatus(status?: string): HuntLifecycleStatus {
-  const value = status?.toLowerCase()
+  const value = status?.toLowerCase();
   switch (value) {
     case "scheduled":
-      return "Scheduled"
+      return "Scheduled";
     case "active":
-      return "Active"
+      return "Active";
     case "ended":
-      return "Ended"
+      return "Ended";
     case "completed":
-      return "Completed"
+      return "Completed";
     case "cancelled":
-      return "Cancelled"
+      return "Cancelled";
     case "draft":
-      return "Draft"
+      return "Draft";
     default:
-      return (status as HuntLifecycleStatus) ?? "Draft"
+      return (status as HuntLifecycleStatus) ?? "Draft";
   }
 }
 
 export function getDisplayHuntStatus(status?: string): string {
-  return normalizeHuntStatus(status)
+  return normalizeHuntStatus(status);
 }

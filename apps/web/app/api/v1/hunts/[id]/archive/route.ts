@@ -5,10 +5,7 @@ import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit";
  * POST /api/v1/hunts/[id]/archive
  * Archive a hunt (hide from public but preserve data).
  */
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: Request, { params }: { params: { id: string } }) {
   const ip = getIP(req);
   const { success, reset } = rateLimit(ip, { limit: 30, windowMs: 60 * 1000 });
 

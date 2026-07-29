@@ -4,7 +4,7 @@ import { AlertCircle, CheckCircle2, ExternalLink, Loader2, RotateCw } from "luci
 import { useEffect, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { type MintStage,stageLabel, useNftMint } from "@/hooks/useNftMint";
+import { type MintStage, stageLabel, useNftMint } from "@/hooks/useNftMint";
 
 interface NftMintProgressProps {
   huntId: number;
@@ -42,8 +42,7 @@ export function NftMintProgress({
     [stage]
   );
 
-  const isBusy =
-    stage !== "idle" && stage !== "complete" && stage !== "error";
+  const isBusy = stage !== "idle" && stage !== "complete" && stage !== "error";
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
@@ -58,7 +57,9 @@ export function NftMintProgress({
         <div className="mb-4 rounded-lg bg-slate-50 p-3 text-sm">
           <p className="font-medium text-slate-700">
             Estimated fee: {feeEstimate.feeXlm} XLM{" "}
-            <span className="text-slate-500">({feeEstimate.feeStroops.toLocaleString()} stroops)</span>
+            <span className="text-slate-500">
+              ({feeEstimate.feeStroops.toLocaleString()} stroops)
+            </span>
           </p>
           <p className="text-xs text-slate-500">
             {feeEstimate.simulated

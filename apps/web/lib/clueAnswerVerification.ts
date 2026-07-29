@@ -1,6 +1,6 @@
-import { sha256Hex } from './crypto';
-import { matchAnswerFuzzy, normalizeAnswerForMatch, type AnswerStrictness } from './fuzzyAnswer';
-import type { Clue } from './types';
+import { sha256Hex } from "./crypto";
+import { matchAnswerFuzzy, normalizeAnswerForMatch, type AnswerStrictness } from "./fuzzyAnswer";
+import type { Clue } from "./types";
 
 const SHA256_HEX = /^[a-f0-9]{64}$/i;
 
@@ -17,11 +17,11 @@ export function isSha256Hex(value: string): boolean {
 export async function matchesClueAnswer(
   candidate: string,
   clue: Clue,
-  huntId: number,
+  huntId: number
 ): Promise<boolean> {
-  const stored = clue.answer || '';
+  const stored = clue.answer || "";
   const isStoredHash = isSha256Hex(stored);
-  const strictness: AnswerStrictness = clue.answerStrictness ?? 'normal';
+  const strictness: AnswerStrictness = clue.answerStrictness ?? "normal";
   const alternatives = clue.alternativeAnswers ?? [];
 
   if (isSha256Hex(candidate)) {
@@ -53,7 +53,10 @@ export async function matchesClueAnswer(
   }
 
   // Legacy plaintext: support pipe-separated answers plus fuzzy matching
-  const pipeAlts = stored.split('|').map((v) => v.trim()).filter(Boolean);
+  const pipeAlts = stored
+    .split("|")
+    .map((v) => v.trim())
+    .filter(Boolean);
   const primary = pipeAlts[0] ?? stored;
   const allAlts = [...pipeAlts.slice(1), ...alternatives];
 

@@ -1,7 +1,7 @@
-import { ThemedCustomText } from '@components/themed/ThemedCustomText'
-import { useTheme } from '@providers/ThemeProvider'
-import type { ButtonSize,ButtonVariant, SharedButtonProps } from '@shared/types/components'
-import React, { useState } from 'react'
+import { ThemedCustomText } from "@components/themed/ThemedCustomText";
+import { useTheme } from "@providers/ThemeProvider";
+import type { ButtonSize, ButtonVariant, SharedButtonProps } from "@shared/types/components";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -9,23 +9,23 @@ import {
   StyleSheet,
   View,
   type ViewStyle,
-} from 'react-native'
+} from "react-native";
 
-export interface ButtonProps extends Omit<PressableProps, 'style'>, SharedButtonProps {
-  icon?: React.ReactNode
-  style?: ViewStyle
+export interface ButtonProps extends Omit<PressableProps, "style">, SharedButtonProps {
+  icon?: React.ReactNode;
+  style?: ViewStyle;
 }
 
 const sizeStyles: Record<ButtonSize, ViewStyle & { borderRadius: number }> = {
   sm: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 6 },
   md: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 8 },
   lg: { paddingVertical: 16, paddingHorizontal: 20, borderRadius: 10 },
-}
+};
 
 export function Button({
   label,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   loading = false,
   icon,
@@ -34,35 +34,35 @@ export function Button({
   accessibilityLabel,
   testID,
 }: ButtonProps) {
-  const [pressed, setPressed] = useState(false)
-  const { colors } = useTheme()
+  const [pressed, setPressed] = useState(false);
+  const { colors } = useTheme();
 
   const bgColor: Record<ButtonVariant, string> = {
     primary: colors.primary,
     secondary: colors.secondary,
-    ghost: 'transparent',
-    outline: 'transparent',
+    ghost: "transparent",
+    outline: "transparent",
     destructive: colors.error,
-  }
+  };
 
-  const isGhostLike = variant === 'ghost' || variant === 'outline'
+  const isGhostLike = variant === "ghost" || variant === "outline";
 
   const containerStyle: ViewStyle = {
     ...sizeStyles[size],
     backgroundColor: bgColor[variant],
     opacity: disabled ? 0.5 : pressed ? 0.8 : 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 8,
-    ...(variant === 'outline' && {
+    ...(variant === "outline" && {
       borderWidth: 1,
       borderColor: colors.border,
     }),
     ...(style as ViewStyle),
-  }
+  };
 
-  const textColor = isGhostLike ? colors.text : '#ffffff'
+  const textColor = isGhostLike ? colors.text : "#ffffff";
 
   return (
     <Pressable
@@ -81,7 +81,7 @@ export function Button({
       {!loading && icon && <View>{icon as React.ReactElement}</View>}
       {!loading && (
         <ThemedCustomText
-          variant={size === 'sm' ? 'caption' : size === 'lg' ? 'body' : 'label'}
+          variant={size === "sm" ? "caption" : size === "lg" ? "body" : "label"}
           lightColor={textColor}
           darkColor={textColor}
           weight="600"
@@ -90,7 +90,7 @@ export function Button({
         </ThemedCustomText>
       )}
     </Pressable>
-  )
+  );
 }
 
-const _styles = StyleSheet.create({})
+const _styles = StyleSheet.create({});

@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page,test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 
@@ -15,7 +15,10 @@ function getReportFilePaths(pageName: string) {
   };
 }
 
-async function saveA11yReport(pageName: string, results: Awaited<ReturnType<AxeBuilder["analyze"]>>) {
+async function saveA11yReport(
+  pageName: string,
+  results: Awaited<ReturnType<AxeBuilder["analyze"]>>
+) {
   fs.mkdirSync(reportRoot, { recursive: true });
   const { fullReport, summaryReport } = getReportFilePaths(pageName);
   fs.writeFileSync(fullReport, JSON.stringify(results, null, 2));
@@ -43,7 +46,10 @@ async function runA11yAudit(page: Page, pageName: string) {
   await saveA11yReport(pageName, accessibilityScanResults);
 
   if (accessibilityScanResults.violations.length > 0) {
-    console.log(`${pageName} A11y Violations:`, JSON.stringify(accessibilityScanResults.violations, null, 2));
+    console.log(
+      `${pageName} A11y Violations:`,
+      JSON.stringify(accessibilityScanResults.violations, null, 2)
+    );
   }
 
   expect(accessibilityScanResults.violations).toEqual([]);
@@ -112,7 +118,9 @@ test.describe("Accessibility Audits", () => {
     await runA11yAudit(page, "hunt_detail");
   });
 
-  test("Home page should support keyboard navigation and screen reader landmarks", async ({ page }) => {
+  test("Home page should support keyboard navigation and screen reader landmarks", async ({
+    page,
+  }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     await expectKeyboardNavigation(page);

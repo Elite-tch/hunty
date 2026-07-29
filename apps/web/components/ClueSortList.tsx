@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import React, { useCallback, useRef, useState } from "react"
-import { GripVertical, ChevronUp, ChevronDown } from "lucide-react"
+import React, { useCallback, useRef, useState } from "react";
+import { GripVertical, ChevronUp, ChevronDown } from "lucide-react";
 
 export interface ClueItem {
-  id: string
-  label: string
+  id: string;
+  label: string;
 }
 
 interface ClueSortListProps {
   /** The ordered list of clue items. */
-  items: ClueItem[]
+  items: ClueItem[];
   /** Called with the new order after a reorder. */
-  onReorder: (newItems: ClueItem[]) => void
+  onReorder: (newItems: ClueItem[]) => void;
   /** Whether the list is disabled (e.g. while saving). */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 /**
@@ -28,110 +28,110 @@ interface ClueSortListProps {
  * - Screen-reader live region announcements
  */
 export function ClueSortList({ items, onReorder, disabled = false }: ClueSortListProps) {
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
-  const [overIndex, setOverIndex] = useState<number | null>(null)
-  const liveRegionRef = useRef<HTMLDivElement>(null)
-  const draggedItemRef = useRef<ClueItem | null>(null)
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+  const liveRegionRef = useRef<HTMLDivElement>(null);
+  const draggedItemRef = useRef<ClueItem | null>(null);
 
   const announce = useCallback((message: string) => {
-    const region = liveRegionRef.current
+    const region = liveRegionRef.current;
     if (region) {
-      region.textContent = message
+      region.textContent = message;
     }
-  }, [])
+  }, []);
 
   const moveItem = useCallback(
     (fromIndex: number, toIndex: number) => {
-      if (toIndex < 0 || toIndex >= items.length || fromIndex === toIndex) return
-      const newItems = [...items]
-      const [moved] = newItems.splice(fromIndex, 1)
-      newItems.splice(toIndex, 0, moved)
-      onReorder(newItems)
-      announce(`Moved clue ${fromIndex + 1} to position ${toIndex + 1}`)
+      if (toIndex < 0 || toIndex >= items.length || fromIndex === toIndex) return;
+      const newItems = [...items];
+      const [moved] = newItems.splice(fromIndex, 1);
+      newItems.splice(toIndex, 0, moved);
+      onReorder(newItems);
+      announce(`Moved clue ${fromIndex + 1} to position ${toIndex + 1}`);
     },
-    [items, onReorder, announce],
-  )
+    [items, onReorder, announce]
+  );
 
   // ─── Mouse drag handlers ────────────────────────────────────────────
 
   const handleDragStart = useCallback(
     (e: React.DragEvent, index: number) => {
-      if (disabled) return
-      setDraggedIndex(index)
-      draggedItemRef.current = items[index]
-      e.dataTransfer.effectAllowed = "move"
-      e.dataTransfer.setData("text/plain", index.toString())
+      if (disabled) return;
+      setDraggedIndex(index);
+      draggedItemRef.current = items[index];
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", index.toString());
       // Use a timeout so the drag image is captured before we change opacity
       requestAnimationFrame(() => {
-        setDraggedIndex(index)
-      })
+        setDraggedIndex(index);
+      });
     },
-    [items, disabled],
-  )
+    [items, disabled]
+  );
 
   const handleDragOver = useCallback(
     (e: React.DragEvent, index: number) => {
-      if (disabled) return
-      e.preventDefault()
-      e.dataTransfer.dropEffect = "move"
-      setOverIndex(index)
+      if (disabled) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setOverIndex(index);
     },
-    [disabled],
-  )
+    [disabled]
+  );
 
   const handleDragLeave = useCallback(() => {
-    setOverIndex(null)
-  }, [])
+    setOverIndex(null);
+  }, []);
 
   const handleDrop = useCallback(
     (e: React.DragEvent, toIndex: number) => {
-      e.preventDefault()
-      const fromIndex = draggedIndex
-      setDraggedIndex(null)
-      setOverIndex(null)
-      if (fromIndex === null || fromIndex === toIndex) return
-      moveItem(fromIndex, toIndex)
+      e.preventDefault();
+      const fromIndex = draggedIndex;
+      setDraggedIndex(null);
+      setOverIndex(null);
+      if (fromIndex === null || fromIndex === toIndex) return;
+      moveItem(fromIndex, toIndex);
     },
-    [draggedIndex, moveItem],
-  )
+    [draggedIndex, moveItem]
+  );
 
   const handleDragEnd = useCallback(() => {
-    setDraggedIndex(null)
-    setOverIndex(null)
-    draggedItemRef.current = null
-  }, [])
+    setDraggedIndex(null);
+    setOverIndex(null);
+    draggedItemRef.current = null;
+  }, []);
 
   // ─── Keyboard handlers ──────────────────────────────────────────────
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, index: number) => {
-      if (disabled) return
+      if (disabled) return;
       if (e.altKey && e.key === "ArrowUp") {
-        e.preventDefault()
-        moveItem(index, index - 1)
+        e.preventDefault();
+        moveItem(index, index - 1);
       } else if (e.altKey && e.key === "ArrowDown") {
-        e.preventDefault()
-        moveItem(index, index + 1)
+        e.preventDefault();
+        moveItem(index, index + 1);
       }
     },
-    [disabled, moveItem],
-  )
+    [disabled, moveItem]
+  );
 
   // ─── Move button handlers (touch-friendly) ──────────────────────────
 
   const handleMoveUp = useCallback(
     (index: number) => {
-      moveItem(index, index - 1)
+      moveItem(index, index - 1);
     },
-    [moveItem],
-  )
+    [moveItem]
+  );
 
   const handleMoveDown = useCallback(
     (index: number) => {
-      moveItem(index, index + 1)
+      moveItem(index, index + 1);
     },
-    [moveItem],
-  )
+    [moveItem]
+  );
 
   return (
     <div className="space-y-1">
@@ -139,8 +139,8 @@ export function ClueSortList({ items, onReorder, disabled = false }: ClueSortLis
       <div ref={liveRegionRef} className="sr-only" aria-live="assertive" role="status" />
 
       {items.map((item, index) => {
-        const isDragged = draggedIndex === index
-        const isOver = overIndex === index && draggedIndex !== index
+        const isDragged = draggedIndex === index;
+        const isOver = overIndex === index && draggedIndex !== index;
 
         return (
           <div
@@ -204,8 +204,8 @@ export function ClueSortList({ items, onReorder, disabled = false }: ClueSortLis
               </button>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

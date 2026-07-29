@@ -32,7 +32,8 @@ export function RegistrationButton({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  const isHuntFull = maxCapacity !== undefined && currentPlayers !== undefined && currentPlayers >= maxCapacity;
+  const isHuntFull =
+    maxCapacity !== undefined && currentPlayers !== undefined && currentPlayers >= maxCapacity;
 
   const handleRegister = async () => {
     setIsRegistering(true);
@@ -44,7 +45,8 @@ export function RegistrationButton({
       setSuccessMessage("Successfully registered for the hunt!");
       setRetryCount(0); // Reset retry count on success
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      const errorMessage =
+        err instanceof Error ? err.message : "Registration failed. Please try again.";
       setError(errorMessage);
       setRetryCount((prev) => prev + 1);
     } finally {
@@ -62,7 +64,8 @@ export function RegistrationButton({
       setSuccessMessage("Successfully added to waitlist!");
       setRetryCount(0); // Reset retry count on success
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Waitlist failed. Please try again.";
+      const errorMessage =
+        err instanceof Error ? err.message : "Waitlist failed. Please try again.";
       setError(errorMessage);
       setRetryCount((prev) => prev + 1);
     } finally {
@@ -124,8 +127,18 @@ export function RegistrationButton({
             </>
           ) : (
             <>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 90 11-18 0 9 90 0118 0z" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 8v4l3 3m6-3a9 90 11-18 0 9 90 0118 0z"
+                />
               </svg>
               Join Waitlist
             </>
@@ -144,7 +157,13 @@ export function RegistrationButton({
             </>
           ) : (
             <>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               Join Hunt
@@ -157,8 +176,18 @@ export function RegistrationButton({
       {successMessage && (
         <div className="rounded-lg bg-green-50 border border-green-200 p-4">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 90 0 11-18 0 9 90 0 0118 0z" />
+            <svg
+              className="w-5 h-5 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m6 2a9 90 0 11-18 0 9 90 0 0118 0z"
+              />
             </svg>
             <p className="text-sm font-medium text-green-800">{successMessage}</p>
           </div>
@@ -169,15 +198,26 @@ export function RegistrationButton({
       {error && (
         <div className="rounded-lg bg-red-50 border border-red-200 p-4">
           <div className="flex items-start gap-2">
-            <svg className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 90 0 11-18 0 9 90 0 0118 0z" />
+            <svg
+              className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4m0 4h.01M21 12a9 90 0 11-18 0 9 90 0 0118 0z"
+              />
             </svg>
             <div className="flex-1">
               <p className="text-sm font-medium text-red-800 mb-1">Request failed</p>
               <p className="text-sm text-red-700">{error}</p>
               {retryCount > 0 && (
                 <p className="text-xs text-red-600 mt-2">
-                  {retryCount === 1 ? "1 attempt made." : `${retryCount} attempts made.`} You can try again.
+                  {retryCount === 1 ? "1 attempt made." : `${retryCount} attempts made.`} You can
+                  try again.
                 </p>
               )}
               {error.includes("network") && (

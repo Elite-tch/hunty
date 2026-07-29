@@ -1,82 +1,82 @@
-import * as fs from "fs"
-import * as path from "path"
-import { randomUUID } from "crypto"
-import { logger } from "@/lib/logger"
+import * as fs from "fs";
+import * as path from "path";
+import { randomUUID } from "crypto";
+import { logger } from "@/lib/logger";
 import type {
   ContentPolicyViolation,
   CreatorModerationNotification,
   ModerationDecision,
   ModerationSubmission,
-} from "./types"
-import type { StoredHunt } from "@/lib/types"
-import { scanHuntContent } from "./autoFlag"
+} from "./types";
+import type { StoredHunt } from "@/lib/types";
+import { scanHuntContent } from "./autoFlag";
 
-const DATA_DIR = path.join(process.cwd(), "lib", "moderation-data")
-const QUEUE_FILE = path.join(DATA_DIR, "queue.json")
-const NOTIFICATIONS_FILE = path.join(DATA_DIR, "notifications.json")
+const DATA_DIR = path.join(process.cwd(), "lib", "moderation-data");
+const QUEUE_FILE = path.join(DATA_DIR, "queue.json");
+const NOTIFICATIONS_FILE = path.join(DATA_DIR, "notifications.json");
 
 function ensureDataDir(): void {
   if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true })
+    fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 }
 
 function readJSON<T>(filePath: string, fallback: T): T {
   try {
-    const data = fs.readFileSync(filePath, "utf-8")
-    return JSON.parse(data) as T
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data) as T;
   } catch {
-    return fallback
+    return fallback;
   }
 }
 
 function writeJSON<T>(filePath: string, data: T): void {
   try {
-    ensureDataDir()
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8")
+    ensureDataDir();
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
-    logger.error("Failed to write moderation data file:", filePath, err)
+    logger.error("Failed to write moderation data file:", filePath, err);
   }
 }
 
 function getQueue(): ModerationSubmission[] {
-  return readJSON<ModerationSubmission[]>(QUEUE_FILE, [])
+  return readJSON<ModerationSubmission[]>(QUEUE_FILE, []);
 }
 
 function saveQueue(queue: ModerationSubmission[]): void {
-  writeJSON(QUEUE_FILE, queue)
+  writeJSON(QUEUE_FILE, queue);
 }
 
 function getNotifications(): CreatorModerationNotification[] {
-  return readJSON<CreatorModerationNotification[]>(NOTIFICATIONS_FILE, [])
+  return readJSON<CreatorModerationNotification[]>(NOTIFICATIONS_FILE, []);
 }
 
 function saveNotifications(notifications: CreatorModerationNotification[]): void {
-  writeJSON(NOTIFICATIONS_FILE, notifications)
+  writeJSON(NOTIFICATIONS_FILE, notifications);
 }
 
 export function getPendingSubmissions(): ModerationSubmission[] {
   return getQueue()
     .filter((s) => s.status === "pending")
-    .sort((a, b) => a.submittedAt - b.submittedAt)
+    .sort((a, b) => a.submittedAt - b.submittedAt);
 }
 
 export function getAllSubmissions(): ModerationSubmission[] {
-  return getQueue().sort((a, b) => b.submittedAt - a.submittedAt)
+  return getQueue().sort((a, b) => b.submittedAt - a.submittedAt);
 }
 
 export function getSubmissionByHuntId(huntId: number): ModerationSubmission | undefined {
-  return getQueue().find((s) => s.huntId === huntId)
+  return getQueue().find((s) => s.huntId === huntId);
 }
 
 export function submitHuntForModeration(hunt: StoredHunt): ModerationSubmission {
-  const queue = getQueue()
-  const existing = queue.find((s) => s.huntId === hunt.id && s.status === "pending")
+  const queue = getQueue();
+  const existing = queue.find((s) => s.huntId === hunt.id && s.status === "pending");
   if (existing) {
-    return existing
+    return existing;
   }
 
-  const { autoFlags, policyViolations } = scanHuntContent(hunt)
+  const { autoFlags, policyViolations } = scanHuntContent(hunt);
   const submission: ModerationSubmission = {
     id: randomUUID(),
     huntId: hunt.id,
@@ -86,18 +86,18 @@ export function submitHuntForModeration(hunt: StoredHunt): ModerationSubmission 
     autoFlags,
     policyViolations,
     creatorEmail: hunt.creatorEmail,
-  }
+  };
 
-  saveQueue([...queue, submission])
-  return submission
+  saveQueue([...queue, submission]);
+  return submission;
 }
 
 function appendCreatorNotification(input: {
-  huntId: number
-  huntTitle: string
-  action: "approved" | "rejected"
-  reason?: string
-  creatorEmail?: string
+  huntId: number;
+  huntTitle: string;
+  action: "approved" | "rejected";
+  reason?: string;
+  creatorEmail?: string;
 }): CreatorModerationNotification {
   const notification: CreatorModerationNotification = {
     id: randomUUID(),
@@ -108,23 +108,23 @@ function appendCreatorNotification(input: {
     creatorEmail: input.creatorEmail,
     createdAt: Date.now(),
     read: false,
-  }
-  saveNotifications([notification, ...getNotifications()])
-  return notification
+  };
+  saveNotifications([notification, ...getNotifications()]);
+  return notification;
 }
 
 function updateSubmission(
   submissionId: string,
   updater: (submission: ModerationSubmission) => ModerationSubmission
 ): ModerationSubmission | null {
-  const queue = getQueue()
-  const index = queue.findIndex((s) => s.id === submissionId)
-  if (index === -1) return null
-  const updated = updater(queue[index])
-  const next = [...queue]
-  next[index] = updated
-  saveQueue(next)
-  return updated
+  const queue = getQueue();
+  const index = queue.findIndex((s) => s.id === submissionId);
+  if (index === -1) return null;
+  const updated = updater(queue[index]);
+  const next = [...queue];
+  next[index] = updated;
+  saveQueue(next);
+  return updated;
 }
 
 export function approveSubmission(
@@ -136,16 +136,16 @@ export function approveSubmission(
     status: "approved" as ModerationDecision,
     reviewedAt: Date.now(),
     reviewedBy,
-  }))
+  }));
   if (result) {
     appendCreatorNotification({
       huntId: result.huntId,
       huntTitle: result.hunt.title,
       action: "approved",
       creatorEmail: result.creatorEmail,
-    })
+    });
   }
-  return result
+  return result;
 }
 
 export function rejectSubmission(
@@ -161,7 +161,7 @@ export function rejectSubmission(
     reviewedBy,
     rejectionReason: reason,
     policyViolations: [...new Set([...s.policyViolations, ...policyViolations])],
-  }))
+  }));
   if (result) {
     appendCreatorNotification({
       huntId: result.huntId,
@@ -169,9 +169,9 @@ export function rejectSubmission(
       action: "rejected",
       reason,
       creatorEmail: result.creatorEmail,
-    })
+    });
   }
-  return result
+  return result;
 }
 
 export function flagContentPolicyViolation(
@@ -181,49 +181,48 @@ export function flagContentPolicyViolation(
   return updateSubmission(submissionId, (s) => ({
     ...s,
     policyViolations: [...new Set([...s.policyViolations, ...violations])],
-  }))
+  }));
 }
 
 export function getCreatorNotifications(creatorEmail?: string): CreatorModerationNotification[] {
-  const all = getNotifications()
-  if (!creatorEmail) return all
+  const all = getNotifications();
+  if (!creatorEmail) return all;
   return all.filter(
     (n) => !n.creatorEmail || n.creatorEmail.toLowerCase() === creatorEmail.toLowerCase()
-  )
+  );
 }
 
 export function markNotificationRead(notificationId: string): boolean {
-  const list = getNotifications()
-  const index = list.findIndex((n) => n.id === notificationId)
-  if (index === -1) return false
-  const next = [...list]
-  next[index] = { ...next[index], read: true }
-  saveNotifications(next)
-  return true
+  const list = getNotifications();
+  const index = list.findIndex((n) => n.id === notificationId);
+  if (index === -1) return false;
+  const next = [...list];
+  next[index] = { ...next[index], read: true };
+  saveNotifications(next);
+  return true;
 }
 
-export function getModerationStatusForHunts(huntIds: number[]): Record<
-  number,
-  { status: ModerationDecision; rejectionReason?: string }
-> {
-  const queue = getQueue()
-  const result: Record<number, { status: ModerationDecision; rejectionReason?: string }> = {}
+export function getModerationStatusForHunts(
+  huntIds: number[]
+): Record<number, { status: ModerationDecision; rejectionReason?: string }> {
+  const queue = getQueue();
+  const result: Record<number, { status: ModerationDecision; rejectionReason?: string }> = {};
   for (const huntId of huntIds) {
     const latest = queue
       .filter((s) => s.huntId === huntId)
-      .sort((a, b) => b.submittedAt - a.submittedAt)[0]
+      .sort((a, b) => b.submittedAt - a.submittedAt)[0];
     if (latest) {
       result[huntId] = {
         status: latest.status,
         rejectionReason: latest.rejectionReason,
-      }
+      };
     }
   }
-  return result
+  return result;
 }
 
 /** Test helper — reset persisted moderation data. */
 export function __resetModerationStoreForTests(): void {
-  saveQueue([])
-  saveNotifications([])
+  saveQueue([]);
+  saveNotifications([]);
 }

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useEffect,useState } from "react"
+import { useEffect, useState } from "react";
 
-import { getCountdown } from "@/lib/dateUtils"
+import { getCountdown } from "@/lib/dateUtils";
 
 /**
  * React hook that returns a live countdown string that updates every second.
@@ -13,25 +13,25 @@ import { getCountdown } from "@/lib/dateUtils"
 export function useCountdown(endUnixSeconds: number | undefined | null): string | null {
   const [display, setDisplay] = useState<string | null>(() =>
     endUnixSeconds != null ? getCountdown(endUnixSeconds) : null
-  )
+  );
 
   useEffect(() => {
     if (endUnixSeconds == null) {
-      setDisplay(null)
-      return
+      setDisplay(null);
+      return;
     }
 
     // Immediately compute
-    setDisplay(getCountdown(endUnixSeconds))
+    setDisplay(getCountdown(endUnixSeconds));
 
     const interval = setInterval(() => {
-      const value = getCountdown(endUnixSeconds)
-      setDisplay(value)
-      if (value === null) clearInterval(interval)
-    }, 1000)
+      const value = getCountdown(endUnixSeconds);
+      setDisplay(value);
+      if (value === null) clearInterval(interval);
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [endUnixSeconds])
+    return () => clearInterval(interval);
+  }, [endUnixSeconds]);
 
-  return display
+  return display;
 }

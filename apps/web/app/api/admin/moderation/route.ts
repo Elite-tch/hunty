@@ -1,73 +1,73 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 import {
   approveSubmission,
   flagContentPolicyViolation,
   getAllSubmissions,
   getPendingSubmissions,
   rejectSubmission,
-} from "@/lib/moderation/store"
-import { sendModerationActionEmail } from "@/lib/moderation/email"
-import type { ContentPolicyViolation } from "@/lib/moderation/types"
+} from "@/lib/moderation/store";
+import { sendModerationActionEmail } from "@/lib/moderation/email";
+import type { ContentPolicyViolation } from "@/lib/moderation/types";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const view = searchParams.get("view") || "pending"
+  const { searchParams } = new URL(req.url);
+  const view = searchParams.get("view") || "pending";
 
   if (view === "all") {
-    return NextResponse.json({ submissions: getAllSubmissions() })
+    return NextResponse.json({ submissions: getAllSubmissions() });
   }
 
-  return NextResponse.json({ submissions: getPendingSubmissions() })
+  return NextResponse.json({ submissions: getPendingSubmissions() });
 }
 
 export async function POST(req: NextRequest) {
   let body: {
-    action?: string
-    submissionId?: string
-    reason?: string
-    policyViolations?: ContentPolicyViolation[]
-    reviewedBy?: string
-  }
+    action?: string;
+    submissionId?: string;
+    reason?: string;
+    policyViolations?: ContentPolicyViolation[];
+    reviewedBy?: string;
+  };
 
   try {
-    body = await req.json()
+    body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { action, submissionId } = body
+  const { action, submissionId } = body;
   if (!submissionId) {
-    return NextResponse.json({ error: "submissionId is required" }, { status: 400 })
+    return NextResponse.json({ error: "submissionId is required" }, { status: 400 });
   }
 
   if (action === "approve") {
-    const updated = approveSubmission(submissionId, body.reviewedBy || "admin")
+    const updated = approveSubmission(submissionId, body.reviewedBy || "admin");
     if (!updated) {
-      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
     if (updated.creatorEmail) {
       await sendModerationActionEmail({
         huntName: updated.hunt.title,
         creatorEmail: updated.creatorEmail,
         action: "approved",
-      })
+      });
     }
-    return NextResponse.json({ success: true, submission: updated })
+    return NextResponse.json({ success: true, submission: updated });
   }
 
   if (action === "reject") {
-    const reason = body.reason?.trim()
+    const reason = body.reason?.trim();
     if (!reason) {
-      return NextResponse.json({ error: "reason is required to reject" }, { status: 400 })
+      return NextResponse.json({ error: "reason is required to reject" }, { status: 400 });
     }
     const updated = rejectSubmission(
       submissionId,
       reason,
       body.policyViolations ?? [],
       body.reviewedBy || "admin"
-    )
+    );
     if (!updated) {
-      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
     if (updated.creatorEmail) {
       await sendModerationActionEmail({
@@ -75,22 +75,22 @@ export async function POST(req: NextRequest) {
         creatorEmail: updated.creatorEmail,
         action: "rejected",
         reason,
-      })
+      });
     }
-    return NextResponse.json({ success: true, submission: updated })
+    return NextResponse.json({ success: true, submission: updated });
   }
 
   if (action === "flag") {
-    const violations = body.policyViolations
+    const violations = body.policyViolations;
     if (!violations?.length) {
-      return NextResponse.json({ error: "policyViolations is required" }, { status: 400 })
+      return NextResponse.json({ error: "policyViolations is required" }, { status: 400 });
     }
-    const updated = flagContentPolicyViolation(submissionId, violations)
+    const updated = flagContentPolicyViolation(submissionId, violations);
     if (!updated) {
-      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 });
     }
-    return NextResponse.json({ success: true, submission: updated })
+    return NextResponse.json({ success: true, submission: updated });
   }
 
-  return NextResponse.json({ error: "Invalid action" }, { status: 400 })
+  return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

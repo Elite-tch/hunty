@@ -27,83 +27,43 @@
   "env": [
     {
       "key": "NEXT_PUBLIC_ENVIRONMENT",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "NEXT_PUBLIC_SOROBAN_RPC_URL",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "NEXT_PUBLIC_SOROBAN_NETWORK_PASSPHRASE",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "NEXT_PUBLIC_SOROBAN_NETWORK_TYPE",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "NEXT_PUBLIC_API_URL",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "NEXT_PUBLIC_GRAPHQL_URL",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "DATABASE_URL",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "PINATA_JWT",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "RESEND_API_KEY",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     },
     {
       "key": "CSP_REPORT_ONLY",
-      "scope": [
-        "production",
-        "preview",
-        "development"
-      ]
+      "scope": ["production", "preview", "development"]
     }
   ],
   "regions": ["iad1"],

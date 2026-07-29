@@ -10,10 +10,10 @@
  */
 
 // Design tokens
-export * from './tokens'
+export * from "./tokens";
 
 // Shared types
-export * from './types/components'
+export * from "./types/components";
 
 // Shared hooks
-export * from './hooks'
+export * from "./hooks";

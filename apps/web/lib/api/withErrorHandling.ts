@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server"
-import { errorResponse, REQUEST_ID_HEADER } from "./response"
+import { NextResponse } from "next/server";
+import { errorResponse, REQUEST_ID_HEADER } from "./response";
 
-type RouteHandler<Context> = (req: Request, context: Context) => Promise<NextResponse> | NextResponse
+type RouteHandler<Context> = (
+  req: Request,
+  context: Context
+) => Promise<NextResponse> | NextResponse;
 
 function generateRequestId(): string {
-  return globalThis.crypto.randomUUID()
+  return globalThis.crypto.randomUUID();
 }
 
 /**
@@ -21,21 +24,21 @@ function generateRequestId(): string {
  *   )
  */
 export function withErrorHandling<Context = unknown>(
-  handler: RouteHandler<Context>,
+  handler: RouteHandler<Context>
 ): RouteHandler<Context> {
   return async (req: Request, context: Context): Promise<NextResponse> => {
     // `req` may be omitted by callers/tests that don't need it (e.g. static
     // GET handlers with no dynamic input), so avoid assuming it exists.
-    const requestId = req?.headers?.get(REQUEST_ID_HEADER) ?? generateRequestId()
+    const requestId = req?.headers?.get(REQUEST_ID_HEADER) ?? generateRequestId();
 
     try {
-      const response = await handler(req, context)
+      const response = await handler(req, context);
       if (!response.headers.has(REQUEST_ID_HEADER)) {
-        response.headers.set(REQUEST_ID_HEADER, requestId)
+        response.headers.set(REQUEST_ID_HEADER, requestId);
       }
-      return response
+      return response;
     } catch (error) {
-      return errorResponse(error, requestId)
+      return errorResponse(error, requestId);
     }
-  }
+  };
 }

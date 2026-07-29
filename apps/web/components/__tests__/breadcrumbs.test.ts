@@ -1,5 +1,5 @@
 // components/__tests__/breadcrumbs.test.ts
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   defaultResolver,
@@ -71,8 +71,7 @@ describe("generateBreadcrumbs", () => {
   });
 
   it("uses a custom resolver when provided", () => {
-    const resolver = (segment: string) =>
-      segment === "special-id" ? "Special Hunt Name" : null;
+    const resolver = (segment: string) => (segment === "special-id" ? "Special Hunt Name" : null);
     const crumbs = generateBreadcrumbs("/hunts/special-id", {}, resolver);
     const seg = crumbs.find((c) => c.href === "/hunts/special-id");
     expect(seg?.label).toBe("Special Hunt Name");

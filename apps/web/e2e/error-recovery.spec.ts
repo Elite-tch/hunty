@@ -1,6 +1,6 @@
-import { expect,test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import { injectMockWallet, MOCK_PUBLIC_KEY,seedHuntData } from "./helpers/mock-wallet";
+import { injectMockWallet, MOCK_PUBLIC_KEY, seedHuntData } from "./helpers/mock-wallet";
 
 test.describe("Error Recovery Flows", () => {
   test.beforeEach(async ({ page }) => {
@@ -36,15 +36,15 @@ test.describe("Error Recovery Flows", () => {
     // Fill title and description but leave answer empty
     await page.getByPlaceholder("Title of the Hunt").fill("Test Hunt");
     await page.getByPlaceholder("Description").fill("A test hunt");
-    
+
     // Leave answer code empty
     const answerInput = page.getByPlaceholder("Enter Code to Unlock next challenge");
-    
+
     // Try to add another clue without filling answer
     const addBtn = page.getByRole("button", { name: /^add$/i });
     if (await addBtn.isVisible()) {
       await addBtn.click();
-      
+
       // Should show validation error or prevent adding
       const form = page.locator("form, [role='form']").first();
       await expect(form).toBeVisible();
@@ -138,7 +138,7 @@ test.describe("Error Recovery Flows", () => {
 
     // Page should handle disconnection gracefully
     const connectBtn = page.getByRole("button", { name: /connect wallet/i });
-    
+
     // Should eventually show connect button or redirect
     await expect(connectBtn).toBeVisible({ timeout: 5_000 });
   });
@@ -341,7 +341,7 @@ test.describe("Error Recovery Flows", () => {
   test("shows validation errors for invalid email formats", async ({ page }) => {
     // If there's email input anywhere
     const emailInputs = page.locator("input[type='email']");
-    
+
     if (await emailInputs.isVisible().catch(() => false)) {
       await emailInputs.fill("invalid-email");
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import React, { useEffect, useMemo,useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Joyride, { CallBackProps, STATUS, Step, TooltipRenderProps } from "react-joyride";
 
 import { useWallet } from "@/lib/context/WalletContext";
@@ -51,35 +51,40 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ tourType }) => {
       target: "body",
       placement: "center",
       title: "Welcome to Hunty! 🎯",
-      content: "Hunty is a decentralized Web3 scavenger hunt platform. Browse active challenges, solve clues, and unlock real crypto rewards and exclusive NFTs!",
+      content:
+        "Hunty is a decentralized Web3 scavenger hunt platform. Browse active challenges, solve clues, and unlock real crypto rewards and exclusive NFTs!",
       disableBeacon: true,
     },
     {
       target: "#wallet-button",
       placement: "bottom",
       title: "Connect Your Wallet 🔑",
-      content: "Connect your Stellar wallet to build your profile, start solving clues, and automatically claim your earnings.",
+      content:
+        "Connect your Stellar wallet to build your profile, start solving clues, and automatically claim your earnings.",
       disableBeacon: true,
     },
     {
       target: "#play-button",
       placement: "bottom",
       title: "Play Active Hunts 🎮",
-      content: "If you have a game link, paste it in the field below or click 'Play Game' to start solving active hunts immediately.",
+      content:
+        "If you have a game link, paste it in the field below or click 'Play Game' to start solving active hunts immediately.",
       disableBeacon: true,
     },
     {
       target: "#discovery-arcade",
       placement: "top",
       title: "Explore the Discovery Arcade 🗺️",
-      content: "Browse the arcade of live and completed hunts. Filter by reward types (XLM, NFTs) or search for specific hunts by name or creator.",
+      content:
+        "Browse the arcade of live and completed hunts. Filter by reward types (XLM, NFTs) or search for specific hunts by name or creator.",
       disableBeacon: true,
     },
     {
       target: "#balance-pill",
       placement: "bottom",
       title: "Track Your Earnings 💰",
-      content: "Your current Stellar balance is updated in real-time right here in the header once connected.",
+      content:
+        "Your current Stellar balance is updated in real-time right here in the header once connected.",
       disableBeacon: true,
     },
   ];
@@ -89,28 +94,32 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ tourType }) => {
       target: "body",
       placement: "center",
       title: "Creator Dashboard 🛠️",
-      content: "Welcome to the Creator Workspace. Here you can design, deploy, and fund your custom scavenger hunts, and monitor player engagement.",
+      content:
+        "Welcome to the Creator Workspace. Here you can design, deploy, and fund your custom scavenger hunts, and monitor player engagement.",
       disableBeacon: true,
     },
     {
       target: "#creator-create-button",
       placement: "bottom",
       title: "Create a Scavenger Hunt 📝",
-      content: "Design clues, hints, upload cover images, configure rules, and lock rewards (XLM/NFTs) inside a Soroban smart contract.",
+      content:
+        "Design clues, hints, upload cover images, configure rules, and lock rewards (XLM/NFTs) inside a Soroban smart contract.",
       disableBeacon: true,
     },
     {
       target: "#creator-templates-button",
       placement: "bottom",
       title: "Start from a Template 📑",
-      content: "Use our pre-made scavenger hunt templates to quickly launch local, educational, or virtual challenges.",
+      content:
+        "Use our pre-made scavenger hunt templates to quickly launch local, educational, or virtual challenges.",
       disableBeacon: true,
     },
     {
       target: "#reward-history-section",
       placement: "top",
       title: "Reward Distributions 💸",
-      content: "Check transaction history, see who claimed rewards, and view public explorer links for your hunt transactions on the Stellar ledger.",
+      content:
+        "Check transaction history, see who claimed rewards, and view public explorer links for your hunt transactions on the Stellar ledger.",
       disableBeacon: true,
     },
   ];

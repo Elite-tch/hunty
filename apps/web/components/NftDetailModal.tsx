@@ -1,20 +1,21 @@
 "use client";
 
-import { motion } from "framer-motion"
-import { Calendar, Download, ExternalLink, Send,Share2, Trophy, Zap } from "lucide-react"
-import Image from "next/image"
-import React from "react"
+import { motion } from "framer-motion";
+import { Calendar, Download, ExternalLink, Send, Share2, Trophy, Zap } from "lucide-react";
+import Image from "next/image";
+import React from "react";
 
-import { Button } from "@/components/ui/button"
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle} from "@/components/ui/dialog"
-import { formatISOString } from "@/lib/dateUtils"
-import { resolveImageSrc } from "@/lib/ipfs"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { formatISOString } from "@/lib/dateUtils";
+import { resolveImageSrc } from "@/lib/ipfs";
+import { cn } from "@/lib/utils";
 
 interface NftAttribute {
   trait_type: string;
@@ -35,14 +36,14 @@ export interface NftRewardDetail {
 }
 
 interface NftDetailModalProps {
-  nft: NftRewardDetail | null
-  isOpen: boolean
-  onClose: () => void
-  onTransfer?: (nft: NftRewardDetail) => void
+  nft: NftRewardDetail | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onTransfer?: (nft: NftRewardDetail) => void;
 }
 
 export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailModalProps) {
-  if (!nft) return null
+  if (!nft) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -51,9 +52,7 @@ export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailMo
           {/* Image Section */}
           <div className="relative w-full md:w-1/2 aspect-square bg-linear-to-br from-indigo-50 to-purple-50 flex items-center justify-center p-8">
             <motion.div
-              initial={
-                prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }
-              }
+              initial={prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }}
               animate={prefersReducedMotion ? {} : { scale: 1, opacity: 1 }}
               transition={
                 prefersReducedMotion
@@ -76,7 +75,7 @@ export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailMo
                   "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
                   nft.claimed
                     ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
-                    : "bg-amber-500/10 text-amber-600 border border-amber-500/20",
+                    : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                 )}
               >
                 {nft.claimed ? "Verified" : "Unclaimed"}
@@ -108,9 +107,7 @@ export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailMo
                 <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3">
                   <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <Calendar className="w-3 h-3" />
-                    <span className="text-[10px] font-bold uppercase">
-                      Earned On
-                    </span>
+                    <span className="text-[10px] font-bold uppercase">Earned On</span>
                   </div>
                   <div className="text-sm font-semibold text-slate-800">
                     {formatISOString(nft.earnedAt)}
@@ -119,9 +116,7 @@ export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailMo
                 <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3">
                   <div className="flex items-center gap-2 text-slate-400 mb-1">
                     <Zap className="w-3 h-3" />
-                    <span className="text-[10px] font-bold uppercase">
-                      Hunt
-                    </span>
+                    <span className="text-[10px] font-bold uppercase">Hunt</span>
                   </div>
                   <div className="text-sm font-semibold text-slate-800 truncate">
                     {nft.huntName || "Legacy Hunt"}
@@ -144,9 +139,7 @@ export function NftDetailModal({ nft, isOpen, onClose, onTransfer }: NftDetailMo
                         <span className="text-[9px] text-indigo-400 uppercase font-bold">
                           {attr.trait_type}
                         </span>
-                        <span className="text-xs font-bold text-indigo-700">
-                          {attr.value}
-                        </span>
+                        <span className="text-xs font-bold text-indigo-700">{attr.value}</span>
                       </div>
                     ))}
                   </div>

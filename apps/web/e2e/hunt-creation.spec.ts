@@ -1,4 +1,4 @@
-import { expect,test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { injectMockWallet, seedHuntData } from "./helpers/mock-wallet";
 
@@ -24,12 +24,8 @@ test.describe("Hunt Creation", () => {
 
     // Fill in the first clue form
     await page.getByPlaceholder("Title of the Hunt").fill("What is the largest planet?");
-    await page
-      .getByPlaceholder("Description")
-      .fill("Think about our solar system.");
-    await page
-      .getByPlaceholder("Enter Code to Unlock next challenge")
-      .fill("jupiter");
+    await page.getByPlaceholder("Description").fill("Think about our solar system.");
+    await page.getByPlaceholder("Enter Code to Unlock next challenge").fill("jupiter");
 
     // Verify values are populated
     await expect(page.getByPlaceholder("Title of the Hunt")).toHaveValue(
@@ -92,9 +88,7 @@ test.describe("Hunt Creation", () => {
     // Set start and end dates
     const today = new Date();
     const startDate = today.toISOString().split("T")[0];
-    const futureDate = new Date(
-      today.getTime() + 7 * 24 * 60 * 60 * 1000
-    )
+    const futureDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
       .toISOString()
       .split("T")[0];
 
@@ -113,9 +107,11 @@ test.describe("Hunt Creation", () => {
 
     // 2. Create Tab: Fill clue details
     await page.getByPlaceholder("Title of the Hunt").fill("Full Pipeline Test Hunt");
-    await page.getByPlaceholder("Description").fill("Ensuring the end-to-end flow works seamlessly.");
+    await page
+      .getByPlaceholder("Description")
+      .fill("Ensuring the end-to-end flow works seamlessly.");
     await page.getByPlaceholder("Enter Code to Unlock next challenge").fill("e2eflow");
-    
+
     // Click Next to go to Rewards tab
     await page.getByRole("button", { name: /next/i }).click();
 
@@ -129,7 +125,9 @@ test.describe("Hunt Creation", () => {
 
     const today = new Date();
     const startDate = today.toISOString().split("T")[0];
-    const futureDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    const futureDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
 
     const dateInputs = page.locator('input[type="date"]');
     await dateInputs.nth(0).fill(startDate);
@@ -139,7 +137,9 @@ test.describe("Hunt Creation", () => {
     await page.getByRole("button", { name: /publish game/i }).click();
 
     // 5. Confirmation Modal: Confirm creation
-    const modalPublishBtn = page.getByRole("dialog").getByRole("button", { name: "Publish", exact: true });
+    const modalPublishBtn = page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Publish", exact: true });
     await modalPublishBtn.click();
 
     // 6. Assertion: Wait for redirect to the /hunts page

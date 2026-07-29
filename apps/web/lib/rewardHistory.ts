@@ -1,6 +1,6 @@
-import { NETWORK_PASSPHRASE } from "@/lib/contracts/config"
-import { getHuntsByCreator } from "@/lib/huntStore"
-import type { RewardHistoryEntry } from "@/lib/types"
+import { NETWORK_PASSPHRASE } from "@/lib/contracts/config";
+import { getHuntsByCreator } from "@/lib/huntStore";
+import type { RewardHistoryEntry } from "@/lib/types";
 
 const DEFAULT_PLAYER_HISTORY: RewardHistoryEntry[] = [
   {
@@ -45,7 +45,7 @@ const DEFAULT_PLAYER_HISTORY: RewardHistoryEntry[] = [
     huntName: "Office Onboarding Hunt",
     explorerUrl: "https://stellar.expert/explorer/testnet/tx/mock_tx_nft_2",
   },
-]
+];
 
 const DEFAULT_CREATOR_HISTORY: RewardHistoryEntry[] = [
   {
@@ -83,34 +83,34 @@ const DEFAULT_CREATOR_HISTORY: RewardHistoryEntry[] = [
     recipient: "GBYL...KQTC",
     explorerUrl: "https://stellar.expert/explorer/testnet/tx/mock_tx_dist_xlm_2",
   },
-]
+];
 
 function getExplorerUrl(hash: string): string {
-  if (!hash) return "#"
-  const network = NETWORK_PASSPHRASE.toLowerCase()
-  const isPublic = !/future|test/i.test(network)
+  if (!hash) return "#";
+  const network = NETWORK_PASSPHRASE.toLowerCase();
+  const isPublic = !/future|test/i.test(network);
   return isPublic
     ? `https://stellar.expert/explorer/public/tx/${hash}`
-    : `https://stellar.expert/explorer/testnet/tx/${hash}`
+    : `https://stellar.expert/explorer/testnet/tx/${hash}`;
 }
 
 export async function fetchPlayerRewardHistory(address: string): Promise<RewardHistoryEntry[]> {
-  if (!address) return []
+  if (!address) return [];
   return DEFAULT_PLAYER_HISTORY.map((entry) => ({
     ...entry,
     explorerUrl: getExplorerUrl(entry.txHash),
-  }))
+  }));
 }
 
 export async function fetchCreatorRewardHistory(address: string): Promise<RewardHistoryEntry[]> {
-  if (!address) return []
+  if (!address) return [];
 
-  const hunts = getHuntsByCreator(address)
-  const huntMap = new Map<number, string>(hunts.map((hunt) => [hunt.id, hunt.title]))
+  const hunts = getHuntsByCreator(address);
+  const huntMap = new Map<number, string>(hunts.map((hunt) => [hunt.id, hunt.title]));
 
   return DEFAULT_CREATOR_HISTORY.map((entry) => ({
     ...entry,
     huntName: huntMap.get(entry.huntId ?? -1) ?? entry.huntName,
     explorerUrl: getExplorerUrl(entry.txHash),
-  }))
+  }));
 }

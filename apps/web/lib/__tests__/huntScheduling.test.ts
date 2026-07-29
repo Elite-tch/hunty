@@ -1,31 +1,31 @@
-import { describe, expect, it } from "vitest"
-import type { StoredHunt } from "@/lib/types"
+import { describe, expect, it } from "vitest";
+import type { StoredHunt } from "@/lib/types";
 import {
   applyHuntScheduleTransitions,
   getReminderCandidates,
   validateHuntSchedule,
-} from "@/lib/huntScheduling"
+} from "@/lib/huntScheduling";
 
 describe("hunt scheduling", () => {
   it("rejects invalid schedule ranges and past starts", () => {
-    const now = new Date("2026-07-25T12:00:00.000Z").getTime()
+    const now = new Date("2026-07-25T12:00:00.000Z").getTime();
     const result = validateHuntSchedule({
       startAt: now - 60_000,
       endAt: now - 30_000,
       now,
-    })
+    });
 
-    expect(result.isValid).toBe(false)
+    expect(result.isValid).toBe(false);
     expect(result.errors).toEqual(
       expect.objectContaining({
         startAt: expect.stringContaining("future"),
         endAt: expect.stringContaining("after"),
       })
-    )
-  })
+    );
+  });
 
   it("transitions scheduled hunts to active and active hunts to ended at the boundary", () => {
-    const now = new Date("2026-07-25T12:00:00.000Z").getTime()
+    const now = new Date("2026-07-25T12:00:00.000Z").getTime();
     const hunts: StoredHunt[] = [
       {
         id: 1,
@@ -57,17 +57,17 @@ describe("hunt scheduling", () => {
         startAt: now - 5 * 60_000,
         endAt: now - 60_000,
       } as StoredHunt,
-    ]
+    ];
 
-    const updated = applyHuntScheduleTransitions(hunts, now)
+    const updated = applyHuntScheduleTransitions(hunts, now);
 
-    expect(updated.find((hunt) => hunt.id === 1)?.status).toBe("active")
-    expect(updated.find((hunt) => hunt.id === 2)?.status).toBe("ended")
-    expect(updated.find((hunt) => hunt.id === 3)?.status).toBe("ended")
-  })
+    expect(updated.find((hunt) => hunt.id === 1)?.status).toBe("active");
+    expect(updated.find((hunt) => hunt.id === 2)?.status).toBe("ended");
+    expect(updated.find((hunt) => hunt.id === 3)?.status).toBe("ended");
+  });
 
   it("only sends reminder notifications once within the reminder window", () => {
-    const now = new Date("2026-07-25T12:00:00.000Z").getTime()
+    const now = new Date("2026-07-25T12:00:00.000Z").getTime();
     const hunts: StoredHunt[] = [
       {
         id: 1,
@@ -79,12 +79,12 @@ describe("hunt scheduling", () => {
         startAt: now + 30 * 60_000,
         endAt: now + 2 * 60 * 60_000,
       } as StoredHunt,
-    ]
+    ];
 
-    const first = getReminderCandidates(hunts, now, new Map([[1, now - 5 * 60_000]]))
-    const second = getReminderCandidates(hunts, now, new Map([[1, now]]))
+    const first = getReminderCandidates(hunts, now, new Map([[1, now - 5 * 60_000]]));
+    const second = getReminderCandidates(hunts, now, new Map([[1, now]]));
 
-    expect(first).toHaveLength(1)
-    expect(second).toHaveLength(0)
-  })
-})
+    expect(first).toHaveLength(1);
+    expect(second).toHaveLength(0);
+  });
+});

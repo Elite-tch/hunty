@@ -5,41 +5,44 @@ interface RateLimitConfig {
   windowMs: number;
 }
 
-// In-memory cache for rate limiting. 
-// Note: In a production environment with multiple server instances, 
+// In-memory cache for rate limiting.
+// Note: In a production environment with multiple server instances,
 // this should be replaced with Redis or a similar distributed store.
 const cache = new Map<string, { count: number; expires: number }>();
 
 /**
  * Simple in-memory rate limiter for Next.js API routes.
  */
-export function rateLimit(ip: string, config: RateLimitConfig = { limit: 60, windowMs: 60 * 1000 }) {
+export function rateLimit(
+  ip: string,
+  config: RateLimitConfig = { limit: 60, windowMs: 60 * 1000 }
+) {
   const now = Date.now();
   const key = `ratelimit_${ip}`;
   const record = cache.get(key);
 
   if (!record || now > record.expires) {
     cache.set(key, { count: 1, expires: now + config.windowMs });
-    return { 
-      success: true, 
+    return {
+      success: true,
       remaining: config.limit - 1,
-      reset: now + config.windowMs 
+      reset: now + config.windowMs,
     };
   }
 
   if (record.count >= config.limit) {
-    return { 
-      success: false, 
+    return {
+      success: false,
       remaining: 0,
-      reset: record.expires
+      reset: record.expires,
     };
   }
 
   record.count += 1;
-  return { 
-    success: true, 
+  return {
+    success: true,
     remaining: config.limit - record.count,
-    reset: record.expires
+    reset: record.expires,
   };
 }
 
@@ -64,8 +67,8 @@ export function rateLimitResponse(reset: number) {
       status: 429,
       headers: {
         "X-RateLimit-Reset": Math.ceil(reset / 1000).toString(),
-        "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString()
-      }
+        "Retry-After": Math.ceil((reset - Date.now()) / 1000).toString(),
+      },
     }
   );
 }

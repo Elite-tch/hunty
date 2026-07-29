@@ -4,11 +4,11 @@ This directory provides the frontend layer for interacting with Stellar/Soroban 
 
 ## Module Overview
 
-| File | Purpose |
-|------|---------|
-| `client.ts` | Creates and configures the Soroban RPC `Server` instance, reads network settings from environment variables |
-| `SorobanContext.tsx` | React context provider and `useSoroban()` hook for accessing the Server and connection state |
-| `rpcRetry.ts` | Exponential-backoff retry wrapper for Soroban RPC calls with timeout and jitter support |
+| File                 | Purpose                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `client.ts`          | Creates and configures the Soroban RPC `Server` instance, reads network settings from environment variables |
+| `SorobanContext.tsx` | React context provider and `useSoroban()` hook for accessing the Server and connection state                |
+| `rpcRetry.ts`        | Exponential-backoff retry wrapper for Soroban RPC calls with timeout and jitter support                     |
 
 ---
 
@@ -16,9 +16,9 @@ This directory provides the frontend layer for interacting with Stellar/Soroban 
 
 Both `client.ts` and `SorobanContext.tsx` read from these environment variables:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NEXT_PUBLIC_SOROBAN_RPC_URL` | `https://rpc.futurenet.stellar.org` | Soroban RPC endpoint |
+| Variable                                 | Default                                  | Description                    |
+| ---------------------------------------- | ---------------------------------------- | ------------------------------ |
+| `NEXT_PUBLIC_SOROBAN_RPC_URL`            | `https://rpc.futurenet.stellar.org`      | Soroban RPC endpoint           |
 | `NEXT_PUBLIC_SOROBAN_NETWORK_PASSPHRASE` | `Test SDF Future Network ; October 2022` | Network passphrase for signing |
 
 ---
@@ -30,10 +30,10 @@ Both `client.ts` and `SorobanContext.tsx` read from these environment variables:
 Creates a new Soroban RPC `Server` instance pointing at the configured RPC URL. The returned `Server` object uses the same API as the deprecated `soroban-client` and is re-exported from `@stellar/stellar-sdk`.
 
 ```ts
-import { createSorobanServer } from "@/lib/soroban/client"
+import { createSorobanServer } from "@/lib/soroban/client";
 
-const server = createSorobanServer()
-const health = await server.getHealth()
+const server = createSorobanServer();
+const health = await server.getHealth();
 ```
 
 **Returns:** A `Server` instance from `@stellar/stellar-sdk`. The type is cast as `any` due to SDK import patterns.
@@ -43,9 +43,9 @@ const health = await server.getHealth()
 Returns the configured network passphrase. Used when building Stellar transactions that need to be signed for the correct network (Futurenet / Testnet / Mainnet).
 
 ```ts
-import { getSorobanNetworkPassphrase } from "@/lib/soroban/client"
+import { getSorobanNetworkPassphrase } from "@/lib/soroban/client";
 
-const passphrase = getSorobanNetworkPassphrase()
+const passphrase = getSorobanNetworkPassphrase();
 // "Test SDF Future Network ; October 2022"
 ```
 
@@ -69,14 +69,14 @@ Wraps the application (or a subtree) with a Soroban RPC connection. On mount it 
 Wrap your component tree to provide Soroban connectivity:
 
 ```tsx
-import { SorobanProvider } from "@/lib/soroban/SorobanContext"
+import { SorobanProvider } from "@/lib/soroban/SorobanContext";
 
 function App() {
   return (
     <SorobanProvider>
       <MainContent />
     </SorobanProvider>
-  )
+  );
 }
 ```
 
@@ -86,26 +86,26 @@ React hook that returns the current Soroban context. Must be called within a `So
 
 **Returns `SorobanContextValue`:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `server` | `Server \| null` | The Soroban RPC Server instance. `null` before connection test completes |
-| `networkPassphrase` | `string` | Resolved network passphrase from env |
-| `rpcUrl` | `string` | Resolved RPC URL from env |
-| `connectionStatus` | `SorobanConnectionStatus` | Current connection state: `"idle"` \| `"connecting"` \| `"connected"` \| `"error"` |
-| `connectionError` | `Error \| null` | Set when `connectionStatus` is `"error"` |
-| `reconnect` | `() => Promise<void>` | Manually re-trigger the RPC health check |
+| Property            | Type                      | Description                                                                        |
+| ------------------- | ------------------------- | ---------------------------------------------------------------------------------- |
+| `server`            | `Server \| null`          | The Soroban RPC Server instance. `null` before connection test completes           |
+| `networkPassphrase` | `string`                  | Resolved network passphrase from env                                               |
+| `rpcUrl`            | `string`                  | Resolved RPC URL from env                                                          |
+| `connectionStatus`  | `SorobanConnectionStatus` | Current connection state: `"idle"` \| `"connecting"` \| `"connected"` \| `"error"` |
+| `connectionError`   | `Error \| null`           | Set when `connectionStatus` is `"error"`                                           |
+| `reconnect`         | `() => Promise<void>`     | Manually re-trigger the RPC health check                                           |
 
 **Usage:**
 
 ```tsx
 function MyComponent() {
-  const { server, networkPassphrase, connectionStatus, connectionError, reconnect } = useSoroban()
+  const { server, networkPassphrase, connectionStatus, connectionError, reconnect } = useSoroban();
 
-  if (connectionStatus === "connecting") return <div>Connecting to Stellar...</div>
-  if (connectionStatus === "error") return <div>Error: {connectionError?.message}</div>
-  if (!server) return null
+  if (connectionStatus === "connecting") return <div>Connecting to Stellar...</div>;
+  if (connectionStatus === "error") return <div>Error: {connectionError?.message}</div>;
+  if (!server) return null;
 
-  return <div>Connected to {networkPassphrase}</div>
+  return <div>Connected to {networkPassphrase}</div>;
 }
 ```
 
@@ -132,29 +132,30 @@ Provides a retry wrapper that handles transient Soroban RPC failures (network ti
 Wraps an async Soroban operation so it automatically retries on retryable failures.
 
 ```ts
-import { withSorobanRpcRetry } from "@/lib/soroban/rpcRetry"
+import { withSorobanRpcRetry } from "@/lib/soroban/rpcRetry";
 
-const result = await withSorobanRpcRetry(
-  () => server.callContract(contractId, method, args),
-  { maxAttempts: 3, timeoutMs: 10000 }
-)
+const result = await withSorobanRpcRetry(() => server.callContract(contractId, method, args), {
+  maxAttempts: 3,
+  timeoutMs: 10000,
+});
 ```
 
 **Parameters:**
 
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `operation` | `() => Promise<T>` | — | The async RPC call to execute |
-| `options.maxAttempts` | `number` | `4` | Maximum retry attempts (including the initial call) |
-| `options.initialDelayMs` | `number` | `800` | Delay before first retry in ms |
-| `options.maxDelayMs` | `number` | `12000` | Cap for backoff delay in ms |
-| `options.backoffMultiplier` | `number` | `2` | Delay multiplier per attempt |
-| `options.jitterRatio` | `number` | `0.2` | Random jitter as fraction of current delay |
-| `options.timeoutMs` | `number` | `15000` | Per-attempt timeout in ms |
+| Param                       | Type               | Default | Description                                         |
+| --------------------------- | ------------------ | ------- | --------------------------------------------------- |
+| `operation`                 | `() => Promise<T>` | —       | The async RPC call to execute                       |
+| `options.maxAttempts`       | `number`           | `4`     | Maximum retry attempts (including the initial call) |
+| `options.initialDelayMs`    | `number`           | `800`   | Delay before first retry in ms                      |
+| `options.maxDelayMs`        | `number`           | `12000` | Cap for backoff delay in ms                         |
+| `options.backoffMultiplier` | `number`           | `2`     | Delay multiplier per attempt                        |
+| `options.jitterRatio`       | `number`           | `0.2`   | Random jitter as fraction of current delay          |
+| `options.timeoutMs`         | `number`           | `15000` | Per-attempt timeout in ms                           |
 
 **Retryable errors:**
 
 The wrapper considers these errors retryable:
+
 - HTTP status codes: `408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`
 - Messages matching patterns like: `timeout`, `socket hang up`, `ECONNRESET`, `ECONNREFUSED`, `ENOTFOUND`, `too many requests`, `rate limit`, `fetch failed`
 
@@ -180,28 +181,28 @@ The frontend interacts with Soroban smart contracts through a standard pattern:
 5. **Await receipt** — Use `server.getTransaction(hash)` to poll until the transaction is confirmed.
 
 ```tsx
-import { useSoroban } from "@/lib/soroban/SorobanContext"
-import { withSorobanRpcRetry } from "@/lib/soroban/rpcRetry"
-import { SorobanRpc, Contract } from "@stellar/stellar-sdk"
+import { useSoroban } from "@/lib/soroban/SorobanContext";
+import { withSorobanRpcRetry } from "@/lib/soroban/rpcRetry";
+import { SorobanRpc, Contract } from "@stellar/stellar-sdk";
 
 function HuntActions({ contractId }: { contractId: string }) {
-  const { server } = useSoroban()
+  const { server } = useSoroban();
 
   const registerPlayer = async (huntId: number) => {
-    if (!server) throw new Error("Soroban not connected")
+    if (!server) throw new Error("Soroban not connected");
 
-    const contract = new Contract(contractId)
-    const operation = contract.call("register_player", new SorobanRpc.Int128(huntId))
+    const contract = new Contract(contractId);
+    const operation = contract.call("register_player", new SorobanRpc.Int128(huntId));
 
     const result = await withSorobanRpcRetry(
       () => server.callContract(contractId, "register_player", [new SorobanRpc.Int128(huntId)]),
       { maxAttempts: 3 }
-    )
+    );
 
-    return result
-  }
+    return result;
+  };
 
-  return { registerPlayer }
+  return { registerPlayer };
 }
 ```
 
@@ -209,12 +210,15 @@ function HuntActions({ contractId }: { contractId: string }) {
 
 ## Web vs Mobile
 
-| Layer | Web | Mobile |
-|-------|-----|--------|
-| RPC Server | `createSorobanServer()` via `SorobanContext.tsx` | Direct import of `client.ts` |
-| Connection state | `useSoroban()` hook | `SorobanContext.tsx` can be wrapped in Expo |
-| Retry logic | `withSorobanRpcRetry()` | Same function — pure async, no DOM dependency |
-| Transaction feedback | `TxToaster` (sonner) | `ToastProvider` with Reanimated popups |
+| Layer                | Web                                              | Mobile                                        |
+| -------------------- | ------------------------------------------------ | --------------------------------------------- |
+| RPC Server           | `createSorobanServer()` via `SorobanContext.tsx` | Direct import of `client.ts`                  |
+| Connection state     | `useSoroban()` hook                              | `SorobanContext.tsx` can be wrapped in Expo   |
+| Retry logic          | `withSorobanRpcRetry()`                          | Same function — pure async, no DOM dependency |
+| Transaction feedback | `TxToaster` (sonner)                             | `ToastProvider` with Reanimated popups        |
 
 Both platforms share the same `client.ts` and `rpcRetry.ts` modules. Only the React context layer (`SorobanContext.tsx`) is web-specific in its current form but can be adapted for React Native.
+
+```
+
 ```

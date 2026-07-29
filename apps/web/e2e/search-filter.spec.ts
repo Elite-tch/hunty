@@ -1,4 +1,4 @@
-import { expect, Page,test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 
 import { seedHuntData } from "./helpers/mock-wallet";
 
@@ -80,10 +80,9 @@ test.describe("Game Arcade — Search and Filter", () => {
     await page.goto("/");
 
     // Wait until the arcade grid or the no-results placeholder is rendered
-    await page.waitForSelector(
-      '[data-testid="arcade-hunt-grid"], [class*="border-dashed"]',
-      { timeout: 15000 }
-    );
+    await page.waitForSelector('[data-testid="arcade-hunt-grid"], [class*="border-dashed"]', {
+      timeout: 15000,
+    });
   });
 
   // ── 1. Typing in the search bar filters hunt cards by title ────────────────
@@ -120,9 +119,7 @@ test.describe("Game Arcade — Search and Filter", () => {
   });
 
   // ── 3. Selecting "Completed" status filter shows only completed hunts ──────
-  test("selecting Completed status filter shows only completed hunts", async ({
-    page,
-  }) => {
+  test("selecting Completed status filter shows only completed hunts", async ({ page }) => {
     // "Completed" status renders as "Ended" label in the UI
     await page.getByRole("button", { name: "Ended" }).click({ force: true });
 
@@ -166,10 +163,9 @@ test.describe("Game Arcade — Search and Filter", () => {
     await page.goto("/");
 
     // Wait for grid to render
-    await page.waitForSelector(
-      '[data-testid="arcade-hunt-grid"], [class*="border-dashed"]',
-      { timeout: 15000 }
-    );
+    await page.waitForSelector('[data-testid="arcade-hunt-grid"], [class*="border-dashed"]', {
+      timeout: 15000,
+    });
 
     // Filter state should be restored from sessionStorage
     const restoredSearch = page.getByPlaceholder("Search title...");

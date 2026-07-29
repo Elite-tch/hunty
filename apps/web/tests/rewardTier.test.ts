@@ -1,4 +1,4 @@
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // ==========================================
 // --- 1. CORE TYPES & IMPLEMENTATION ---
@@ -27,49 +27,89 @@ export interface CalculatedReward {
 
 // Canonical tier configuration satisfying different reward amounts and NFT designs per tier
 const DEFAULT_TIER_CONFIGS: TierConfig[] = [
-  { tier: "GOLD", minScore: 90, maxCompletionTimeSec: 300, rewardAmount: 100, nftDesignId: "nft_gold_epic" },
-  { tier: "SILVER", minScore: 75, maxCompletionTimeSec: 600, rewardAmount: 50, nftDesignId: "nft_silver_rare" },
-  { tier: "BRONZE", minScore: 50, maxCompletionTimeSec: 1200, rewardAmount: 25, nftDesignId: "nft_bronze_common" },
-  { tier: "PARTICIPATION", minScore: 0, maxCompletionTimeSec: Infinity, rewardAmount: 5, nftDesignId: "nft_participation_base" },
+  {
+    tier: "GOLD",
+    minScore: 90,
+    maxCompletionTimeSec: 300,
+    rewardAmount: 100,
+    nftDesignId: "nft_gold_epic",
+  },
+  {
+    tier: "SILVER",
+    minScore: 75,
+    maxCompletionTimeSec: 600,
+    rewardAmount: 50,
+    nftDesignId: "nft_silver_rare",
+  },
+  {
+    tier: "BRONZE",
+    minScore: 50,
+    maxCompletionTimeSec: 1200,
+    rewardAmount: 25,
+    nftDesignId: "nft_bronze_common",
+  },
+  {
+    tier: "PARTICIPATION",
+    minScore: 0,
+    maxCompletionTimeSec: Infinity,
+    rewardAmount: 5,
+    nftDesignId: "nft_participation_base",
+  },
 ];
 
 export class RewardTierSystem {
   /**
    * Evaluates user performance against thresholds to determine tier, amounts, and NFT metadata
    */
-  public static calculateReward(submission: HuntSubmission, configs: TierConfig[] = DEFAULT_TIER_CONFIGS): CalculatedReward {
+  public static calculateReward(
+    submission: HuntSubmission,
+    configs: TierConfig[] = DEFAULT_TIER_CONFIGS
+  ): CalculatedReward {
     // Check Gold
-    const gold = configs.find(c => c.tier === "GOLD")!;
-    if (submission.score >= gold.minScore && submission.completionTimeSec <= gold.maxCompletionTimeSec) {
+    const gold = configs.find((c) => c.tier === "GOLD")!;
+    if (
+      submission.score >= gold.minScore &&
+      submission.completionTimeSec <= gold.maxCompletionTimeSec
+    ) {
       return { tier: "GOLD", rewardAmount: gold.rewardAmount, nftDesignId: gold.nftDesignId };
     }
 
     // Check Silver
-    const silver = configs.find(c => c.tier === "SILVER")!;
-    if (submission.score >= silver.minScore && submission.completionTimeSec <= silver.maxCompletionTimeSec) {
+    const silver = configs.find((c) => c.tier === "SILVER")!;
+    if (
+      submission.score >= silver.minScore &&
+      submission.completionTimeSec <= silver.maxCompletionTimeSec
+    ) {
       return { tier: "SILVER", rewardAmount: silver.rewardAmount, nftDesignId: silver.nftDesignId };
     }
 
     // Check Bronze
-    const bronze = configs.find(c => c.tier === "BRONZE")!;
-    if (submission.score >= bronze.minScore && submission.completionTimeSec <= bronze.maxCompletionTimeSec) {
+    const bronze = configs.find((c) => c.tier === "BRONZE")!;
+    if (
+      submission.score >= bronze.minScore &&
+      submission.completionTimeSec <= bronze.maxCompletionTimeSec
+    ) {
       return { tier: "BRONZE", rewardAmount: bronze.rewardAmount, nftDesignId: bronze.nftDesignId };
     }
 
     // Fallback: Participation reward for all other completers
-    const participation = configs.find(c => c.tier === "PARTICIPATION")!;
-    return { tier: "PARTICIPATION", rewardAmount: participation.rewardAmount, nftDesignId: participation.nftDesignId };
+    const participation = configs.find((c) => c.tier === "PARTICIPATION")!;
+    return {
+      tier: "PARTICIPATION",
+      rewardAmount: participation.rewardAmount,
+      nftDesignId: participation.nftDesignId,
+    };
   }
 
   /**
    * Provides tier preview configuration metadata for display in Hunt details panels
    */
   public static getTierPreviews(configs: TierConfig[] = DEFAULT_TIER_CONFIGS) {
-    return configs.map(c => ({
+    return configs.map((c) => ({
       tier: c.tier,
       rewardAmount: c.rewardAmount,
       nftDesignId: c.nftDesignId,
-      condition: `Score ≥ ${c.minScore}${c.maxCompletionTimeSec === Infinity ? "" : ` & Time ≤ ${c.maxCompletionTimeSec}s`}`
+      condition: `Score ≥ ${c.minScore}${c.maxCompletionTimeSec === Infinity ? "" : ` & Time ≤ ${c.maxCompletionTimeSec}s`}`,
     }));
   }
 }

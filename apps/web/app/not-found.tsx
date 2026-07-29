@@ -29,8 +29,13 @@ export default function NotFound() {
         <p className="text-zinc-400 text-lg mb-8">We couldn&apos;t find that hunt.</p>
 
         <div className="mx-auto max-w-xl">
-          <p className="text-zinc-300 mb-6">The hunt you tried to access doesn&apos;t exist or may have been removed.</p>
-          <Link href="/" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-3 rounded-md">
+          <p className="text-zinc-300 mb-6">
+            The hunt you tried to access doesn&apos;t exist or may have been removed.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-3 rounded-md"
+          >
             Return to Game Arcade
           </Link>
         </div>

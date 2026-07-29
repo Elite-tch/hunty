@@ -36,7 +36,9 @@ export default async function EmbedPage({ params }: PageProps) {
   if (hunt.is_private) {
     return (
       <div className="embed-root private">
-        <div className="lock-icon" aria-hidden="true">🔒</div>
+        <div className="lock-icon" aria-hidden="true">
+          🔒
+        </div>
         <p className="private-msg">This hunt is private and cannot be embedded.</p>
         <style>{embedStyles}</style>
       </div>
@@ -51,8 +53,8 @@ export default async function EmbedPage({ params }: PageProps) {
     hunt.rewardType === "Both"
       ? "XLM + NFT"
       : hunt.rewardType === "XLM"
-      ? "XLM Reward"
-      : "NFT Reward";
+        ? "XLM Reward"
+        : "NFT Reward";
 
   return (
     <>
@@ -66,11 +68,7 @@ export default async function EmbedPage({ params }: PageProps) {
         {/* Cover image strip */}
         {hunt.coverImageCid && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={hunt.coverImageCid}
-            alt={`${hunt.title} cover`}
-            className="cover"
-          />
+          <img src={hunt.coverImageCid} alt={`${hunt.title} cover`} className="cover" />
         )}
 
         <div className="body">
@@ -84,9 +82,7 @@ export default async function EmbedPage({ params }: PageProps) {
           <h1 className="title">{hunt.title}</h1>
 
           {/* Description */}
-          {hunt.description && (
-            <p className="description">{hunt.description}</p>
-          )}
+          {hunt.description && <p className="description">{hunt.description}</p>}
 
           {/* Meta row */}
           <div className="meta">

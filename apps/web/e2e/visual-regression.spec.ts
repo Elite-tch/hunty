@@ -29,7 +29,7 @@
  * can diff against them without a separate baseline generation step.
  */
 
-import { expect, type Locator,type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 
 import { injectMockWallet, seedHuntData } from "./helpers/mock-wallet";
 
@@ -92,11 +92,7 @@ function dynamicMasks(page: Page): Locator[] {
  * Takes both light and dark screenshots of a given path.
  * The snapshot names follow the pattern: `<name>-light.png` / `<name>-dark.png`.
  */
-async function snapshotPage(
-  page: Page,
-  path: string,
-  name: string
-): Promise<void> {
+async function snapshotPage(page: Page, path: string, name: string): Promise<void> {
   for (const theme of ["light", "dark"] as const) {
     await setTheme(page, theme);
     await page.goto(path);

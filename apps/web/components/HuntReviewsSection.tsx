@@ -1,82 +1,82 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState, useCallback } from "react"
-import { useWallet } from "@/lib/context/WalletContext"
-import type { HuntReview } from "@/lib/types"
-import { Star, Trash2, Flag, Loader2, MessageSquare, AlertCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import React, { useEffect, useState, useCallback } from "react";
+import { useWallet } from "@/lib/context/WalletContext";
+import type { HuntReview } from "@/lib/types";
+import { Star, Trash2, Flag, Loader2, MessageSquare, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface HuntReviewsSectionProps {
-  huntId: number
-  creatorAddress?: string
+  huntId: number;
+  creatorAddress?: string;
 }
 
 export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectionProps) {
-  const { connected, publicKey } = useWallet()
+  const { connected, publicKey } = useWallet();
 
-  const [reviews, setReviews] = useState<HuntReview[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [reviews, setReviews] = useState<HuntReview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Form State
-  const [rating, setRating] = useState(0)
-  const [hoverRating, setHoverRating] = useState(0)
-  const [text, setText] = useState("")
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [text, setText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // Completion State (client-side pre-flight check)
-  const [hasCompleted, setHasCompleted] = useState(false)
+  const [hasCompleted, setHasCompleted] = useState(false);
 
   const fetchReviews = useCallback(async () => {
     try {
-      setLoading(true)
-      const res = await fetch(`/api/v1/hunts/${huntId}/reviews`)
-      if (!res.ok) throw new Error("Failed to load reviews")
-      const data = await res.json()
-      setReviews(data.data || [])
-      setError(null)
+      setLoading(true);
+      const res = await fetch(`/api/v1/hunts/${huntId}/reviews`);
+      if (!res.ok) throw new Error("Failed to load reviews");
+      const data = await res.json();
+      setReviews(data.data || []);
+      setError(null);
     } catch (err: any) {
-      setError(err.message || "An error occurred while loading reviews")
+      setError(err.message || "An error occurred while loading reviews");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [huntId])
+  }, [huntId]);
 
   useEffect(() => {
-    void fetchReviews()
-  }, [fetchReviews])
+    void fetchReviews();
+  }, [fetchReviews]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const completedLocal = localStorage.getItem(`hunt_completed_${huntId}`) === "true"
-      setHasCompleted(completedLocal)
+      const completedLocal = localStorage.getItem(`hunt_completed_${huntId}`) === "true";
+      setHasCompleted(completedLocal);
     }
-  }, [huntId])
+  }, [huntId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!connected || !publicKey) {
-      setSubmitError("Please connect your wallet first.")
-      return
+      setSubmitError("Please connect your wallet first.");
+      return;
     }
     if (rating === 0) {
-      setSubmitError("Please select a star rating.")
-      return
+      setSubmitError("Please select a star rating.");
+      return;
     }
 
     try {
-      setSubmitting(true)
-      setSubmitError(null)
+      setSubmitting(true);
+      setSubmitError(null);
 
       // First make sure completion is registered on the server (just in case)
       await fetch(`/api/v1/hunts/${huntId}/complete`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playerAddress: publicKey }),
-      })
+      });
 
       // Submit review
       const res = await fetch(`/api/v1/hunts/${huntId}/reviews`, {
@@ -87,26 +87,26 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
           rating,
           text: text.trim() || undefined,
         }),
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to submit review")
+        throw new Error(data.error || "Failed to submit review");
       }
 
-      setSubmitSuccess(true)
-      setRating(0)
-      setText("")
-      await fetchReviews()
+      setSubmitSuccess(true);
+      setRating(0);
+      setText("");
+      await fetchReviews();
     } catch (err: any) {
-      setSubmitError(err.message || "An error occurred while submitting your review")
+      setSubmitError(err.message || "An error occurred while submitting your review");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const handleModerate = async (reviewId: string, action: "delete" | "flag" | "unflag") => {
-    if (!connected || !publicKey) return
+    if (!connected || !publicKey) return;
 
     try {
       const res = await fetch(`/api/v1/hunts/${huntId}/reviews/${reviewId}/moderate`, {
@@ -116,29 +116,34 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
           action,
           moderatorAddress: publicKey,
         }),
-      })
+      });
 
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || "Failed to moderate review")
+        const data = await res.json();
+        throw new Error(data.error || "Failed to moderate review");
       }
 
-      await fetchReviews()
+      await fetchReviews();
     } catch (err: any) {
-      alert(err.message || "An error occurred during moderation")
+      alert(err.message || "An error occurred during moderation");
     }
-  }
+  };
 
-  const userHasReviewed = connected && publicKey && reviews.some(
-    (r) => r.playerAddress.toLowerCase() === publicKey.toLowerCase()
-  )
+  const userHasReviewed =
+    connected &&
+    publicKey &&
+    reviews.some((r) => r.playerAddress.toLowerCase() === publicKey.toLowerCase());
 
-  const isCreator = connected && publicKey && creatorAddress && publicKey.toLowerCase() === creatorAddress.toLowerCase()
+  const isCreator =
+    connected &&
+    publicKey &&
+    creatorAddress &&
+    publicKey.toLowerCase() === creatorAddress.toLowerCase();
 
   const truncateAddress = (addr: string) => {
-    if (addr.length <= 10) return addr
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-  }
+    if (addr.length <= 10) return addr;
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
 
   return (
     <div className="space-y-8 bg-slate-900/30 border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md">
@@ -151,7 +156,10 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
 
       {/* Review Submission Form */}
       {connected && hasCompleted && !userHasReviewed && !submitSuccess && (
-        <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-4"
+        >
           <h3 className="text-sm font-semibold text-slate-200">
             Share your experience! Rate this hunt:
           </h3>
@@ -188,9 +196,7 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
               rows={3}
               className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             />
-            <div className="text-right text-[10px] text-slate-500">
-              {text.length}/500 chars
-            </div>
+            <div className="text-right text-[10px] text-slate-500">{text.length}/500 chars</div>
           </div>
 
           {submitError && (
@@ -248,7 +254,10 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
         {loading ? (
           <div className="space-y-4">
             {[1, 2].map((i) => (
-              <div key={i} className="animate-pulse bg-white/5 border border-white/5 rounded-2xl p-5 space-y-2">
+              <div
+                key={i}
+                className="animate-pulse bg-white/5 border border-white/5 rounded-2xl p-5 space-y-2"
+              >
                 <div className="h-4 w-1/4 bg-slate-800 rounded" />
                 <div className="h-3 w-1/3 bg-slate-800 rounded" />
                 <div className="h-4 w-3/4 bg-slate-800 rounded mt-3" />
@@ -292,7 +301,10 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
                     </div>
 
                     {/* Star Rating Display */}
-                    <div className="flex items-center gap-0.5 mt-1.5" aria-label={`Rated ${review.rating} stars`}>
+                    <div
+                      className="flex items-center gap-0.5 mt-1.5"
+                      aria-label={`Rated ${review.rating} stars`}
+                    >
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
@@ -327,7 +339,9 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => handleModerate(review.id, review.flagged ? "unflag" : "flag")}
+                        onClick={() =>
+                          handleModerate(review.id, review.flagged ? "unflag" : "flag")
+                        }
                         title={review.flagged ? "Unflag Review" : "Flag Review"}
                         className={cn(
                           "w-8 h-8 rounded-lg hover:bg-white/5",
@@ -341,7 +355,7 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
                         variant="ghost"
                         onClick={() => {
                           if (confirm("Are you sure you want to delete this review?")) {
-                            void handleModerate(review.id, "delete")
+                            void handleModerate(review.id, "delete");
                           }
                         }}
                         title="Delete Review"
@@ -358,5 +372,5 @@ export function HuntReviewsSection({ huntId, creatorAddress }: HuntReviewsSectio
         )}
       </div>
     </div>
-  )
+  );
 }

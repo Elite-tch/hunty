@@ -1,9 +1,4 @@
-import {
-  getAddress,
-  isConnected,
-  requestAccess,
-  WatchWalletChanges,
-} from "@stellar/freighter-api";
+import { getAddress, isConnected, requestAccess, WatchWalletChanges } from "@stellar/freighter-api";
 import { useEffect, useState } from "react";
 
 import {
@@ -128,13 +123,7 @@ export function useFreighterWallet(): UseFreighterWalletReturn {
     try {
       watcher = new WatchWalletChanges(3000);
       watcher.watch(
-        ({
-          address,
-        }: {
-          address: string;
-          network: string;
-          networkPassphrase: string;
-        }) => {
+        ({ address }: { address: string; network: string; networkPassphrase: string }) => {
           if (address) {
             // Account changed or connected
             setPublicKey(address);
@@ -147,7 +136,7 @@ export function useFreighterWallet(): UseFreighterWalletReturn {
             setConnected(false);
             localStorage.removeItem(STORAGE_KEY);
           }
-        },
+        }
       );
     } catch {
       // Freighter not installed — watcher silently skipped
@@ -169,8 +158,7 @@ export function useFreighterWallet(): UseFreighterWalletReturn {
         const connResult = await isConnected();
         if (!connResult.isConnected) {
           return {
-            error:
-              "Freighter extension not found. Please install it from freighter.app",
+            error: "Freighter extension not found. Please install it from freighter.app",
           };
         }
 
@@ -204,10 +192,7 @@ export function useFreighterWallet(): UseFreighterWalletReturn {
       return {};
     } catch (err) {
       return {
-        error:
-          err instanceof Error
-            ? err.message
-            : "Unexpected error during connection.",
+        error: err instanceof Error ? err.message : "Unexpected error during connection.",
       };
     }
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { Check,X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import React from "react";
 
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ export default function ToggleButton({ isActive, onClick }: ToggleButtonProps) {
           "w-full h-full rounded-2xl cursor-pointer p-0.5 transition-all duration-300",
           isActive
             ? "bg-gradient-to-b from-[#A43751] to-[#4F0C14]" // Red gradient for ON
-            : "bg-gradient-to-b from-[#39A437] to-[#194F0C]", // Green gradient for OFF
+            : "bg-gradient-to-b from-[#39A437] to-[#194F0C]" // Green gradient for OFF
         )}
       >
         <div className="w-full h-full bg-white rounded-xl overflow-hidden">
@@ -41,7 +41,7 @@ export default function ToggleButton({ isActive, onClick }: ToggleButtonProps) {
               "w-1/2 h-full rounded-xl flex items-center justify-center",
               isActive
                 ? "bg-gradient-to-b from-[#A43751] to-[#4F0C14]" // Red gradient for ON
-                : "bg-gradient-to-b from-[#39A437] to-[#194F0C]", // Green gradient for OFF
+                : "bg-gradient-to-b from-[#39A437] to-[#194F0C]" // Green gradient for OFF
             )}
           >
             {isActive ? (
@@ -62,17 +62,14 @@ export default function ToggleButton({ isActive, onClick }: ToggleButtonProps) {
       </div>
       <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none">
         <div
-          className={cn(
-            "flex-1 flex justify-center",
-            isActive ? "text-gray-800" : "text-gray-400",
-          )}
+          className={cn("flex-1 flex justify-center", isActive ? "text-gray-800" : "text-gray-400")}
         >
           <Check className="w-4 h-4" />
         </div>
         <div
           className={cn(
             "flex-1 flex justify-center",
-            !isActive ? "text-gray-800" : "text-gray-400",
+            !isActive ? "text-gray-800" : "text-gray-400"
           )}
         >
           <X className="w-4 h-4" />

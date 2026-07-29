@@ -15,7 +15,7 @@ export const queryKeys = {
     nftCount: (address: string | undefined) =>
       ["wallet", "nftCount", address || "anonymous"] as const,
   },
-} as const
+} as const;
 
 export const queryCachePolicy = {
   hunts: {
@@ -43,4 +43,4 @@ export const queryCachePolicy = {
     gcTime: 5 * 60 * 1000,
     refetchInterval: 30 * 1000,
   },
-} as const
+} as const;

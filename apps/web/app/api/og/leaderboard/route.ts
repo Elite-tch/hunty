@@ -45,8 +45,16 @@ export async function GET(req: Request) {
       React.createElement(
         "div",
         { style: { display: "flex", flexDirection: "column", gap: 12 } },
-        React.createElement("div", { style: { fontSize: 24, fontWeight: 700, opacity: 0.8 } }, "Hunty Leaderboard"),
-        React.createElement("div", { style: { fontSize: 44, fontWeight: 800, lineHeight: 1.1 } }, title),
+        React.createElement(
+          "div",
+          { style: { fontSize: 24, fontWeight: 700, opacity: 0.8 } },
+          "Hunty Leaderboard"
+        ),
+        React.createElement(
+          "div",
+          { style: { fontSize: 44, fontWeight: 800, lineHeight: 1.1 } },
+          title
+        ),
         React.createElement("div", { style: { fontSize: 24, opacity: 0.92 } }, subtitle)
       ),
       React.createElement(
@@ -54,15 +62,23 @@ export async function GET(req: Request) {
         { style: { display: "flex", gap: 16 } },
         React.createElement(
           "div",
-          { style: { flex: 1, background: "rgba(255,255,255,0.16)", padding: 20, borderRadius: 18 } },
+          {
+            style: { flex: 1, background: "rgba(255,255,255,0.16)", padding: 20, borderRadius: 18 },
+          },
           React.createElement("div", { style: { fontSize: 20, opacity: 0.8 } }, "Players"),
           React.createElement("div", { style: { fontSize: 36, fontWeight: 700 } }, sorted.length)
         ),
         React.createElement(
           "div",
-          { style: { flex: 1, background: "rgba(255,255,255,0.16)", padding: 20, borderRadius: 18 } },
+          {
+            style: { flex: 1, background: "rgba(255,255,255,0.16)", padding: 20, borderRadius: 18 },
+          },
           React.createElement("div", { style: { fontSize: 20, opacity: 0.8 } }, "Your rank"),
-          React.createElement("div", { style: { fontSize: 36, fontWeight: 700 } }, userRank > 0 ? `#${userRank}` : "—")
+          React.createElement(
+            "div",
+            { style: { fontSize: 36, fontWeight: 700 } },
+            userRank > 0 ? `#${userRank}` : "—"
+          )
         )
       )
     ),

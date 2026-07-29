@@ -3,16 +3,22 @@
  * Persisted in localStorage to track seasons, archives, and rewards.
  */
 
-import type { ArchivedSeason, Reward,Season, SeasonBadge, SeasonLeaderboardEntry } from "@/lib/types"
+import type {
+  ArchivedSeason,
+  Reward,
+  Season,
+  SeasonBadge,
+  SeasonLeaderboardEntry,
+} from "@/lib/types";
 
-export type { ArchivedSeason, Reward,Season, SeasonBadge, SeasonLeaderboardEntry }
+export type { ArchivedSeason, Reward, Season, SeasonBadge, SeasonLeaderboardEntry };
 
-const SEASONS_STORAGE_KEY = "hunty_seasons"
-const ARCHIVED_SEASONS_KEY = "hunty_archived_seasons"
-const SEASON_BADGES_KEY = "hunty_season_badges"
+const SEASONS_STORAGE_KEY = "hunty_seasons";
+const ARCHIVED_SEASONS_KEY = "hunty_archived_seasons";
+const SEASON_BADGES_KEY = "hunty_season_badges";
 
 // Seed timestamps: current season ends 30 days from now, previous season ended 30 days ago
-const NOW_SECONDS = Math.floor(Date.now() / 1000)
+const NOW_SECONDS = Math.floor(Date.now() / 1000);
 
 export const SEED_SEASONS: Season[] = [
   {
@@ -43,66 +49,66 @@ export const SEED_SEASONS: Season[] = [
       { place: 5, amount: 75 },
     ],
   },
-]
+];
 
 function readSeasons(): Season[] {
-  if (typeof window === "undefined") return [...SEED_SEASONS]
+  if (typeof window === "undefined") return [...SEED_SEASONS];
   try {
-    const raw = localStorage.getItem(SEASONS_STORAGE_KEY)
-    if (!raw) return [...SEED_SEASONS]
-    const parsed = JSON.parse(raw) as Season[]
-    return Array.isArray(parsed) ? parsed : [...SEED_SEASONS]
+    const raw = localStorage.getItem(SEASONS_STORAGE_KEY);
+    if (!raw) return [...SEED_SEASONS];
+    const parsed = JSON.parse(raw) as Season[];
+    return Array.isArray(parsed) ? parsed : [...SEED_SEASONS];
   } catch {
-    return [...SEED_SEASONS]
+    return [...SEED_SEASONS];
   }
 }
 
 function writeSeasons(seasons: Season[]): void {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(SEASONS_STORAGE_KEY, JSON.stringify(seasons))
+    localStorage.setItem(SEASONS_STORAGE_KEY, JSON.stringify(seasons));
   } catch {
     // ignore
   }
 }
 
 function readArchivedSeasons(): ArchivedSeason[] {
-  if (typeof window === "undefined") return []
+  if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(ARCHIVED_SEASONS_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as ArchivedSeason[]
-    return Array.isArray(parsed) ? parsed : []
+    const raw = localStorage.getItem(ARCHIVED_SEASONS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as ArchivedSeason[];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return []
+    return [];
   }
 }
 
 function writeArchivedSeasons(archived: ArchivedSeason[]): void {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(ARCHIVED_SEASONS_KEY, JSON.stringify(archived))
+    localStorage.setItem(ARCHIVED_SEASONS_KEY, JSON.stringify(archived));
   } catch {
     // ignore
   }
 }
 
 function readSeasonBadges(): SeasonBadge[] {
-  if (typeof window === "undefined") return []
+  if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(SEASON_BADGES_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as SeasonBadge[]
-    return Array.isArray(parsed) ? parsed : []
+    const raw = localStorage.getItem(SEASON_BADGES_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as SeasonBadge[];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return []
+    return [];
   }
 }
 
 function writeSeasonBadges(badges: SeasonBadge[]): void {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(SEASON_BADGES_KEY, JSON.stringify(badges))
+    localStorage.setItem(SEASON_BADGES_KEY, JSON.stringify(badges));
   } catch {
     // ignore
   }
@@ -110,40 +116,45 @@ function writeSeasonBadges(badges: SeasonBadge[]): void {
 
 /** Get all seasons */
 export function getAllSeasons(): Season[] {
-  return readSeasons()
+  return readSeasons();
 }
 
 /** Get active season */
 export function getActiveSeason(): Season | null {
-  const seasons = readSeasons()
-  const now = Math.floor(Date.now() / 1000)
-  return seasons.find((s) => s.status === "Active" && s.startTime <= now && s.endTime >= now) || null
+  const seasons = readSeasons();
+  const now = Math.floor(Date.now() / 1000);
+  return (
+    seasons.find((s) => s.status === "Active" && s.startTime <= now && s.endTime >= now) || null
+  );
 }
 
 /** Get season by ID */
 export function getSeasonById(id: number): Season | undefined {
-  return readSeasons().find((s) => s.id === id)
+  return readSeasons().find((s) => s.id === id);
 }
 
 /** Create a new season */
 export function createSeason(season: Omit<Season, "id">): Season {
-  const seasons = readSeasons()
-  const newId = seasons.length > 0 ? Math.max(...seasons.map((s) => s.id)) + 1 : 1
-  const newSeason: Season = { ...season, id: newId }
-  writeSeasons([...seasons, newSeason])
-  return newSeason
+  const seasons = readSeasons();
+  const newId = seasons.length > 0 ? Math.max(...seasons.map((s) => s.id)) + 1 : 1;
+  const newSeason: Season = { ...season, id: newId };
+  writeSeasons([...seasons, newSeason]);
+  return newSeason;
 }
 
 /** Update season status */
 export function updateSeasonStatus(seasonId: number, status: Season["status"]): void {
-  const seasons = readSeasons().map((s) => (s.id === seasonId ? { ...s, status } : s))
-  writeSeasons(seasons)
+  const seasons = readSeasons().map((s) => (s.id === seasonId ? { ...s, status } : s));
+  writeSeasons(seasons);
 }
 
 /** Archive a season with its final leaderboard */
-export function archiveSeason(seasonId: number, finalLeaderboard: SeasonLeaderboardEntry[]): ArchivedSeason {
-  const season = getSeasonById(seasonId)
-  if (!season) throw new Error(`Season ${seasonId} not found`)
+export function archiveSeason(
+  seasonId: number,
+  finalLeaderboard: SeasonLeaderboardEntry[]
+): ArchivedSeason {
+  const season = getSeasonById(seasonId);
+  if (!season) throw new Error(`Season ${seasonId} not found`);
 
   const archived: ArchivedSeason = {
     season: { ...season, status: "Ended" },
@@ -152,47 +163,50 @@ export function archiveSeason(seasonId: number, finalLeaderboard: SeasonLeaderbo
       rank: index + 1,
     })),
     archivedAt: Math.floor(Date.now() / 1000),
-  }
+  };
 
-  const archivedSeasons = readArchivedSeasons()
-  writeArchivedSeasons([...archivedSeasons, archived])
+  const archivedSeasons = readArchivedSeasons();
+  writeArchivedSeasons([...archivedSeasons, archived]);
 
   // Update season status to Ended
-  updateSeasonStatus(seasonId, "Ended")
+  updateSeasonStatus(seasonId, "Ended");
 
-  return archived
+  return archived;
 }
 
 /** Get all archived seasons */
 export function getArchivedSeasons(): ArchivedSeason[] {
-  return readArchivedSeasons()
+  return readArchivedSeasons();
 }
 
 /** Get archived season by ID */
 export function getArchivedSeasonById(id: number): ArchivedSeason | undefined {
-  return readArchivedSeasons().find((a) => a.season.id === id)
+  return readArchivedSeasons().find((a) => a.season.id === id);
 }
 
 /** Award season badge to a participant */
-export function awardSeasonBadge(seasonId: number, address: string, name?: string, rank?: number): SeasonBadge {
-  const season = getSeasonById(seasonId)
-  if (!season) throw new Error(`Season ${seasonId} not found`)
+export function awardSeasonBadge(
+  seasonId: number,
+  address: string,
+  name?: string,
+  rank?: number
+): SeasonBadge {
+  const season = getSeasonById(seasonId);
+  if (!season) throw new Error(`Season ${seasonId} not found`);
 
-  const badges = readSeasonBadges()
-  const existingBadge = badges.find((b) => b.seasonId === seasonId && b.address === address)
-  
+  const badges = readSeasonBadges();
+  const existingBadge = badges.find((b) => b.seasonId === seasonId && b.address === address);
+
   if (existingBadge) {
     // Update existing badge with rank if season ended
     if (rank !== undefined) {
       const updated = badges.map((b) =>
-        b.seasonId === seasonId && b.address === address
-          ? { ...b, rank }
-          : b
-      )
-      writeSeasonBadges(updated)
-      return { ...existingBadge, rank }
+        b.seasonId === seasonId && b.address === address ? { ...b, rank } : b
+      );
+      writeSeasonBadges(updated);
+      return { ...existingBadge, rank };
     }
-    return existingBadge
+    return existingBadge;
   }
 
   const newBadge: SeasonBadge = {
@@ -202,26 +216,26 @@ export function awardSeasonBadge(seasonId: number, address: string, name?: strin
     name,
     rank,
     earnedAt: Math.floor(Date.now() / 1000),
-  }
+  };
 
-  writeSeasonBadges([...badges, newBadge])
-  return newBadge
+  writeSeasonBadges([...badges, newBadge]);
+  return newBadge;
 }
 
 /** Get season badges for a player */
 export function getPlayerSeasonBadges(address: string): SeasonBadge[] {
-  return readSeasonBadges().filter((b) => b.address === address)
+  return readSeasonBadges().filter((b) => b.address === address);
 }
 
 /** Get all season badges */
 export function getAllSeasonBadges(): SeasonBadge[] {
-  return readSeasonBadges()
+  return readSeasonBadges();
 }
 
 /** Get current season leaderboard (aggregated from all hunts in the season) */
 export function getCurrentSeasonLeaderboard(): SeasonLeaderboardEntry[] {
-  const activeSeason = getActiveSeason()
-  if (!activeSeason) return []
+  const activeSeason = getActiveSeason();
+  if (!activeSeason) return [];
 
   // In a real implementation, this would aggregate from all hunts in the season
   // For now, return mock data
@@ -231,30 +245,30 @@ export function getCurrentSeasonLeaderboard(): SeasonLeaderboardEntry[] {
     { address: "GFA...789", name: "BobHunts", points: 320 },
     { address: "GBX...A1B", points: 280 },
     { address: "GCA...HB2", points: 240 },
-  ]
+  ];
 
-  return mockLeaderboard
+  return mockLeaderboard;
 }
 
 /** Check if a season needs to be reset (ended) based on current time */
 export function checkSeasonReset(): Season | null {
-  const seasons = readSeasons()
-  const now = Math.floor(Date.now() / 1000)
-  
+  const seasons = readSeasons();
+  const now = Math.floor(Date.now() / 1000);
+
   for (const season of seasons) {
     if (season.status === "Active" && season.endTime < now) {
-      return season
+      return season;
     }
   }
-  
-  return null
+
+  return null;
 }
 
 /** Calculate time remaining until season ends */
 export function getSeasonTimeRemaining(seasonId: number): number {
-  const season = getSeasonById(seasonId)
-  if (!season || season.status !== "Active") return 0
-  
-  const now = Math.floor(Date.now() / 1000)
-  return Math.max(0, season.endTime - now)
+  const season = getSeasonById(seasonId);
+  if (!season || season.status !== "Active") return 0;
+
+  const now = Math.floor(Date.now() / 1000);
+  return Math.max(0, season.endTime - now);
 }

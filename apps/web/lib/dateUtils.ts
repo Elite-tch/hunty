@@ -9,20 +9,23 @@
  * Example: "Feb 10, 2026, 2:32 PM"
  */
 export function formatTimestamp(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000)
+  const date = new Date(unixSeconds * 1000);
   return new Intl.DateTimeFormat(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(date)
+  }).format(date);
 }
 
 export function formatTimestampWithTimezone(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000)
-  const timeZoneName = Intl.DateTimeFormat(undefined, { timeZoneName: "short" }).formatToParts(date).find((part) => part.type === "timeZoneName")?.value ?? "UTC"
-  return `${formatTimestamp(unixSeconds)} ${timeZoneName}`
+  const date = new Date(unixSeconds * 1000);
+  const timeZoneName =
+    Intl.DateTimeFormat(undefined, { timeZoneName: "short" })
+      .formatToParts(date)
+      .find((part) => part.type === "timeZoneName")?.value ?? "UTC";
+  return `${formatTimestamp(unixSeconds)} ${timeZoneName}`;
 }
 
 /**
@@ -30,12 +33,12 @@ export function formatTimestampWithTimezone(unixSeconds: number): string {
  * Example: "Feb 10, 2026"
  */
 export function formatDate(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000)
+  const date = new Date(unixSeconds * 1000);
   return new Intl.DateTimeFormat(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
-  }).format(date)
+  }).format(date);
 }
 
 /**
@@ -43,15 +46,15 @@ export function formatDate(unixSeconds: number): string {
  * Example: "Feb 10, 2026, 2:32 PM"
  */
 export function formatISOString(isoString: string): string {
-  const date = new Date(isoString)
-  if (isNaN(date.getTime())) return isoString
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return isoString;
   return new Intl.DateTimeFormat(undefined, {
     year: "numeric",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-  }).format(date)
+  }).format(date);
 }
 
 /**
@@ -61,25 +64,25 @@ export function formatISOString(isoString: string): string {
  * Examples: "2h 15m 03s", "45m 12s", "30s"
  */
 export function getCountdown(endUnixSeconds: number): string | null {
-  const now = Math.floor(Date.now() / 1000)
-  let diff = endUnixSeconds - now
-  
+  const now = Math.floor(Date.now() / 1000);
+  let diff = endUnixSeconds - now;
+
   // Clamp to zero - if time has elapsed, return null
-  if (diff <= 0) return null
-  
+  if (diff <= 0) return null;
+
   // Additional safety: ensure diff is never negative in calculations
-  diff = Math.max(0, diff)
+  diff = Math.max(0, diff);
 
-  const days = Math.floor(diff / 86400)
-  const hours = Math.floor((diff % 86400) / 3600)
-  const minutes = Math.floor((diff % 3600) / 60)
-  const seconds = diff % 60
+  const days = Math.floor(diff / 86400);
+  const hours = Math.floor((diff % 86400) / 3600);
+  const minutes = Math.floor((diff % 3600) / 60);
+  const seconds = diff % 60;
 
-  const parts: string[] = []
-  if (days > 0) parts.push(`${days}d`)
-  if (hours > 0) parts.push(`${hours}h`)
-  if (minutes > 0) parts.push(`${minutes}m`)
-  parts.push(`${seconds.toString().padStart(2, "0")}s`)
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  parts.push(`${seconds.toString().padStart(2, "0")}s`);
 
-  return parts.join(" ")
+  return parts.join(" ");
 }

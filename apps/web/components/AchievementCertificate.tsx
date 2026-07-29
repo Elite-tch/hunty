@@ -1,17 +1,20 @@
-"use client"
+"use client";
 
-import { ShieldCheck,Star, Trophy } from "lucide-react"
-import React, { forwardRef } from "react"
+import { ShieldCheck, Star, Trophy } from "lucide-react";
+import React, { forwardRef } from "react";
 
 interface AchievementCertificateProps {
-  playerName?: string
-  huntTitle?: string
-  rank?: number
-  points?: number
+  playerName?: string;
+  huntTitle?: string;
+  rank?: number;
+  points?: number;
 }
 
 export const AchievementCertificate = forwardRef<HTMLDivElement, AchievementCertificateProps>(
-  ({ playerName = "Stellar Explorer", huntTitle = "Scavenger Hunt", rank = 1, points = 100 }, ref) => {
+  (
+    { playerName = "Stellar Explorer", huntTitle = "Scavenger Hunt", rank = 1, points = 100 },
+    ref
+  ) => {
     return (
       <div
         ref={ref}
@@ -23,7 +26,7 @@ export const AchievementCertificate = forwardRef<HTMLDivElement, AchievementCert
         {/* Background Decorations */}
         <div className="absolute top-[-50px] left-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-[-50px] right-[-50px] w-64 h-64 bg-pink-500/10 rounded-full blur-3xl" />
-        
+
         {/* Border Inner Line */}
         <div className="absolute inset-2 border border-amber-500/20 pointer-events-none" />
 
@@ -46,10 +49,8 @@ export const AchievementCertificate = forwardRef<HTMLDivElement, AchievementCert
             {playerName}
           </h2>
 
-          <p className="text-slate-300 text-xs mb-4">
-            successfully completed the hunt
-          </p>
-          
+          <p className="text-slate-300 text-xs mb-4">successfully completed the hunt</p>
+
           <h3 className="text-xl font-bold text-amber-100 mb-6 italic">
             &ldquo;{huntTitle}&rdquo;
           </h3>
@@ -88,8 +89,8 @@ export const AchievementCertificate = forwardRef<HTMLDivElement, AchievementCert
         <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-amber-500/40" />
         <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-amber-500/40" />
       </div>
-    )
-  },
-)
+    );
+  }
+);
 
-AchievementCertificate.displayName = "AchievementCertificate"
+AchievementCertificate.displayName = "AchievementCertificate";

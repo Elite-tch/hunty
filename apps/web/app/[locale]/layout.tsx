@@ -1,27 +1,27 @@
-import "../globals.css"
+import "../globals.css";
 
-import type { Metadata } from "next"
-import { headers } from "next/headers"
-import { notFound } from "next/navigation"
-import { NextIntlClientProvider } from "next-intl"
-import { getMessages, getTranslations } from "next-intl/server"
+import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getTranslations } from "next-intl/server";
 
-import { TxToaster } from "@/components/TxToaster"
-import { routing } from "@/i18n/routing"
-import { hankenGrotesk } from "@/lib/font"
+import { TxToaster } from "@/components/TxToaster";
+import { routing } from "@/i18n/routing";
+import { hankenGrotesk } from "@/lib/font";
 
-import Providers from "../providers"
+import Providers from "../providers";
 
 // RTL locales — add Arabic, Hebrew, Farsi, etc. here when supported
-const RTL_LOCALES: string[] = []
+const RTL_LOCALES: string[] = [];
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = await params
-  const t = await getTranslations({ locale, namespace: "home" })
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
 
   return {
     title: t("metaTitle"),
@@ -71,34 +71,34 @@ export async function generateMetadata({
         fr: "https://hunty.app/fr",
       },
     },
-  }
+  };
 }
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({
   children,
   params,
 }: {
-  children: React.ReactNode
-  params: Promise<{ locale: string }>
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params
+  const { locale } = await params;
 
   // Validate that the incoming `locale` parameter is valid
   if (!routing.locales.includes(locale as "en" | "es")) {
-    notFound()
+    notFound();
   }
 
   // Providing all messages to the client
-  const messages = await getMessages()
+  const messages = await getMessages();
 
-  const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr"
+  const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
-  const headersList = await headers()
-  const nonce = headersList.get("x-nonce") || undefined
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || undefined;
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
@@ -122,12 +122,10 @@ export default async function LocaleLayout({
               Skip to content
             </a>
             <TxToaster />
-            <main id="main-content">
-              {children}
-            </main>
+            <main id="main-content">{children}</main>
           </Providers>
         </NextIntlClientProvider>
       </body>
     </html>
-  )
+  );
 }

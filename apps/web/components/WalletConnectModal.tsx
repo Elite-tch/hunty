@@ -1,26 +1,21 @@
-"use client"
+"use client";
 
-import { Check, Copy, ExternalLink,QrCode, Smartphone, X } from "lucide-react"
-import { QRCodeSVG } from "qrcode.react"
-import { useCallback,useEffect, useState } from "react"
-import { toast } from "sonner"
+import { Check, Copy, ExternalLink, QrCode, Smartphone, X } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { logger } from "@/lib/logger"
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { logger } from "@/lib/logger";
 import {
   connectWalletConnect,
   disconnectWalletConnect,
   openWalletDeepLink,
   subscribeWalletConnect,
   type WalletConnectState,
-} from "@/lib/walletConnect"
+} from "@/lib/walletConnect";
 
 const SUPPORTED_WALLETS = [
   {
@@ -51,104 +46,97 @@ const SUPPORTED_WALLETS = [
     description: "Browser extension by SDF",
     platforms: ["extension"],
   },
-]
+];
 
 interface WalletConnectModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onConnected?: (publicKey: string) => void
+  isOpen: boolean;
+  onClose: () => void;
+  onConnected?: (publicKey: string) => void;
 }
 
-export function WalletConnectModal({
-  isOpen,
-  onClose,
-  onConnected,
-}: WalletConnectModalProps) {
-  const [view, setView] = useState<"list" | "qr" | "connecting">("list")
-  const [qrUri, setQrUri] = useState<string>("")
-  const [qrDataUrl, setQrDataUrl] = useState<string>("")
-  const [copied, setCopied] = useState(false)
-  const [wcState, setWcState] = useState<WalletConnectState | null>(null)
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null)
+export function WalletConnectModal({ isOpen, onClose, onConnected }: WalletConnectModalProps) {
+  const [view, setView] = useState<"list" | "qr" | "connecting">("list");
+  const [qrUri, setQrUri] = useState<string>("");
+  const [qrDataUrl, setQrDataUrl] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+  const [wcState, setWcState] = useState<WalletConnectState | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
     const unsub = subscribeWalletConnect((state) => {
-      setWcState(state)
+      setWcState(state);
       if (state.connected && state.session) {
-        const publicKey = state.session.accounts[0]
+        const publicKey = state.session.accounts[0];
         if (publicKey) {
-          onConnected?.(publicKey)
-          onClose()
+          onConnected?.(publicKey);
+          onClose();
         }
       }
       if (state.error) {
-        toast.error(state.error)
-        setView("list")
+        toast.error(state.error);
+        setView("list");
       }
-    })
-    return unsub
-  }, [isOpen, onClose, onConnected])
+    });
+    return unsub;
+  }, [isOpen, onClose, onConnected]);
 
-  const handleWalletSelect = useCallback(
-    async (walletId: string) => {
-      setSelectedWallet(walletId)
-      const wallet = SUPPORTED_WALLETS.find((w) => w.id === walletId)
-      if (!wallet) return
+  const handleWalletSelect = useCallback(async (walletId: string) => {
+    setSelectedWallet(walletId);
+    const wallet = SUPPORTED_WALLETS.find((w) => w.id === walletId);
+    if (!wallet) return;
 
-      try {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    try {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        if (isMobile && wallet.platforms.includes("ios") || wallet.platforms.includes("android")) {
-          setView("connecting")
-          const { uri } = await connectWalletConnect()
-          openWalletDeepLink(wallet.name, uri)
-          return
-        }
-
-        setView("qr")
-        const { uri, qrDataUrl } = await connectWalletConnect()
-        setQrUri(uri)
-        setQrDataUrl(qrDataUrl)
-      } catch (err) {
-        logger.error("WalletConnect connection failed", err)
-        toast.error(err instanceof Error ? err.message : "Connection failed")
-        setView("list")
+      if ((isMobile && wallet.platforms.includes("ios")) || wallet.platforms.includes("android")) {
+        setView("connecting");
+        const { uri } = await connectWalletConnect();
+        openWalletDeepLink(wallet.name, uri);
+        return;
       }
-    },
-    []
-  )
+
+      setView("qr");
+      const { uri, qrDataUrl } = await connectWalletConnect();
+      setQrUri(uri);
+      setQrDataUrl(qrDataUrl);
+    } catch (err) {
+      logger.error("WalletConnect connection failed", err);
+      toast.error(err instanceof Error ? err.message : "Connection failed");
+      setView("list");
+    }
+  }, []);
 
   const handleCopyUri = useCallback(async () => {
-    if (!qrUri) return
+    if (!qrUri) return;
     try {
-      await navigator.clipboard.writeText(qrUri)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-      toast.success("Connection URI copied to clipboard")
+      await navigator.clipboard.writeText(qrUri);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast.success("Connection URI copied to clipboard");
     } catch {
-      toast.error("Failed to copy URI")
+      toast.error("Failed to copy URI");
     }
-  }, [qrUri])
+  }, [qrUri]);
 
   const handleDisconnect = useCallback(() => {
-    disconnectWalletConnect()
-    setView("list")
-    setQrUri("")
-    setQrDataUrl("")
-    setSelectedWallet(null)
-  }, [])
+    disconnectWalletConnect();
+    setView("list");
+    setQrUri("");
+    setQrDataUrl("");
+    setSelectedWallet(null);
+  }, []);
 
   const handleClose = useCallback(() => {
     if (wcState?.connecting) {
-      disconnectWalletConnect()
+      disconnectWalletConnect();
     }
-    setView("list")
-    setQrUri("")
-    setQrDataUrl("")
-    setSelectedWallet(null)
-    onClose()
-  }, [wcState?.connecting, onClose])
+    setView("list");
+    setQrUri("");
+    setQrDataUrl("");
+    setSelectedWallet(null);
+    onClose();
+  }, [wcState?.connecting, onClose]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
@@ -196,7 +184,7 @@ export function WalletConnectModal({
                         alt=""
                         className="h-6 w-6"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none"
+                          (e.target as HTMLImageElement).style.display = "none";
                         }}
                       />
                     ) : (
@@ -205,9 +193,7 @@ export function WalletConnectModal({
                   </div>
                   <div className="flex-1 text-left">
                     <div className="font-medium">{wallet.name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {wallet.description}
-                    </div>
+                    <div className="text-xs text-muted-foreground">{wallet.description}</div>
                   </div>
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </button>
@@ -232,11 +218,7 @@ export function WalletConnectModal({
           <div className="flex flex-col items-center gap-4 py-4">
             <div className="rounded-xl border-2 border-primary/20 bg-white p-4">
               {qrDataUrl ? (
-                <img
-                  src={qrDataUrl}
-                  alt="WalletConnect QR Code"
-                  className="h-64 w-64"
-                />
+                <img src={qrDataUrl} alt="WalletConnect QR Code" className="h-64 w-64" />
               ) : qrUri ? (
                 <QRCodeSVG
                   value={qrUri}
@@ -268,22 +250,16 @@ export function WalletConnectModal({
                 onClick={handleCopyUri}
                 aria-label="Copy WalletConnect URI"
               >
-                {copied ? (
-                  <Check className="mr-2 h-4 w-4" />
-                ) : (
-                  <Copy className="mr-2 h-4 w-4" />
-                )}
+                {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
                 {copied ? "Copied!" : "Copy URI"}
               </Button>
               <Button
                 variant="outline"
                 className="flex-1"
                 onClick={() => {
-                  const wallet = SUPPORTED_WALLETS.find(
-                    (w) => w.id === selectedWallet
-                  )
+                  const wallet = SUPPORTED_WALLETS.find((w) => w.id === selectedWallet);
                   if (wallet && qrUri) {
-                    openWalletDeepLink(wallet.name, qrUri)
+                    openWalletDeepLink(wallet.name, qrUri);
                   }
                 }}
                 disabled={!selectedWallet || !qrUri}
@@ -298,8 +274,8 @@ export function WalletConnectModal({
               variant="ghost"
               size="sm"
               onClick={() => {
-                handleDisconnect()
-                setView("list")
+                handleDisconnect();
+                setView("list");
               }}
               className="text-muted-foreground"
             >
@@ -317,16 +293,14 @@ export function WalletConnectModal({
             </div>
             <div className="text-center">
               <p className="font-medium">Opening wallet app...</p>
-              <p className="text-sm text-muted-foreground">
-                Approve the connection in your wallet
-              </p>
+              <p className="text-sm text-muted-foreground">Approve the connection in your wallet</p>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
-                handleDisconnect()
-                setView("list")
+                handleDisconnect();
+                setView("list");
               }}
             >
               Cancel
@@ -335,7 +309,7 @@ export function WalletConnectModal({
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 function WalletIcon({ className }: { className?: string }) {
@@ -353,5 +327,5 @@ function WalletIcon({ className }: { className?: string }) {
       <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
       <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
     </svg>
-  )
+  );
 }

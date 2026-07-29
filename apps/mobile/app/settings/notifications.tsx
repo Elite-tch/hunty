@@ -9,7 +9,7 @@ import {
   setPreferences,
 } from '@services/notifications/notificationPreferences';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Platform,ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function NotificationsScreen() {
   const { colors } = useTheme();

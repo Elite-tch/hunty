@@ -7,8 +7,7 @@ const config = [
       "jsx-a11y": jsxA11y,
     },
     rules: {
-      "no-console":
-        process.env.NODE_ENV === "production" ? "error" : "warn",
+      "no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
       "jsx-a11y/control-has-associated-label": "error",
       "jsx-a11y/interactive-supports-focus": "error",
     },

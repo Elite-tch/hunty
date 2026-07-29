@@ -7,10 +7,7 @@ import { getHuntById } from "@/lib/huntStore";
  * Returns lightweight hunt data for the embed widget.
  * Private hunts return 403 so the widget can inform the viewer.
  */
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const ip = getIP(req);
   const { success, reset } = rateLimit(ip, { limit: 120, windowMs: 60 * 1000 });
 

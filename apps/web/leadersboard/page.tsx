@@ -1,12 +1,9 @@
 "use client";
 
-import { AnimatePresence,motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import {
-  get_hunt_leaderboard_paginated,
-  LeaderboardEntry,
-} from "@/lib/contracts/hunt";
+import { get_hunt_leaderboard_paginated, LeaderboardEntry } from "@/lib/contracts/hunt";
 import { getActiveWalletAdapter } from "@/lib/walletAdapter"; // adjust path if needed
 
 type Props = { params: Promise<{ id: string }> };
@@ -43,7 +40,7 @@ export default function LeaderboardPage({ params }: Props) {
       huntId,
       pageNum,
       limit,
-      userAddress || undefined,
+      userAddress || undefined
     );
     setPlayers(data.entries);
     setTotal(data.total);
@@ -63,8 +60,7 @@ export default function LeaderboardPage({ params }: Props) {
   const goPrev = () => setPage((p) => Math.max(p - 1, 1));
   const goNext = () => setPage((p) => Math.min(p + 1, totalPages));
 
-  if (loading && players.length === 0)
-    return <div className="p-6">Loading…</div>;
+  if (loading && players.length === 0) return <div className="p-6">Loading…</div>;
 
   return (
     <div className="p-6">
@@ -91,16 +87,10 @@ export default function LeaderboardPage({ params }: Props) {
                   transition={{ duration: 0.3 }}
                   className={isMe ? "bg-yellow-100" : ""}
                 >
-                  <td className="border p-2 text-center">
-                    {(page - 1) * limit + i + 1}
-                  </td>
+                  <td className="border p-2 text-center">{(page - 1) * limit + i + 1}</td>
                   <td className="border p-2">
                     {p.name || p.address.slice(0, 6)}…
-                    {isMe && (
-                      <span className="ml-2 bg-yellow-300 px-2 rounded text-sm">
-                        You
-                      </span>
-                    )}
+                    {isMe && <span className="ml-2 bg-yellow-300 px-2 rounded text-sm">You</span>}
                   </td>
                   <td className="border p-2 text-center">{p.points}</td>
                 </motion.tr>
@@ -129,9 +119,7 @@ export default function LeaderboardPage({ params }: Props) {
         </button>
       </div>
       {currentUserRank && (
-        <div className="mt-2 text-sm text-gray-600">
-          Your rank: #{currentUserRank}
-        </div>
+        <div className="mt-2 text-sm text-gray-600">Your rank: #{currentUserRank}</div>
       )}
     </div>
   );

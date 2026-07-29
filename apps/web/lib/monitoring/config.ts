@@ -48,6 +48,6 @@ export const MONITORING = {
     endpoint: process.env.WEB_VITALS_ENDPOINT || "",
     sampleRate: parseFloat(process.env.WEB_VITALS_SAMPLE_RATE || "0.1"),
   },
-} as const
+} as const;
 
-export type MonitoringConfig = typeof MONITORING
+export type MonitoringConfig = typeof MONITORING;

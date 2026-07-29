@@ -26,6 +26,7 @@
 - [x] `legend` - Win 100 hunts (💎 Legendary)
 
 **Metadata per Achievement:**
+
 - [x] id - Unique identifier
 - [x] title - Display name
 - [x] description - User-friendly description
@@ -34,6 +35,7 @@
 - [x] condition - Human-readable requirement
 
 **Additional Features:**
+
 - [x] Rarity color mappings (common, uncommon, rare, epic, legendary)
 - [x] Border color mappings for UI
 - [x] TypeScript union type for type safety
@@ -129,7 +131,7 @@
 
 ```typescript
 interface BadgeWallProps {
-  playerAddress: string
+  playerAddress: string;
 }
 ```
 
@@ -242,18 +244,18 @@ interface BadgeWallProps {
 
 ## 📊 Implementation Statistics
 
-| Metric | Value |
-|--------|-------|
-| Files Created | 3 |
-| Files Modified | 2 |
-| Lines of Code | ~800 |
-| Test Cases | 28 |
-| Test Pass Rate | 100% |
-| Achievements Defined | 10 |
-| Rarity Levels | 5 |
-| Components | 2 |
-| Functions | 6 |
-| TypeScript Types | 5 |
+| Metric               | Value |
+| -------------------- | ----- |
+| Files Created        | 3     |
+| Files Modified       | 2     |
+| Lines of Code        | ~800  |
+| Test Cases           | 28    |
+| Test Pass Rate       | 100%  |
+| Achievements Defined | 10    |
+| Rarity Levels        | 5     |
+| Components           | 2     |
+| Functions            | 6     |
+| TypeScript Types     | 5     |
 
 ---
 
@@ -394,6 +396,7 @@ interface BadgeWallProps {
 ## 📞 Support
 
 For questions or issues:
+
 1. Check `lib/achievements/README.md` for detailed documentation
 2. Review `ACHIEVEMENT_QUICK_START.md` for common tasks
 3. Check test file for usage examples

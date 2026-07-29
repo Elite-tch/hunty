@@ -95,7 +95,9 @@ const nextConfig: NextConfig = {
     ];
 
     const cspHeader = cspDirectives.join("; ");
-    const cspHeaderName = isReportOnly ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
+    const cspHeaderName = isReportOnly
+      ? "Content-Security-Policy-Report-Only"
+      : "Content-Security-Policy";
 
     return [
       {
@@ -161,4 +163,3 @@ const nextConfig: NextConfig = {
 };
 
 export default withNextIntl(nextConfig);
-

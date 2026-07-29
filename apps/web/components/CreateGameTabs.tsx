@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface CreateGameTabsProps {
-  activeTab: "create" | "rewards" | "publish" | "leaderboard"
-  onTabChange: (tab: "create" | "rewards" | "publish" | "leaderboard") => void
+  activeTab: "create" | "rewards" | "publish" | "leaderboard";
+  onTabChange: (tab: "create" | "rewards" | "publish" | "leaderboard") => void;
 }
 
 export function CreateGameTabs({ activeTab, onTabChange }: CreateGameTabsProps) {
@@ -13,7 +13,7 @@ export function CreateGameTabs({ activeTab, onTabChange }: CreateGameTabsProps) 
     { id: "create", label: "Create" },
     { id: "rewards", label: "Rewards" },
     { id: "publish", label: "Publish" },
-  ] as const
+  ] as const;
 
   return (
     <div className="flex gap-3 mb-8 w-full">
@@ -32,5 +32,5 @@ export function CreateGameTabs({ activeTab, onTabChange }: CreateGameTabsProps) 
         </Button>
       ))}
     </div>
-  )
+  );
 }

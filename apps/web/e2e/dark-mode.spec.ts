@@ -11,7 +11,7 @@
  * 6. Manual override persists after system preference changes
  */
 
-import { expect,test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { injectMockWallet, seedHuntData } from "./helpers/mock-wallet";
 
@@ -169,9 +169,7 @@ test.describe("Dark mode toggle", () => {
 
   test("ThemeToggle button is visible on the home page", async ({ page }) => {
     await page.goto("/");
-    await expect(
-      page.getByRole("button", { name: /toggle dark mode/i })
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /toggle dark mode/i })).toBeVisible();
   });
 
   test("ThemeToggle has correct aria-label", async ({ page }) => {

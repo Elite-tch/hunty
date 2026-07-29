@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { Search } from 'lucide-react';
-import './globals.css';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { Search } from "lucide-react";
+import "./globals.css";
 
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-import KeyboardShortcutsProvider from '../components/KeyboardShortcutsProvider';
+import KeyboardShortcutsProvider from "../components/KeyboardShortcutsProvider";
 
-import type { SearchBarHandle } from '@/lib/keyboardShortcuts';
+import type { SearchBarHandle } from "@/lib/keyboardShortcuts";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -18,9 +18,9 @@ interface SearchBarProps {
 }
 
 const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
-  ({ placeholder = 'Search hunts...', onSearch, className = '' }, ref) => {
+  ({ placeholder = "Search hunts...", onSearch, className = "" }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState("");
 
     useImperativeHandle(ref, () => ({
       focus: () => {
@@ -32,11 +32,11 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
         inputRef.current?.blur();
       },
       clear: () => {
-        setQuery('');
+        setQuery("");
         if (inputRef.current) {
-          inputRef.current.value = '';
+          inputRef.current.value = "";
         }
-        onSearch?.('');
+        onSearch?.("");
       },
     }));
 
@@ -70,6 +70,6 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
   }
 );
 
-SearchBar.displayName = 'SearchBar';
+SearchBar.displayName = "SearchBar";
 
 export default SearchBar;

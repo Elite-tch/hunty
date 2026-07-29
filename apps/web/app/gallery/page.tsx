@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/EmptyState";
 import { FilterBar } from "@/components/FilterBar";
@@ -13,7 +13,7 @@ import { usePlayerNfts } from "@/hooks/usePlayerNfts";
 
 export default function GalleryPage() {
   const { address, nfts, loading, error } = usePlayerNfts();
-  const [selectedNft, setSelectedNft] = useState<null | typeof nfts[0]>(null);
+  const [selectedNft, setSelectedNft] = useState<null | (typeof nfts)[0]>(null);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [huntFilter, setHuntFilter] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<{ start?: string; end?: string }>({});
@@ -32,7 +32,13 @@ export default function GalleryPage() {
       if (sort === "newest") {
         return new Date(b.earnedAt).getTime() - new Date(a.earnedAt).getTime();
       } else {
-        const rarityOrder: Record<string, number> = { Legendary: 5, Epic: 4, Rare: 3, Uncommon: 2, Common: 1 };
+        const rarityOrder: Record<string, number> = {
+          Legendary: 5,
+          Epic: 4,
+          Rare: 3,
+          Uncommon: 2,
+          Common: 1,
+        };
         const aRarity = a.attributes.find((t) => t.trait_type === "Rarity")?.value ?? "Common";
         const bRarity = b.attributes.find((t) => t.trait_type === "Rarity")?.value ?? "Common";
         return (rarityOrder[bRarity] ?? 0) - (rarityOrder[aRarity] ?? 0);
@@ -77,11 +83,21 @@ export default function GalleryPage() {
             {filtered.map((nft) => (
               <Card key={nft.id} className="p-4 cursor-pointer" onClick={() => setSelectedNft(nft)}>
                 <div className="flex items-center gap-4">
-                  <img src={nft.imageUri.startsWith("ipfs://") ? `/api/ipfs/${nft.imageUri.split("ipfs://")[1]}` : nft.imageUri} alt={nft.name} className="w-20 h-20 object-cover rounded" />
+                  <img
+                    src={
+                      nft.imageUri.startsWith("ipfs://")
+                        ? `/api/ipfs/${nft.imageUri.split("ipfs://")[1]}`
+                        : nft.imageUri
+                    }
+                    alt={nft.name}
+                    className="w-20 h-20 object-cover rounded"
+                  />
                   <div>
                     <h2 className="font-semibold text-lg line-clamp-1">{nft.name}</h2>
                     <p className="text-sm text-slate-600 line-clamp-2">{nft.description}</p>
-                    <p className="text-xs text-slate-500">Earned {new Date(nft.earnedAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-slate-500">
+                      Earned {new Date(nft.earnedAt).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               </Card>

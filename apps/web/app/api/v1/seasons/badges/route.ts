@@ -5,7 +5,7 @@ import { ValidationError } from "@/lib/api/errors";
 import { withErrorHandling } from "@/lib/api/withErrorHandling";
 
 import { getIP, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { awardSeasonBadge,getAllSeasonBadges, getPlayerSeasonBadges } from "@/lib/seasonStore";
+import { awardSeasonBadge, getAllSeasonBadges, getPlayerSeasonBadges } from "@/lib/seasonStore";
 
 /**
  * GET /api/v1/seasons/badges

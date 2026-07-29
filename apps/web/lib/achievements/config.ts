@@ -6,9 +6,9 @@
 // Achievement and AchievementId are defined in the shared @hunty/types package.
 // Imported for local use and re-exported so existing
 // "@/lib/achievements/config" imports keep working.
-import type { Achievement, AchievementId } from "@hunty/types"
+import type { Achievement, AchievementId } from "@hunty/types";
 
-export type { Achievement, AchievementId }
+export type { Achievement, AchievementId };
 
 export const ACHIEVEMENTS: Record<AchievementId, Achievement> = {
   first_hunt_completed: {
@@ -91,7 +91,7 @@ export const ACHIEVEMENTS: Record<AchievementId, Achievement> = {
     rarity: "legendary",
     condition: "Win 100 hunts",
   },
-}
+};
 
 export const RARITY_COLORS: Record<Achievement["rarity"], string> = {
   common: "from-slate-400 to-slate-600",
@@ -99,7 +99,7 @@ export const RARITY_COLORS: Record<Achievement["rarity"], string> = {
   rare: "from-blue-400 to-blue-600",
   epic: "from-purple-400 to-purple-600",
   legendary: "from-yellow-400 to-yellow-600",
-}
+};
 
 export const RARITY_BORDER_COLORS: Record<Achievement["rarity"], string> = {
   common: "border-slate-400",
@@ -107,4 +107,4 @@ export const RARITY_BORDER_COLORS: Record<Achievement["rarity"], string> = {
   rare: "border-blue-400",
   epic: "border-purple-400",
   legendary: "border-yellow-400",
-}
+};

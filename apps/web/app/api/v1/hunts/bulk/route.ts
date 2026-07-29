@@ -21,7 +21,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid hunt IDs" }, { status: 400 });
     }
 
-    const ids = huntIds.map((id: string | number) => typeof id === "string" ? parseInt(id, 10) : id);
+    const ids = huntIds.map((id: string | number) =>
+      typeof id === "string" ? parseInt(id, 10) : id
+    );
 
     if (ids.some((id: number) => isNaN(id))) {
       return NextResponse.json({ error: "Invalid hunt ID in list" }, { status: 400 });
@@ -32,40 +34,43 @@ export async function POST(req: Request) {
       hideHuntsFromPublic(ids);
       return NextResponse.json({
         success: true,
-        message: `${ids.length} hunt(s) archived successfully`
+        message: `${ids.length} hunt(s) archived successfully`,
       });
     } else if (action === "unarchive") {
       const { unhideHuntsFromPublic } = await import("@/lib/huntStore");
       unhideHuntsFromPublic(ids);
       return NextResponse.json({
         success: true,
-        message: `${ids.length} hunt(s) unarchived successfully`
+        message: `${ids.length} hunt(s) unarchived successfully`,
       });
     } else if (action === "soft-delete") {
       const { softDeleteHunts } = await import("@/lib/huntStore");
       softDeleteHunts(ids);
       return NextResponse.json({
         success: true,
-        message: `${ids.length} hunt(s) soft-deleted successfully. You can restore them within 30 days.`
+        message: `${ids.length} hunt(s) soft-deleted successfully. You can restore them within 30 days.`,
       });
     } else if (action === "restore") {
       const { restoreHunts } = await import("@/lib/huntStore");
       restoreHunts(ids);
       return NextResponse.json({
         success: true,
-        message: `${ids.length} hunt(s) restored successfully`
+        message: `${ids.length} hunt(s) restored successfully`,
       });
     } else if (action === "permanent-delete") {
       if (!confirmed) {
-        return NextResponse.json({
-          error: "Confirmation required. Set confirmed=true to permanently delete."
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            error: "Confirmation required. Set confirmed=true to permanently delete.",
+          },
+          { status: 400 }
+        );
       }
       const { permanentDeleteHunts } = await import("@/lib/huntStore");
       permanentDeleteHunts(ids);
       return NextResponse.json({
         success: true,
-        message: `${ids.length} hunt(s) permanently deleted. This action cannot be undone.`
+        message: `${ids.length} hunt(s) permanently deleted. This action cannot be undone.`,
       });
     } else {
       return NextResponse.json({ error: "Invalid action" }, { status: 400 });

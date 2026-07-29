@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { ArrowRight, History } from "lucide-react"
-import Link from "next/link"
-import { useMemo, useState } from "react"
+import { ArrowRight, History } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatDuration } from "@/lib/huntAttemptHistory"
-import type { HuntAttemptRecord, HuntAttemptStatus } from "@/lib/types"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDuration } from "@/lib/huntAttemptHistory";
+import type { HuntAttemptRecord, HuntAttemptStatus } from "@/lib/types";
 
-type HuntHistoryFilter = "all" | HuntAttemptStatus
+type HuntHistoryFilter = "all" | HuntAttemptStatus;
 
 const FILTER_LABELS: Record<HuntHistoryFilter, string> = {
   all: "All",
   completed: "Completed",
   abandoned: "Abandoned",
   in_progress: "In Progress",
-}
+};
 
 interface HuntHistoryViewerProps {
-  attempts: HuntAttemptRecord[]
+  attempts: HuntAttemptRecord[];
 }
 
 export function HuntHistoryViewer({ attempts }: HuntHistoryViewerProps) {
-  const [filter, setFilter] = useState<HuntHistoryFilter>("all")
+  const [filter, setFilter] = useState<HuntHistoryFilter>("all");
 
   const filteredAttempts = useMemo(() => {
-    if (filter === "all") return attempts
-    return attempts.filter((attempt) => attempt.status === filter)
-  }, [attempts, filter])
+    if (filter === "all") return attempts;
+    return attempts.filter((attempt) => attempt.status === filter);
+  }, [attempts, filter]);
 
-  const completedCount = attempts.filter((attempt) => attempt.status === "completed").length
-  const abandonedCount = attempts.filter((attempt) => attempt.status === "abandoned").length
+  const completedCount = attempts.filter((attempt) => attempt.status === "completed").length;
+  const abandonedCount = attempts.filter((attempt) => attempt.status === "abandoned").length;
 
   return (
     <section aria-label="Hunt replay history" className="space-y-6">
@@ -89,12 +89,12 @@ export function HuntHistoryViewer({ attempts }: HuntHistoryViewerProps) {
         </ul>
       )}
     </section>
-  )
+  );
 }
 
 function HuntAttemptListCard({ attempt }: { attempt: HuntAttemptRecord }) {
-  const isCompleted = attempt.status === "completed"
-  const statusLabel = isCompleted ? "Completed" : "Abandoned"
+  const isCompleted = attempt.status === "completed";
+  const statusLabel = isCompleted ? "Completed" : "Abandoned";
 
   return (
     <Card className="border border-slate-200 bg-white/80 shadow-sm">
@@ -129,8 +129,7 @@ function HuntAttemptListCard({ attempt }: { attempt: HuntAttemptRecord }) {
             </span>
           </span>
           <span>
-            Points:{" "}
-            <span className="font-semibold text-emerald-700">{attempt.totalPoints}</span>
+            Points: <span className="font-semibold text-emerald-700">{attempt.totalPoints}</span>
           </span>
           <span>
             {isCompleted ? "Finished" : "Stopped"}:{" "}
@@ -147,7 +146,7 @@ function HuntAttemptListCard({ attempt }: { attempt: HuntAttemptRecord }) {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function StatBadge({
@@ -155,18 +154,20 @@ function StatBadge({
   value,
   tone,
 }: {
-  label: string
-  value: number
-  tone: "success" | "warning"
+  label: string;
+  value: number;
+  tone: "success" | "warning";
 }) {
   const toneClasses =
     tone === "success"
       ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-      : "bg-amber-50 text-amber-700 border-amber-200"
+      : "bg-amber-50 text-amber-700 border-amber-200";
 
   return (
-    <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${toneClasses}`}>
+    <span
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${toneClasses}`}
+    >
       {label}: {value}
     </span>
-  )
+  );
 }

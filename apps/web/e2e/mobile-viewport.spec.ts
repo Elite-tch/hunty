@@ -1,6 +1,6 @@
-import { devices,expect, test } from "@playwright/test";
+import { devices, expect, test } from "@playwright/test";
 
-import { injectMockWallet, MOCK_PUBLIC_KEY,seedHuntData } from "./helpers/mock-wallet";
+import { injectMockWallet, MOCK_PUBLIC_KEY, seedHuntData } from "./helpers/mock-wallet";
 
 /**
  * Mobile Viewport Tests

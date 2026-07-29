@@ -13,6 +13,7 @@ This document confirms that all requirements for the Content Security Policy (CS
 **Status:** COMPLETED
 
 **What was done:**
+
 - Updated `/workspaces/hunty/next.config.ts` with a complete `headers()` function
 - Implemented CSP directives as per Next.js best practices
 - Configuration supports both staging and production environments
@@ -59,6 +60,7 @@ This document confirms that all requirements for the Content Security Policy (CS
 **Status:** COMPLETED
 
 **Implementation:**
+
 - Detection logic: Checks if `NODE_ENV` is `production` or `CSP_REPORT_ONLY` is set to `true`
 - In staging (development): Uses `Content-Security-Policy-Report-Only` header
 - Violations logged to console but resources NOT blocked
@@ -67,6 +69,7 @@ This document confirms that all requirements for the Content Security Policy (CS
 **Code Location:** [next.config.ts](next.config.ts) lines 18-21
 
 **Usage:**
+
 ```bash
 # Development (automatic report-only)
 pnpm dev
@@ -121,6 +124,7 @@ A comprehensive testing guide has been created: [CSP_TESTING_GUIDE.md](CSP_TESTI
 ### Quick Test Steps:
 
 1. **Start the application:**
+
    ```bash
    cd /workspaces/hunty
    pnpm install
@@ -128,6 +132,7 @@ A comprehensive testing guide has been created: [CSP_TESTING_GUIDE.md](CSP_TESTI
    ```
 
 2. **Verify headers are present:**
+
    ```bash
    curl -I http://localhost:3000 | grep -E "Content-Security-Policy|X-Frame-Options|X-Content-Type-Options"
    ```
@@ -151,25 +156,31 @@ A comprehensive testing guide has been created: [CSP_TESTING_GUIDE.md](CSP_TESTI
 ## Environment Support
 
 ### Development Mode
+
 ```bash
 pnpm dev
 ```
+
 - Header: `Content-Security-Policy-Report-Only`
 - Violations logged but NOT blocked
 - Safe for development and initial testing
 
 ### Production Mode
+
 ```bash
 NODE_ENV=production pnpm start
 ```
+
 - Header: `Content-Security-Policy`
 - Violations actively blocked
 - Full enforcement
 
 ### Safe Rollout Mode
+
 ```bash
 NODE_ENV=production CSP_REPORT_ONLY=true pnpm start
 ```
+
 - Header: `Content-Security-Policy-Report-Only`
 - Even in production, violations only logged
 - Ideal for staging environment monitoring
@@ -184,7 +195,7 @@ This implementation protects against:
 ✅ **Data Exfiltration** - Restricted connection to unauthorized domains  
 ✅ **Clickjacking** - X-Frame-Options prevents framing attacks  
 ✅ **MIME Type Sniffing** - Browser cannot misinterpret file types  
-✅ **XSS Attacks** - Multiple layers of XSS protection  
+✅ **XSS Attacks** - Multiple layers of XSS protection
 
 ---
 

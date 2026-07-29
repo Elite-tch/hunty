@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import { ValidationError } from '@/lib/api/errors';
-import { withErrorHandling } from '@/lib/api/withErrorHandling';
-import { Resend } from 'resend';
+import { NextResponse } from "next/server";
+import { ValidationError } from "@/lib/api/errors";
+import { withErrorHandling } from "@/lib/api/withErrorHandling";
+import { Resend } from "resend";
 
-import { HuntCompletionEmail } from '@/components/emails/HuntCompletionEmail';
-import { logger } from '@/lib/logger';
+import { HuntCompletionEmail } from "@/components/emails/HuntCompletionEmail";
+import { logger } from "@/lib/logger";
 
 export const POST = withErrorHandling(async (request: Request) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,22 +13,19 @@ export const POST = withErrorHandling(async (request: Request) => {
   try {
     body = await request.json();
   } catch {
-    throw new ValidationError('Invalid request body');
+    throw new ValidationError("Invalid request body");
   }
   const { huntName, creatorEmail, completionTime } = body;
 
   if (!creatorEmail) {
-    throw new ValidationError('Missing creator email', { field: 'creatorEmail' });
+    throw new ValidationError("Missing creator email", { field: "creatorEmail" });
   }
 
   const data = await resend.emails.send({
-    from: 'Hunty <onboarding@resend.dev>', // Replace with your verified domain in production
+    from: "Hunty <onboarding@resend.dev>", // Replace with your verified domain in production
     to: [creatorEmail],
-    subject: 'Your hunt was just completed 🎉',
-    react: <HuntCompletionEmail
-      huntName={huntName}
-      completionTime={completionTime}
-    />,
+    subject: "Your hunt was just completed 🎉",
+    react: <HuntCompletionEmail huntName={huntName} completionTime={completionTime} />,
   });
 
   return NextResponse.json(data);

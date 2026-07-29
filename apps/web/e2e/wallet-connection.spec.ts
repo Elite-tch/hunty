@@ -1,10 +1,6 @@
-import { expect,test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import {
-  injectMockWallet,
-  MOCK_PUBLIC_KEY,
-  seedHuntData,
-} from "./helpers/mock-wallet";
+import { injectMockWallet, MOCK_PUBLIC_KEY, seedHuntData } from "./helpers/mock-wallet";
 
 test.describe("Wallet Connection", () => {
   test.beforeEach(async ({ page }) => {
@@ -26,9 +22,7 @@ test.describe("Wallet Connection", () => {
     await expect(page.getByRole("button", { name: /freighter/i })).toBeVisible();
   });
 
-  test("displays shortened wallet address after connecting", async ({
-    page,
-  }) => {
+  test("displays shortened wallet address after connecting", async ({ page }) => {
     await injectMockWallet(page);
     await page.goto("/");
 
@@ -38,9 +32,7 @@ test.describe("Wallet Connection", () => {
     await expect(page.getByText(shortKey)).toBeVisible({ timeout: 10_000 });
   });
 
-  test("wallet dropdown shows address and disconnect option", async ({
-    page,
-  }) => {
+  test("wallet dropdown shows address and disconnect option", async ({ page }) => {
     await injectMockWallet(page);
     await page.goto("/");
 
@@ -54,9 +46,7 @@ test.describe("Wallet Connection", () => {
     await expect(page.getByText("Disconnect wallet")).toBeVisible();
   });
 
-  test("disconnects wallet and shows Connect Wallet button again", async ({
-    page,
-  }) => {
+  test("disconnects wallet and shows Connect Wallet button again", async ({ page }) => {
     await injectMockWallet(page);
     await page.goto("/");
 
@@ -64,8 +54,8 @@ test.describe("Wallet Connection", () => {
     await page.getByText(shortKey).click();
     await page.getByText("Disconnect wallet").click();
 
-    await expect(
-      page.getByRole("button", { name: /connect wallet/i })
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("button", { name: /connect wallet/i })).toBeVisible({
+      timeout: 10_000,
+    });
   });
 });

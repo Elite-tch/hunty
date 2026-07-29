@@ -12,18 +12,18 @@ export type HuntCategoryId =
   | "art"
   | "sports"
   | "mystery"
-  | "family"
+  | "family";
 
 export interface HuntCategory {
-  id: HuntCategoryId
-  label: string
+  id: HuntCategoryId;
+  label: string;
   /** Lucide-style icon name used by UI components */
-  icon: string
+  icon: string;
   /** Tailwind-friendly hex accent */
-  color: string
+  color: string;
   /** Soft background tint */
-  bgColor: string
-  description: string
+  bgColor: string;
+  description: string;
 }
 
 export const HUNT_CATEGORIES: HuntCategory[] = [
@@ -107,19 +107,19 @@ export const HUNT_CATEGORIES: HuntCategory[] = [
     bgColor: "#CFFAFE",
     description: "Kid-friendly group adventures",
   },
-]
+];
 
-const BY_ID = new Map(HUNT_CATEGORIES.map((c) => [c.id, c]))
+const BY_ID = new Map(HUNT_CATEGORIES.map((c) => [c.id, c]));
 
 export function getCategory(id: HuntCategoryId | string | undefined): HuntCategory | undefined {
-  if (!id) return undefined
-  return BY_ID.get(id as HuntCategoryId)
+  if (!id) return undefined;
+  return BY_ID.get(id as HuntCategoryId);
 }
 
 export function isHuntCategoryId(value: string): value is HuntCategoryId {
-  return BY_ID.has(value as HuntCategoryId)
+  return BY_ID.has(value as HuntCategoryId);
 }
 
 export function getCategoryLabel(id: HuntCategoryId | string | undefined): string {
-  return getCategory(id)?.label ?? "Uncategorized"
+  return getCategory(id)?.label ?? "Uncategorized";
 }

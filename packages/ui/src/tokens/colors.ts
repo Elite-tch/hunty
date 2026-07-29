@@ -39,6 +39,6 @@ export const colors = {
   badgeErrorText: "#991b1b",
   badgeGray: "#f3f4f6",
   badgeGrayText: "#374151",
-} as const
+} as const;
 
-export type ColorToken = keyof typeof colors
+export type ColorToken = keyof typeof colors;

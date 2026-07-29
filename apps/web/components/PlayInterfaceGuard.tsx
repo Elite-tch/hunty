@@ -18,13 +18,13 @@ interface PlayInterfaceGuardProps {
 
 /**
  * PlayInterfaceGuard component prevents access to clues for unregistered players.
- * 
+ *
  * Behavior:
  * - Checks registration status before rendering children
  * - Displays registration prompt if player is not registered
  * - Renders play interface (children) only for registered players
  * - Automatically updates when registration status changes
- * 
+ *
  * Requirements: 3.1, 3.2, 3.3
  */
 export function PlayInterfaceGuard({
@@ -38,29 +38,29 @@ export function PlayInterfaceGuard({
     loading: true,
   });
 
-  const refreshRegistrationStatus = useCallback(async (isActive: () => boolean = () => true) => {
-    if (!isActive()) return;
+  const refreshRegistrationStatus = useCallback(
+    async (isActive: () => boolean = () => true) => {
+      if (!isActive()) return;
 
-    setRegistrationStatus({
-      isRegistered: false,
-      loading: true,
-    });
+      setRegistrationStatus({
+        isRegistered: false,
+        loading: true,
+      });
 
-    const status = await checkRegistrationStatus(huntId, playerAddress);
+      const status = await checkRegistrationStatus(huntId, playerAddress);
 
-    if (isActive()) {
-      setRegistrationStatus(status);
-    }
-  }, [huntId, playerAddress]);
+      if (isActive()) {
+        setRegistrationStatus(status);
+      }
+    },
+    [huntId, playerAddress]
+  );
 
   useEffect(() => {
     let isActive = true;
-    const debouncedCheckStatus = debounce(
-      () => {
-        void refreshRegistrationStatus(() => isActive);
-      },
-      REGISTRATION_STATUS_DEBOUNCE_MS
-    );
+    const debouncedCheckStatus = debounce(() => {
+      void refreshRegistrationStatus(() => isActive);
+    }, REGISTRATION_STATUS_DEBOUNCE_MS);
 
     debouncedCheckStatus();
 
@@ -108,8 +108,18 @@ export function PlayInterfaceGuard({
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4 px-4">
         <div className="rounded-lg bg-red-50 border border-red-200 p-6 max-w-md">
           <div className="flex items-start gap-3">
-            <svg className="w-6 h-6 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-6 h-6 text-red-600 mt-0.5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <div>
               <p className="text-red-800 font-semibold mb-2">Unable to verify registration</p>

@@ -1,4 +1,4 @@
-import { afterEach,beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   connectWalletConnect,
@@ -13,7 +13,7 @@ import {
   isWalletConnectConnected,
   getActiveWalletConnectSession,
   resetWalletConnect,
-} from "@/lib/walletConnect"
+} from "@/lib/walletConnect";
 
 const { mockCore, mockWeb3Wallet } = vi.hoisted(() => {
   const mockWeb3Wallet = {
@@ -32,24 +32,24 @@ const { mockCore, mockWeb3Wallet } = vi.hoisted(() => {
 
 vi.mock("@walletconnect/core", () => ({
   Core: mockCore,
-}))
+}));
 
 vi.mock("@walletconnect/web3wallet", () => ({
   Web3Wallet: {
     init: vi.fn(() => Promise.resolve(mockWeb3Wallet)),
   },
-}))
+}));
 
 vi.mock("@walletconnect/utils", () => ({
   buildApprovedNamespaces: vi.fn(() => ({})),
   getSdkError: vi.fn((code: string) => ({ message: code, code: -1 })),
-}))
+}));
 
 vi.mock("qrcode", () => ({
   default: {
     toDataURL: vi.fn(() => Promise.resolve("data:image/png;base64,test")),
   },
-}))
+}));
 
 vi.mock("@/lib/logger", () => ({
   logger: {
@@ -57,39 +57,37 @@ vi.mock("@/lib/logger", () => ({
     warn: vi.fn(),
     error: vi.fn(),
   },
-}))
+}));
 
 describe("walletConnect core module", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    localStorage.clear()
-    vi.resetModules()
-    resetWalletConnect()
-    process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
-  })
+    vi.clearAllMocks();
+    localStorage.clear();
+    vi.resetModules();
+    resetWalletConnect();
+    process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
+  });
 
   afterEach(() => {
-    vi.unstubAllGlobals()
-  })
+    vi.unstubAllGlobals();
+  });
 
   // ─── Render / Init Tests ────────────────────────────────────────
   describe("initialization", () => {
     it("initializes Web3Wallet with correct metadata", async () => {
-      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
-      await initWalletConnect()
-      
+      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
+      await initWalletConnect();
+
       expect(mockCore).toHaveBeenCalledWith({
         projectId: "test-project-id",
         relayUrl: "wss://relay.walletconnect.com",
-      })
-    })
+      });
+    });
 
     it("throws if project ID is missing", async () => {
-      delete process.env.NEXT_PUBLIC_WC_PROJECT_ID
-      await expect(initWalletConnect()).rejects.toThrow(
-        /NEXT_PUBLIC_WC_PROJECT_ID/
-      )
-    })
+      delete process.env.NEXT_PUBLIC_WC_PROJECT_ID;
+      await expect(initWalletConnect()).rejects.toThrow(/NEXT_PUBLIC_WC_PROJECT_ID/);
+    });
 
     it("restores persisted session on init", async () => {
       const mockSession = {
@@ -103,7 +101,7 @@ describe("walletConnect core module", () => {
           },
         },
         acknowledged: Date.now(),
-      }
+      };
 
       localStorage.setItem(
         "hunty_wc_session",
@@ -113,23 +111,23 @@ describe("walletConnect core module", () => {
           accounts: ["GABC123"],
           createdAt: Date.now(),
         })
-      )
+      );
 
       mockWeb3Wallet.getActiveSessions.mockReturnValue({
         "test-topic": mockSession,
-      })
+      });
 
-      await initWalletConnect()
-      
-      expect(getActiveWalletConnectSession()?.peer.name).toBe("Lobstr")
-      expect(isWalletConnectConnected()).toBe(true)
-    })
-  })
+      await initWalletConnect();
+
+      expect(getActiveWalletConnectSession()?.peer.name).toBe("Lobstr");
+      expect(isWalletConnectConnected()).toBe(true);
+    });
+  });
 
   // ─── Connection Tests ───────────────────────────────────────────
   describe("connection", () => {
     beforeEach(async () => {
-      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
+      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
       mockWeb3Wallet.connect.mockResolvedValue({
         uri: "wc:test-uri",
         approval: vi.fn(() =>
@@ -146,77 +144,77 @@ describe("walletConnect core module", () => {
             acknowledged: Date.now(),
           })
         ),
-      })
-      await initWalletConnect()
-    })
+      });
+      await initWalletConnect();
+    });
 
     it("returns QR code data URL on connect", async () => {
-      const result = await connectWalletConnect()
-      
-      expect(result.uri).toBe("wc:test-uri")
-      expect(result.qrDataUrl).toBe("data:image/png;base64,test")
-    })
+      const result = await connectWalletConnect();
+
+      expect(result.uri).toBe("wc:test-uri");
+      expect(result.qrDataUrl).toBe("data:image/png;base64,test");
+    });
 
     it("subscribers receive connecting state", async () => {
-      const states: any[] = []
-      subscribeWalletConnect((state) => states.push(state))
+      const states: any[] = [];
+      subscribeWalletConnect((state) => states.push(state));
 
-      await connectWalletConnect()
+      await connectWalletConnect();
 
-      expect(states.some((s) => s.connecting)).toBe(true)
-    })
+      expect(states.some((s) => s.connecting)).toBe(true);
+    });
 
     it("subscribers receive connected state after approval", async () => {
-      const states: any[] = []
-      subscribeWalletConnect((state) => states.push(state))
+      const states: any[] = [];
+      subscribeWalletConnect((state) => states.push(state));
 
-      await connectWalletConnect()
-      await new Promise((r) => setTimeout(r, 10))
+      await connectWalletConnect();
+      await new Promise((r) => setTimeout(r, 10));
 
-      expect(states.some((s) => s.connected)).toBe(true)
-    })
-  })
+      expect(states.some((s) => s.connected)).toBe(true);
+    });
+  });
 
   // ─── Deep Link Tests ────────────────────────────────────────────
   describe("deep links", () => {
     it("returns Lobstr deep link", () => {
-      const link = getWalletConnectDeepLink("lobstr", "wc:test")
-      expect(link).toBe("lobstr://wc?uri=wc%3Atest")
-    })
+      const link = getWalletConnectDeepLink("lobstr", "wc:test");
+      expect(link).toBe("lobstr://wc?uri=wc%3Atest");
+    });
 
     it("returns xBull deep link", () => {
-      const link = getWalletConnectDeepLink("xbull", "wc:test")
-      expect(link).toBe("xbull://wc?uri=wc%3Atest")
-    })
+      const link = getWalletConnectDeepLink("xbull", "wc:test");
+      expect(link).toBe("xbull://wc?uri=wc%3Atest");
+    });
 
     it("returns null for unknown wallet", () => {
-      const link = getWalletConnectDeepLink("unknown", "wc:test")
-      expect(link).toBeNull()
-    })
+      const link = getWalletConnectDeepLink("unknown", "wc:test");
+      expect(link).toBeNull();
+    });
 
     it("opens deep link in browser", () => {
-      const originalHref = window.location.href
+      const originalHref = window.location.href;
       Object.defineProperty(window, "location", {
         value: { href: "" },
         writable: true,
-      })
+      });
 
-      openWalletDeepLink("lobstr", "wc:test")
-      expect(window.location.href).toBe("lobstr://wc?uri=wc%3Atest")
+      openWalletDeepLink("lobstr", "wc:test");
+      expect(window.location.href).toBe("lobstr://wc?uri=wc%3Atest");
 
       Object.defineProperty(window, "location", {
         value: { href: originalHref },
         writable: true,
-      })
-    })
-  })
+      });
+    });
+  });
 
   // ─── Transaction Tests ─────────────────────────────────────────
   describe("transaction signing", () => {
     beforeEach(async () => {
-      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
-      await initWalletConnect()
-      
+      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
+      await initWalletConnect();
+
       mockWeb3Wallet.connect.mockResolvedValue({
         uri: "wc:test",
         approval: vi.fn(() =>
@@ -233,15 +231,15 @@ describe("walletConnect core module", () => {
             acknowledged: Date.now(),
           })
         ),
-      })
-      await connectWalletConnect()
-      await new Promise((r) => setTimeout(r, 10))
-    })
+      });
+      await connectWalletConnect();
+      await new Promise((r) => setTimeout(r, 10));
+    });
 
     it("sends signXDR request to wallet", async () => {
-      mockWeb3Wallet.request.mockResolvedValue({ signedXdr: "signed-xdr" })
+      mockWeb3Wallet.request.mockResolvedValue({ signedXdr: "signed-xdr" });
 
-      const result = await signTransactionWalletConnect("test-xdr")
+      const result = await signTransactionWalletConnect("test-xdr");
 
       expect(mockWeb3Wallet.request).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -255,42 +253,42 @@ describe("walletConnect core module", () => {
             }),
           }),
         })
-      )
-      expect(result).toBe("signed-xdr")
-    })
+      );
+      expect(result).toBe("signed-xdr");
+    });
 
     it("throws when no session is active", async () => {
-      disconnectWalletConnect()
+      disconnectWalletConnect();
       await expect(signTransactionWalletConnect("test-xdr")).rejects.toThrow(
         /No active WalletConnect session/
-      )
-    })
-  })
+      );
+    });
+  });
 
   // ─── Disconnect Tests ─────────────────────────────────────────
   describe("disconnection", () => {
     it("clears session and state on disconnect", async () => {
-      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
-      await initWalletConnect()
-      
-      const states: any[] = []
-      subscribeWalletConnect((state) => states.push(state))
+      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
+      await initWalletConnect();
 
-      disconnectWalletConnect()
+      const states: any[] = [];
+      subscribeWalletConnect((state) => states.push(state));
 
-      expect(isWalletConnectConnected()).toBe(false)
-      expect(getActiveWalletConnectSession()).toBeNull()
-      expect(states.some((s) => !s.connected && !s.session)).toBe(true)
-    })
+      disconnectWalletConnect();
+
+      expect(isWalletConnectConnected()).toBe(false);
+      expect(getActiveWalletConnectSession()).toBeNull();
+      expect(states.some((s) => !s.connected && !s.session)).toBe(true);
+    });
 
     it("clears localStorage on disconnect", async () => {
-      localStorage.setItem("hunty_wc_session", JSON.stringify({ topic: "test" }))
-      
-      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id"
-      await initWalletConnect()
-      disconnectWalletConnect()
+      localStorage.setItem("hunty_wc_session", JSON.stringify({ topic: "test" }));
 
-      expect(localStorage.getItem("hunty_wc_session")).toBeNull()
-    })
-  })
-})
+      process.env.NEXT_PUBLIC_WC_PROJECT_ID = "test-project-id";
+      await initWalletConnect();
+      disconnectWalletConnect();
+
+      expect(localStorage.getItem("hunty_wc_session")).toBeNull();
+    });
+  });
+});

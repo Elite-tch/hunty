@@ -18,6 +18,7 @@ Before diving in, let's make sure you have everything you need to get started. D
 Let's get your development environment set up. It's pretty straightforward:
 
 1. **Clone the repo:**
+
    ```bash
    git clone https://github.com/Samuel1-ona/Hunty-contract.git
    cd Hunty-contract
@@ -25,6 +26,7 @@ Let's get your development environment set up. It's pretty straightforward:
 
 2. **Build everything:**
    This will compile all three contracts. Grab a coffee ☕ - first builds can take a minute!
+
    ```bash
    cd contracts/hunty-core && make build
    cd ../reward-manager && make build
@@ -89,6 +91,7 @@ Head over to [GitHub Issues](https://github.com/Samuel1-ona/Hunty-contract/issue
 ### Still Not Sure?
 
 If you're feeling overwhelmed, start with:
+
 1. Issues labeled "good first issue" - we specifically set these up for newcomers
 2. Documentation improvements - these are low-stress and help everyone
 3. Test coverage - writing tests is a great way to understand how things work
@@ -141,6 +144,7 @@ as correct answers, making the system more user-friendly."
 ```
 
 **Good commit messages:**
+
 - Explain what changed
 - Explain why (if it's not obvious)
 - Are written in present tense ("Add feature" not "Added feature")
@@ -154,6 +158,7 @@ git push origin feature/your-feature-name
 ```
 
 Then head over to GitHub and create a pull request. In your PR description, tell us:
+
 - What you changed
 - Why you changed it
 - How to test it
@@ -183,7 +188,7 @@ We can't stress this enough: **write tests**. They're not just for catching bugs
 
 ### Our Testing Goals
 
-- Aim for >80% code coverage 
+- Aim for >80% code coverage
 - Test edge cases - these are where bugs hide
 - Include integration tests for cross-contract calls
 - Make tests readable - they should tell a story
@@ -205,27 +210,29 @@ A good PR description helps reviewers understand your work quickly:
 
 ```markdown
 ## What This Does
+
 Adds support for multiple valid answers per clue, allowing hunt creators
 to accept variations like "Paris", "paris", or "City of Light" as correct.
 
 ## Why
+
 Some clues have multiple valid answers, and we want to be flexible while
 still maintaining security through hash verification.
 
 ## Testing
+
 - Added unit tests for multi-answer verification
 - Tested with various answer formats
 - Verified backward compatibility with single-answer clues
 
 ## Related Issues
+
 Closes #21
 ```
 
 ### The Review Process
 
 Don't take feedback personally! Code reviews are about making the code better, not criticizing you. We're all learning and improving together.
-
-
 
 ## Contract-Specific Tips
 
@@ -260,10 +267,7 @@ NFTs are cool, but they need to be done right:
 
 Stuck on something? We've got your back:
 
-- **Leave a message on the issue** - I will get back to you as quick as possible 
-
-
-
+- **Leave a message on the issue** - I will get back to you as quick as possible
 
 ## License
 

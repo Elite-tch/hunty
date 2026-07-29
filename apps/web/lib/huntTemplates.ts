@@ -1,10 +1,10 @@
-import type { HuntDraft } from "@/lib/types"
+import type { HuntDraft } from "@/lib/types";
 
 export interface HuntTemplateClue {
-  title: string
-  description: string
-  code: string
-  link?: string
+  title: string;
+  description: string;
+  code: string;
+  link?: string;
 }
 
 /**
@@ -13,29 +13,30 @@ export interface HuntTemplateClue {
  */
 export interface HuntTemplateSettings {
   /** Players must solve clues in order. */
-  sequential?: boolean
+  sequential?: boolean;
   /** Enable the countdown timer for a time-pressured experience. */
-  timerEnabled?: boolean
+  timerEnabled?: boolean;
   /** Default reward payout type. */
-  rewardType?: "XLM" | "NFT" | "Both"
+  rewardType?: "XLM" | "NFT" | "Both";
 }
 
 export interface HuntTemplate {
-  slug: string
-  title: string
-  description: string
-  category: string
-  estimatedDuration: string
-  clues: HuntTemplateClue[]
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  estimatedDuration: string;
+  clues: HuntTemplateClue[];
   /** Optional builder settings pre-filled when the template is loaded. */
-  settings?: HuntTemplateSettings
+  settings?: HuntTemplateSettings;
 }
 
 export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "city-walking-tour",
     title: "City Walking Tour",
-    description: "Guide players through murals, landmarks, and hidden corners in a downtown walking loop.",
+    description:
+      "Guide players through murals, landmarks, and hidden corners in a downtown walking loop.",
     category: "Outdoor",
     estimatedDuration: "45-60 min",
     settings: {
@@ -46,17 +47,20 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
     clues: [
       {
         title: "Mural at Sunrise Alley",
-        description: "Find the alley mural with the giant orange sun and note the year painted in the corner.",
+        description:
+          "Find the alley mural with the giant orange sun and note the year painted in the corner.",
         code: "2019",
       },
       {
         title: "Clocktower Countdown",
-        description: "Head to the old clocktower and enter the number shown on the face nearest the market square.",
+        description:
+          "Head to the old clocktower and enter the number shown on the face nearest the market square.",
         code: "12",
       },
       {
         title: "Bridge With the Brass Plaque",
-        description: "Cross the pedestrian bridge and use the surname engraved on the brass dedication plaque.",
+        description:
+          "Cross the pedestrian bridge and use the surname engraved on the brass dedication plaque.",
         code: "adeyemi",
       },
     ],
@@ -64,7 +68,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "office-scavenger-hunt",
     title: "Office Scavenger Hunt",
-    description: "Help new teammates learn key spaces, people, and culture rituals around the office.",
+    description:
+      "Help new teammates learn key spaces, people, and culture rituals around the office.",
     category: "Onboarding",
     estimatedDuration: "20-30 min",
     settings: {
@@ -75,17 +80,20 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
     clues: [
       {
         title: "Welcome Wall",
-        description: "Visit the team welcome wall and enter the final word from the mission statement.",
+        description:
+          "Visit the team welcome wall and enter the final word from the mission statement.",
         code: "builders",
       },
       {
         title: "Snack Station Survey",
-        description: "Check the kitchen snack station and enter the flavor listed on the top row of tea boxes.",
+        description:
+          "Check the kitchen snack station and enter the flavor listed on the top row of tea boxes.",
         code: "ginger",
       },
       {
         title: "Conference Room Cipher",
-        description: "Find the room named after a city and enter the city name from the door plaque.",
+        description:
+          "Find the room named after a city and enter the city name from the door plaque.",
         code: "lagos",
       },
     ],
@@ -93,7 +101,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "crypto-trivia-sprint",
     title: "Crypto Trivia Sprint",
-    description: "Kick off a web3 event with fast, beginner-friendly trivia clues that teach while players compete.",
+    description:
+      "Kick off a web3 event with fast, beginner-friendly trivia clues that teach while players compete.",
     category: "Trivia",
     estimatedDuration: "15-20 min",
     clues: [
@@ -109,7 +118,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
       },
       {
         title: "Consensus Check",
-        description: "What is the process called when a network agrees that transactions are valid?",
+        description:
+          "What is the process called when a network agrees that transactions are valid?",
         code: "consensus",
       },
     ],
@@ -117,23 +127,27 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "campus-welcome-quest",
     title: "Campus Welcome Quest",
-    description: "Show new students around must-know spots like the library, student center, and help desk.",
+    description:
+      "Show new students around must-know spots like the library, student center, and help desk.",
     category: "Campus",
     estimatedDuration: "30-40 min",
     clues: [
       {
         title: "Library Launch",
-        description: "Find the library entrance banner and enter the last word in the reading campaign slogan.",
+        description:
+          "Find the library entrance banner and enter the last word in the reading campaign slogan.",
         code: "discover",
       },
       {
         title: "Student Center Stop",
-        description: "Walk to the student center and use the room number on the careers office sign.",
+        description:
+          "Walk to the student center and use the room number on the careers office sign.",
         code: "214",
       },
       {
         title: "Mascot Moment",
-        description: "Take a photo by the mascot statue and enter the mascot nickname written on the base.",
+        description:
+          "Take a photo by the mascot statue and enter the mascot nickname written on the base.",
         code: "falcons",
       },
     ],
@@ -141,7 +155,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "museum-mystery",
     title: "Museum Mystery",
-    description: "Turn a gallery visit into a playful puzzle trail across artifacts, portraits, and exhibit labels.",
+    description:
+      "Turn a gallery visit into a playful puzzle trail across artifacts, portraits, and exhibit labels.",
     category: "Indoor",
     estimatedDuration: "35-50 min",
     settings: {
@@ -152,7 +167,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
     clues: [
       {
         title: "Portrait Puzzle",
-        description: "Locate the oldest portrait in the west gallery and enter the sitter's last name.",
+        description:
+          "Locate the oldest portrait in the west gallery and enter the sitter's last name.",
         code: "balewa",
       },
       {
@@ -162,7 +178,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
       },
       {
         title: "Curator's Choice",
-        description: "Read the curator note near the final room and enter the one-word theme highlighted in bold.",
+        description:
+          "Read the curator note near the final room and enter the one-word theme highlighted in bold.",
         code: "memory",
       },
     ],
@@ -170,23 +187,27 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "foodie-neighborhood-crawl",
     title: "Foodie Neighborhood Crawl",
-    description: "Send players across cafes, bakeries, and street-food spots for a social tasting adventure.",
+    description:
+      "Send players across cafes, bakeries, and street-food spots for a social tasting adventure.",
     category: "Community",
     estimatedDuration: "40-55 min",
     clues: [
       {
         title: "Cafe Counter Clue",
-        description: "Visit the first cafe and enter the pastry name written on the chalkboard special.",
+        description:
+          "Visit the first cafe and enter the pastry name written on the chalkboard special.",
         code: "croissant",
       },
       {
         title: "Market Spice Trail",
-        description: "At the spice stall, use the word printed on the jar with the brightest yellow label.",
+        description:
+          "At the spice stall, use the word printed on the jar with the brightest yellow label.",
         code: "turmeric",
       },
       {
         title: "Dessert Finale",
-        description: "Finish at the dessert stop and enter the topping listed first on the signature sundae menu.",
+        description:
+          "Finish at the dessert stop and enter the topping listed first on the signature sundae menu.",
         code: "almonds",
       },
     ],
@@ -194,7 +215,8 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
   {
     slug: "nature-walk",
     title: "Nature Walk",
-    description: "Lead players along a trail to spot trees, wildlife markers, and scenic lookouts at their own pace.",
+    description:
+      "Lead players along a trail to spot trees, wildlife markers, and scenic lookouts at their own pace.",
     category: "Outdoor",
     estimatedDuration: "30-45 min",
     settings: {
@@ -205,25 +227,28 @@ export const STARTER_HUNT_TEMPLATES: HuntTemplate[] = [
     clues: [
       {
         title: "Trailhead Marker",
-        description: "Start at the trailhead sign and enter the trail's total length shown in kilometers.",
+        description:
+          "Start at the trailhead sign and enter the trail's total length shown in kilometers.",
         code: "5",
       },
       {
         title: "Ancient Oak",
-        description: "Find the oldest oak along the path and enter the word carved into its interpretive plaque.",
+        description:
+          "Find the oldest oak along the path and enter the word carved into its interpretive plaque.",
         code: "guardian",
       },
       {
         title: "Lookout Point",
-        description: "Reach the scenic overlook and enter the name of the river visible in the valley below.",
+        description:
+          "Reach the scenic overlook and enter the name of the river visible in the valley below.",
         code: "silverbrook",
       },
     ],
   },
-]
+];
 
 export function getStarterTemplateBySlug(slug: string): HuntTemplate | undefined {
-  return STARTER_HUNT_TEMPLATES.find((template) => template.slug === slug)
+  return STARTER_HUNT_TEMPLATES.find((template) => template.slug === slug);
 }
 
 /**
@@ -231,11 +256,11 @@ export function getStarterTemplateBySlug(slug: string): HuntTemplate | undefined
  * templates. Used to drive the category filter on the selection screen.
  */
 export function getTemplateCategories(
-  templates: HuntTemplate[] = STARTER_HUNT_TEMPLATES,
+  templates: HuntTemplate[] = STARTER_HUNT_TEMPLATES
 ): string[] {
-  return Array.from(new Set(templates.map((template) => template.category))).sort(
-    (a, b) => a.localeCompare(b),
-  )
+  return Array.from(new Set(templates.map((template) => template.category))).sort((a, b) =>
+    a.localeCompare(b)
+  );
 }
 
 export function buildDraftHuntsFromTemplate(template: HuntTemplate): HuntDraft[] {
@@ -246,5 +271,5 @@ export function buildDraftHuntsFromTemplate(template: HuntTemplate): HuntDraft[]
     link: clue.link ?? "",
     code: clue.code,
     image: "",
-  }))
+  }));
 }

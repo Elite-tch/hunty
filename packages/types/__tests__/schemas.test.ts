@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, it } from "vitest";
 
 import {
   achievementSchema,
@@ -7,7 +7,7 @@ import {
   rewardSchema,
   schemas,
   storedHuntSchema,
-} from "../src/schemas"
+} from "../src/schemas";
 
 describe("zod schemas", () => {
   it("parses a valid stored hunt", () => {
@@ -19,10 +19,10 @@ describe("zod schemas", () => {
       status: "Active",
       rewardType: "XLM",
       rewards: [{ place: 1, amount: 10 }],
-    })
+    });
 
-    expect(parsed.title).toBe("City Hunt")
-  })
+    expect(parsed.title).toBe("City Hunt");
+  });
 
   it("rejects an invalid hunt status", () => {
     const result = storedHuntSchema.safeParse({
@@ -32,14 +32,14 @@ describe("zod schemas", () => {
       cluesCount: 3,
       status: "Paused",
       rewardType: "XLM",
-    })
+    });
 
-    expect(result.success).toBe(false)
-  })
+    expect(result.success).toBe(false);
+  });
 
   it("validates reward, clue, progress, and achievement shapes", () => {
-    expect(rewardSchema.safeParse({ place: 1, amount: 5 }).success).toBe(true)
-    expect(rewardSchema.safeParse({ place: 1 }).success).toBe(false)
+    expect(rewardSchema.safeParse({ place: 1, amount: 5 }).success).toBe(true);
+    expect(rewardSchema.safeParse({ place: 1 }).success).toBe(false);
 
     expect(
       clueSchema.safeParse({
@@ -48,8 +48,8 @@ describe("zod schemas", () => {
         question: "Q",
         answer: "A",
         points: 1,
-      }).success,
-    ).toBe(true)
+      }).success
+    ).toBe(true);
 
     expect(
       playerProgressSchema.safeParse({
@@ -58,8 +58,8 @@ describe("zod schemas", () => {
         current_clue_index: 0,
         completed: false,
         reward_claimed: false,
-      }).success,
-    ).toBe(true)
+      }).success
+    ).toBe(true);
 
     expect(
       achievementSchema.safeParse({
@@ -69,9 +69,9 @@ describe("zod schemas", () => {
         icon: "🏆",
         rarity: "common",
         condition: "Win 1 hunt",
-      }).success,
-    ).toBe(true)
-  })
+      }).success
+    ).toBe(true);
+  });
 
   it("exposes a schema lookup map", () => {
     expect(Object.keys(schemas).sort()).toEqual([
@@ -80,6 +80,6 @@ describe("zod schemas", () => {
       "playerProgress",
       "reward",
       "storedHunt",
-    ])
-  })
-})
+    ]);
+  });
+});

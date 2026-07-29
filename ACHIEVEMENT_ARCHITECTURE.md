@@ -187,17 +187,17 @@ hunty/
 useEffect(() => {
   if (isOpen && playerAddress) {
     // Award achievements
-    const earned = checkAndAwardAchievements(playerAddress, stats)
-    
+    const earned = checkAndAwardAchievements(playerAddress, stats);
+
     // Show notifications
-    earned.forEach(id => {
-      toast.success(`🎉 Achievement Unlocked: ${ACHIEVEMENTS[id].title}!`)
-    })
-    
+    earned.forEach((id) => {
+      toast.success(`🎉 Achievement Unlocked: ${ACHIEVEMENTS[id].title}!`);
+    });
+
     // Display in modal
-    setNewAchievements(earned)
+    setNewAchievements(earned);
   }
-}, [isOpen, playerAddress])
+}, [isOpen, playerAddress]);
 ```
 
 ### 2. Profile Page Integration
@@ -218,7 +218,7 @@ const earned = checkAndAwardAchievements(address, {
   totalHuntsWon: 1,
   totalNftsEarned: 0,
   fastestCompletionSeconds: 250,
-})
+});
 ```
 
 ## 💾 Storage Architecture
@@ -312,7 +312,7 @@ BadgeWall
 
 ```typescript
 // Achievement Identification
-type AchievementId = 
+type AchievementId =
   | "first_hunt_completed"
   | "first_win"
   | "five_wins"
@@ -322,35 +322,35 @@ type AchievementId =
   | "high_scorer"
   | "speed_hunter"
   | "veteran"
-  | "legend"
+  | "legend";
 
 // Achievement Metadata
 interface Achievement {
-  id: AchievementId
-  title: string
-  description: string
-  icon: string
-  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary"
-  condition: string
+  id: AchievementId;
+  title: string;
+  description: string;
+  icon: string;
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  condition: string;
 }
 
 // Earned Achievement Record
 interface EarnedAchievement {
-  id: AchievementId
-  earnedAt: number
+  id: AchievementId;
+  earnedAt: number;
 }
 
 // Player's Achievement Data
 interface PlayerAchievements {
-  address: string
-  earned: EarnedAchievement[]
-  lastUpdated: number
+  address: string;
+  earned: EarnedAchievement[];
+  lastUpdated: number;
 }
 
 // Achievement with Status
 interface AchievementWithStatus extends Achievement {
-  earned: boolean
-  earnedAt?: number
+  earned: boolean;
+  earnedAt?: number;
 }
 ```
 

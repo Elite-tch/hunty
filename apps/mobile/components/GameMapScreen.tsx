@@ -13,7 +13,7 @@ import { buildClueZones, zoneColor, type ClueZone } from '@/lib/clueZones';
 import { getAllHunts } from '@store/huntStore';
 import type { StoredHunt } from '@hunty/types';
 
-import { buildClueZones, type ClueZone,zoneColor } from '@/lib/clueZones';
+import { buildClueZones, type ClueZone, zoneColor } from '@/lib/clueZones';
 
 const INITIAL_DELTA = 0.02;
 

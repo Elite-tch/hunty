@@ -63,7 +63,8 @@ function getNetworkPassphrase(): string {
  * Retrieves the network type (testnet or mainnet)
  */
 export function getSorobanNetworkType(): "testnet" | "mainnet" {
-  const networkType = process.env.NEXT_PUBLIC_SOROBAN_NETWORK_TYPE as "testnet" | "mainnet" | undefined;
+  const networkType = process.env.NEXT_PUBLIC_SOROBAN_NETWORK_TYPE as
+    "testnet" | "mainnet" | undefined;
   return networkType ?? "testnet";
 }
 
@@ -101,7 +102,7 @@ export function getSorobanRpcUrl(): string {
   return getRpcUrl();
 }
 
-let sharedOptimizer: ReturnType<typeof createSorobanRpcOptimizer> | null = null
+let sharedOptimizer: ReturnType<typeof createSorobanRpcOptimizer> | null = null;
 
 export function getSorobanRpcOptimizer(): ReturnType<typeof createSorobanRpcOptimizer> {
   if (!sharedOptimizer) {
@@ -110,17 +111,17 @@ export function getSorobanRpcOptimizer(): ReturnType<typeof createSorobanRpcOpti
       fallbackRpcUrl: process.env.NEXT_PUBLIC_SOROBAN_FALLBACK_RPC_URL,
       debounceMs: Number(process.env.NEXT_PUBLIC_SOROBAN_DEBOUNCE_MS ?? 50),
       ttlMs: Number(process.env.NEXT_PUBLIC_SOROBAN_READ_TTL_MS ?? 30_000),
-    })
+    });
   }
 
-  return sharedOptimizer
+  return sharedOptimizer;
 }
 
 export async function readSorobanContractState<T>(request: {
-  key: string
-  method: string
-  params?: unknown[]
-  parser?: (response: unknown) => unknown
+  key: string;
+  method: string;
+  params?: unknown[];
+  parser?: (response: unknown) => unknown;
 }): Promise<T> {
-  return getSorobanRpcOptimizer().readContractState<T>(request)
+  return getSorobanRpcOptimizer().readContractState<T>(request);
 }

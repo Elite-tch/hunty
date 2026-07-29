@@ -1,4 +1,4 @@
-import { type AnalyticsConfig,analyticsConfig } from '@config/analytics';
+import { type AnalyticsConfig, analyticsConfig } from '@config/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sentry from '@sentry/react-native';
 

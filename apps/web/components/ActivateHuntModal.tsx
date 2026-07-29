@@ -1,19 +1,14 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ActivateHuntModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-  huntTitle: string
-  isActivating?: boolean
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  huntTitle: string;
+  isActivating?: boolean;
 }
 
 export function ActivateHuntModal({
@@ -33,8 +28,8 @@ export function ActivateHuntModal({
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-slate-600 dark:text-slate-300 text-lg">
-            Your hunt will be sent to the admin moderation queue. Once approved, it will appear in the
-            public Game Arcade and players can participate.
+            Your hunt will be sent to the admin moderation queue. Once approved, it will appear in
+            the public Game Arcade and players can participate.
           </p>
           {huntTitle && (
             <p className="text-slate-500 dark:text-slate-400 text-sm italic">
@@ -42,12 +37,7 @@ export function ActivateHuntModal({
             </p>
           )}
           <div className="flex gap-4">
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="flex-1"
-              disabled={isActivating}
-            >
+            <Button onClick={onClose} variant="outline" className="flex-1" disabled={isActivating}>
               Cancel
             </Button>
             <Button
@@ -61,5 +51,5 @@ export function ActivateHuntModal({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { Crown, Eye, Pencil, UserPlus, Users } from "lucide-react"
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Crown, Eye, Pencil, UserPlus, Users } from "lucide-react";
 import {
   acceptInvite,
   appendActivity,
@@ -16,82 +16,78 @@ import {
   type CollaboratorRole,
   type CollaborationActivityEntry,
   type HuntCollaborator,
-} from "@/lib/collaboration"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+} from "@/lib/collaboration";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface CollaboratorsPanelProps {
-  huntId: number
-  currentWallet: string
-  className?: string
+  huntId: number;
+  currentWallet: string;
+  className?: string;
 }
 
 const ROLE_ICON: Record<CollaboratorRole, typeof Crown> = {
   owner: Crown,
   editor: Pencil,
   viewer: Eye,
-}
+};
 
-export function CollaboratorsPanel({
-  huntId,
-  currentWallet,
-  className,
-}: CollaboratorsPanelProps) {
-  const [collaborators, setCollaborators] = useState<HuntCollaborator[]>([])
-  const [activity, setActivity] = useState<CollaborationActivityEntry[]>([])
-  const [inviteAddress, setInviteAddress] = useState("")
-  const [inviteRole, setInviteRole] = useState<"editor" | "viewer">("editor")
-  const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
+export function CollaboratorsPanel({ huntId, currentWallet, className }: CollaboratorsPanelProps) {
+  const [collaborators, setCollaborators] = useState<HuntCollaborator[]>([]);
+  const [activity, setActivity] = useState<CollaborationActivityEntry[]>([]);
+  const [inviteAddress, setInviteAddress] = useState("");
+  const [inviteRole, setInviteRole] = useState<"editor" | "viewer">("editor");
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
-    setCollaborators(getCollaborators(huntId))
-    setActivity(getActivityLog(huntId, 30))
-  }, [huntId])
+    setCollaborators(getCollaborators(huntId));
+    setActivity(getActivityLog(huntId, 30));
+  }, [huntId]);
 
   useEffect(() => {
-    refresh()
-  }, [refresh])
+    refresh();
+  }, [refresh]);
 
   // Presence heartbeat while panel is open
   useEffect(() => {
-    if (!currentWallet) return
-    pingPresence(huntId, currentWallet, "collaborators-panel")
+    if (!currentWallet) return;
+    pingPresence(huntId, currentWallet, "collaborators-panel");
     const id = setInterval(() => {
-      pingPresence(huntId, currentWallet, "collaborators-panel")
-      refresh()
-    }, 8_000)
+      pingPresence(huntId, currentWallet, "collaborators-panel");
+      refresh();
+    }, 8_000);
     return () => {
-      clearInterval(id)
-      pingPresence(huntId, currentWallet, null)
-    }
-  }, [huntId, currentWallet, refresh])
+      clearInterval(id);
+      pingPresence(huntId, currentWallet, null);
+    };
+  }, [huntId, currentWallet, refresh]);
 
   const me = useMemo(
     () => collaborators.find((c) => c.walletAddress === currentWallet),
-    [collaborators, currentWallet],
-  )
-  const isOwner = me?.role === "owner"
+    [collaborators, currentWallet]
+  );
+  const isOwner = me?.role === "owner";
   const activeEditors = useMemo(
     () => getActiveEditors(huntId, currentWallet),
     // refresh updates collaborators → recompute
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [huntId, currentWallet, collaborators],
-  )
+    [huntId, currentWallet, collaborators]
+  );
 
   const handleInvite = () => {
-    setError(null)
-    setMessage(null)
-    const result = inviteCollaborator(huntId, currentWallet, inviteAddress, inviteRole)
+    setError(null);
+    setMessage(null);
+    const result = inviteCollaborator(huntId, currentWallet, inviteAddress, inviteRole);
     if (!result.ok) {
-      setError(result.error)
-      return
+      setError(result.error);
+      return;
     }
-    setInviteAddress("")
-    setMessage(`Invite sent to ${result.collaborator.walletAddress.slice(0, 6)}…`)
-    refresh()
-  }
+    setInviteAddress("");
+    setMessage(`Invite sent to ${result.collaborator.walletAddress.slice(0, 6)}…`);
+    refresh();
+  };
 
   return (
     <div className={cn("space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4", className)}>
@@ -113,7 +109,7 @@ export function CollaboratorsPanel({
 
       <ul className="space-y-2">
         {collaborators.map((c) => {
-          const Icon = ROLE_ICON[c.role]
+          const Icon = ROLE_ICON[c.role];
           return (
             <li
               key={c.walletAddress}
@@ -129,9 +125,7 @@ export function CollaboratorsPanel({
                   <p className="text-[11px] text-slate-500 capitalize">
                     {c.role}
                     {!c.accepted ? " · pending" : ""}
-                    {c.lastActiveAt && Date.now() - c.lastActiveAt < 30_000
-                      ? " · online"
-                      : ""}
+                    {c.lastActiveAt && Date.now() - c.lastActiveAt < 30_000 ? " · online" : ""}
                   </p>
                 </div>
               </div>
@@ -146,9 +140,9 @@ export function CollaboratorsPanel({
                           huntId,
                           currentWallet,
                           c.walletAddress,
-                          e.target.value as "editor" | "viewer",
-                        )
-                        refresh()
+                          e.target.value as "editor" | "viewer"
+                        );
+                        refresh();
                       }}
                     >
                       <option value="editor">editor</option>
@@ -160,9 +154,9 @@ export function CollaboratorsPanel({
                       size="sm"
                       className="h-7 text-[11px]"
                       onClick={() => {
-                        const res = transferOwnership(huntId, currentWallet, c.walletAddress)
-                        if (!res.ok) setError(res.error)
-                        refresh()
+                        const res = transferOwnership(huntId, currentWallet, c.walletAddress);
+                        if (!res.ok) setError(res.error);
+                        refresh();
                       }}
                     >
                       Make owner
@@ -173,8 +167,8 @@ export function CollaboratorsPanel({
                       size="sm"
                       className="h-7 text-[11px] text-red-300"
                       onClick={() => {
-                        removeCollaborator(huntId, currentWallet, c.walletAddress)
-                        refresh()
+                        removeCollaborator(huntId, currentWallet, c.walletAddress);
+                        refresh();
                       }}
                     >
                       Remove
@@ -187,8 +181,8 @@ export function CollaboratorsPanel({
                     size="sm"
                     className="h-7 text-[11px]"
                     onClick={() => {
-                      acceptInvite(huntId, currentWallet)
-                      refresh()
+                      acceptInvite(huntId, currentWallet);
+                      refresh();
                     }}
                   >
                     Accept
@@ -196,10 +190,12 @@ export function CollaboratorsPanel({
                 )}
               </div>
             </li>
-          )
+          );
         })}
         {collaborators.length === 0 && (
-          <p className="text-xs text-slate-500">No collaborators yet. Invite a wallet to co-create.</p>
+          <p className="text-xs text-slate-500">
+            No collaborators yet. Invite a wallet to co-create.
+          </p>
         )}
       </ul>
 
@@ -235,15 +231,15 @@ export function CollaboratorsPanel({
 
       <CollaborationActivityLog entries={activity} />
     </div>
-  )
+  );
 }
 
 export function CollaborationActivityLog({
   entries,
   className,
 }: {
-  entries: CollaborationActivityEntry[]
-  className?: string
+  entries: CollaborationActivityEntry[];
+  className?: string;
 }) {
   return (
     <div className={cn("space-y-2", className)}>
@@ -251,36 +247,28 @@ export function CollaborationActivityLog({
         Activity log
       </h4>
       <ul className="max-h-40 overflow-y-auto space-y-1.5">
-        {entries.length === 0 && (
-          <li className="text-[11px] text-slate-500">No activity yet.</li>
-        )}
+        {entries.length === 0 && <li className="text-[11px] text-slate-500">No activity yet.</li>}
         {entries.map((e) => (
           <li key={e.id} className="text-[11px] text-slate-400">
-            <span className="text-slate-500">
-              {new Date(e.timestamp * 1000).toLocaleString()}
-            </span>
+            <span className="text-slate-500">{new Date(e.timestamp * 1000).toLocaleString()}</span>
             {" · "}
             {e.summary}
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 /** Helper for creators to record a hunt edit in the activity log. */
-export function logHuntEdit(
-  huntId: number,
-  actorAddress: string,
-  summary: string,
-): void {
+export function logHuntEdit(huntId: number, actorAddress: string, summary: string): void {
   appendActivity(huntId, {
     actorAddress,
     action: "hunt_updated",
     summary,
-  })
+  });
 }
 
 function short(addr: string): string {
-  return `${addr.slice(0, 4)}…${addr.slice(-4)}`
+  return `${addr.slice(0, 4)}…${addr.slice(-4)}`;
 }

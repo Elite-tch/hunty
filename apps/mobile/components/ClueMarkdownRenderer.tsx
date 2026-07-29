@@ -2,7 +2,7 @@ import { resolveImageSrc } from '@lib/ipfs';
 import { useTheme } from '@providers/ThemeProvider';
 import { Image } from 'expo-image';
 import React from 'react';
-import { Linking, Pressable,StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface ClueMarkdownRendererProps {
   text: string;

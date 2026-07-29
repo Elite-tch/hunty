@@ -18,11 +18,7 @@ import type { ReactNode } from "react";
 import type { HuntCategoryId } from "./categories";
 import type { CollaboratorRole, HuntCollaborator } from "./collaboration";
 import type { AnswerStrictness } from "./fuzzyAnswer";
-import type {
-  ClueScoringBreakdown,
-  HuntScoringBreakdown,
-  ScoringWeights,
-} from "./scoring";
+import type { ClueScoringBreakdown, HuntScoringBreakdown, ScoringWeights } from "./scoring";
 
 // ─── Shared domain types (single source of truth: @hunty/types) ──────────────
 
@@ -395,10 +391,7 @@ export interface RewardPlayerProgress {
 
 // ─── Activity Feed ───────────────────────────────────────────────────────────
 
-export type ActivityEventType =
-  | "HuntCompleted"
-  | "ClueCompleted"
-  | "HuntSponsored";
+export type ActivityEventType = "HuntCompleted" | "ClueCompleted" | "HuntSponsored";
 
 export interface ActivityEvent {
   id: string;
@@ -495,11 +488,7 @@ export interface PlayerStats {
   lastUpdated: number;
 }
 
-export type CoverImageUploadState =
-  | "idle"
-  | "uploading"
-  | "succeeded"
-  | "failed";
+export type CoverImageUploadState = "idle" | "uploading" | "succeeded" | "failed";
 
 // ─── Player Count ────────────────────────────────────────────────────────────
 

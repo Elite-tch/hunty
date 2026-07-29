@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion"
-import { usePathname } from "next/navigation"
-import { type ReactNode, useEffect } from "react"
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { type ReactNode, useEffect } from "react";
 
 /**
  * Wraps every page in an AnimatePresence boundary so route changes
@@ -13,27 +13,25 @@ import { type ReactNode, useEffect } from "react"
  * opacity-only transition (no layout shift).
  */
 export function PageTransitionWrapper({ children }: { children: ReactNode }) {
-  const pathname = usePathname()
-  const shouldReduceMotion = useReducedMotion()
+  const pathname = usePathname();
+  const shouldReduceMotion = useReducedMotion();
 
   // Reset scroll to top on every route change so the incoming page
   // always starts at the top — prevents a perceived layout shift where
   // the new page appears mid-scroll from the previous route.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" })
-  }, [pathname])
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
 
   const variants: Variants = {
-    initial: shouldReduceMotion
-      ? { opacity: 0 }
-      : { opacity: 0, y: 12 },
+    initial: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 },
     animate: shouldReduceMotion
       ? { opacity: 1, transition: { duration: 0.15 } }
       : { opacity: 1, y: 0, transition: { duration: 0.28, ease: "easeOut" } },
     exit: shouldReduceMotion
       ? { opacity: 0, transition: { duration: 0.1 } }
       : { opacity: 0, y: -8, transition: { duration: 0.18, ease: "easeOut" } },
-  }
+  };
 
   return (
     // mode="wait" ensures the exit animation completes before the next
@@ -41,7 +39,7 @@ export function PageTransitionWrapper({ children }: { children: ReactNode }) {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={pathname}
-        data-page-transition          // ← activates will-change hint in globals.css
+        data-page-transition // ← activates will-change hint in globals.css
         variants={variants}
         initial="initial"
         animate="animate"
@@ -51,7 +49,5 @@ export function PageTransitionWrapper({ children }: { children: ReactNode }) {
         {children}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }
-
-

@@ -13,23 +13,40 @@
  * is required.
  */
 
-import { expect, type Page,test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
-import { injectMockWallet, MOCK_PUBLIC_KEY,seedHuntData } from "./helpers/mock-wallet";
+import { injectMockWallet, MOCK_PUBLIC_KEY, seedHuntData } from "./helpers/mock-wallet";
 
 // ---------------------------------------------------------------------------
 // Fixtures
 // ---------------------------------------------------------------------------
 
 const CREATOR_PUBLIC_KEY = MOCK_PUBLIC_KEY;
-const PLAYER_PUBLIC_KEY =
-  "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3B2WSQHG4W37";
+const PLAYER_PUBLIC_KEY = "GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3B2WSQHG4W37";
 
 const HUNT_ID = 200;
 const CLUES = [
-  { id: 10, huntId: HUNT_ID, question: "What is the capital of France?",   answer: "paris",    points: 10 },
-  { id: 11, huntId: HUNT_ID, question: "How many sides does a triangle have?", answer: "3",    points: 15 },
-  { id: 12, huntId: HUNT_ID, question: "What color is the sky on a clear day?", answer: "blue", points: 20 },
+  {
+    id: 10,
+    huntId: HUNT_ID,
+    question: "What is the capital of France?",
+    answer: "paris",
+    points: 10,
+  },
+  {
+    id: 11,
+    huntId: HUNT_ID,
+    question: "How many sides does a triangle have?",
+    answer: "3",
+    points: 15,
+  },
+  {
+    id: 12,
+    huntId: HUNT_ID,
+    question: "What color is the sky on a clear day?",
+    answer: "blue",
+    points: 20,
+  },
 ];
 
 const DRAFT_HUNT = {
@@ -40,7 +57,7 @@ const DRAFT_HUNT = {
   status: "Draft",
   reward: 5,
   startTime: Math.floor(Date.now() / 1000) + 60,
-  endTime:   Math.floor(Date.now() / 1000) + 7 * 86400,
+  endTime: Math.floor(Date.now() / 1000) + 7 * 86400,
 };
 
 /**
@@ -93,17 +110,26 @@ test.describe("Full Hunt Flow: Creation → Activation → Play", () => {
 
     // Fill in the first clue (already present by default)
     await page.getByPlaceholder("Title of the Hunt").first().fill(CLUES[0].question);
-    await page.getByPlaceholder("Enter Code to Unlock next challenge").first().fill(CLUES[0].answer);
+    await page
+      .getByPlaceholder("Enter Code to Unlock next challenge")
+      .first()
+      .fill(CLUES[0].answer);
 
     // Add second clue
-    await page.getByRole("button", { name: /add clue/i }).first().click();
+    await page
+      .getByRole("button", { name: /add clue/i })
+      .first()
+      .click();
     const titleInputs = page.getByPlaceholder("Title of the Hunt");
     await expect(titleInputs).toHaveCount(2);
     await titleInputs.nth(1).fill(CLUES[1].question);
     await page.getByPlaceholder("Enter Code to Unlock next challenge").nth(1).fill(CLUES[1].answer);
 
     // Add third clue
-    await page.getByRole("button", { name: /add clue/i }).first().click();
+    await page
+      .getByRole("button", { name: /add clue/i })
+      .first()
+      .click();
     await expect(page.getByPlaceholder("Title of the Hunt")).toHaveCount(3);
     await page.getByPlaceholder("Title of the Hunt").nth(2).fill(CLUES[2].question);
     await page.getByPlaceholder("Enter Code to Unlock next challenge").nth(2).fill(CLUES[2].answer);
@@ -162,9 +188,9 @@ test.describe("Full Hunt Flow: Creation → Activation → Play", () => {
     if (await registerBtn.isVisible()) {
       await registerBtn.click();
       // Registration confirmation or success indication
-      await expect(
-        page.getByText(/registered|you're in|success/i).first()
-      ).toBeVisible({ timeout: 8_000 });
+      await expect(page.getByText(/registered|you're in|success/i).first()).toBeVisible({
+        timeout: 8_000,
+      });
     }
   });
 
@@ -181,7 +207,10 @@ test.describe("Full Hunt Flow: Creation → Activation → Play", () => {
 
     // Seed the game in local preview mode by filling answers
     await page.getByPlaceholder("Title of the Hunt").first().fill(CLUES[0].question);
-    await page.getByPlaceholder("Enter Code to Unlock next challenge").first().fill(CLUES[0].answer);
+    await page
+      .getByPlaceholder("Enter Code to Unlock next challenge")
+      .first()
+      .fill(CLUES[0].answer);
 
     const testBtn = page.getByRole("button", { name: /test/i });
     if (await testBtn.isVisible({ timeout: 2_000 }).catch(() => false)) {
@@ -243,7 +272,7 @@ test.describe("Full Hunt Flow: Creation → Activation → Play", () => {
   // -------------------------------------------------------------------------
 
   test("two-wallet flow: creator sees draft, player sees active hunt", async ({ page }) => {
-    const draftHunt  = { ...DRAFT_HUNT, status: "Draft"  };
+    const draftHunt = { ...DRAFT_HUNT, status: "Draft" };
     const activeHunt = { ...DRAFT_HUNT, status: "Active" };
 
     // Start as creator

@@ -17,7 +17,8 @@ const trackVariants = cva(
     variants: {
       checked: {
         true: "bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-200 focus:ring-green-500",
-        false: "bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-200 focus:ring-red-500",
+        false:
+          "bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-200 focus:ring-red-500",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed",
@@ -33,11 +34,7 @@ const trackVariants = cva(
 
 const springConfig = { type: "spring" as const, stiffness: 500, damping: 30 };
 
-const CustomToggle = ({
-  initialValue = false,
-  onChange,
-  disabled = false,
-}: CustomToggleProps) => {
+const CustomToggle = ({ initialValue = false, onChange, disabled = false }: CustomToggleProps) => {
   const [isToggled, setIsToggled] = useState(initialValue);
 
   const handleToggle = () => {

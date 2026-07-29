@@ -3,15 +3,15 @@
  * Defines all level tiers with their titles, thresholds, and benefits.
  */
 
-export type LevelTitle = "Beginner" | "Explorer" | "Hunter" | "Master" | "Legend"
+export type LevelTitle = "Beginner" | "Explorer" | "Hunter" | "Master" | "Legend";
 
 export interface LevelTier {
-  level: number
-  title: LevelTitle
-  xpRequired: number
-  icon: string
-  color: string
-  benefits: string[]
+  level: number;
+  title: LevelTitle;
+  xpRequired: number;
+  icon: string;
+  color: string;
+  benefits: string[];
 }
 
 export const LEVEL_TIERS: LevelTier[] = [
@@ -66,23 +66,23 @@ export const LEVEL_TIERS: LevelTier[] = [
       "Custom profile icon",
     ],
   },
-]
+];
 
 /**
  * Calculate XP earned from a hunt completion based on difficulty
  */
 export function calculateXpFromHunt(points: number, difficulty?: string): number {
-  let multiplier = 1
+  let multiplier = 1;
   switch (difficulty) {
     case "Hard":
-      multiplier = 2
-      break
+      multiplier = 2;
+      break;
     case "Medium":
-      multiplier = 1.5
-      break
+      multiplier = 1.5;
+      break;
     case "Easy":
     default:
-      multiplier = 1
+      multiplier = 1;
   }
-  return Math.floor(points * multiplier)
+  return Math.floor(points * multiplier);
 }

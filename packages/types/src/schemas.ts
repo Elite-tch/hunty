@@ -7,23 +7,18 @@
  * sibling modules.
  */
 
-import { z } from "zod"
+import { z } from "zod";
 
-export const rewardTypeSchema = z.enum(["XLM", "NFT", "Both"])
+export const rewardTypeSchema = z.enum(["XLM", "NFT", "Both"]);
 
-export const huntStatusSchema = z.enum([
-  "Active",
-  "Completed",
-  "Draft",
-  "Cancelled",
-])
+export const huntStatusSchema = z.enum(["Active", "Completed", "Draft", "Cancelled"]);
 
-export const clueDifficultySchema = z.enum(["Easy", "Medium", "Hard"])
+export const clueDifficultySchema = z.enum(["Easy", "Medium", "Hard"]);
 
 export const rewardSchema = z.object({
   place: z.number(),
   amount: z.number(),
-})
+});
 
 export const clueSchema = z.object({
   id: z.number(),
@@ -37,16 +32,14 @@ export const clueSchema = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   geofenceRadiusMeters: z.number().optional(),
-})
+});
 
 export const storedHuntSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
   cluesCount: z.number(),
-  category: z
-    .enum(["Urban", "Campus", "Office", "Museum", "General"])
-    .optional(),
+  category: z.enum(["Urban", "Campus", "Office", "Museum", "General"]).optional(),
   difficulty: z.enum(["Easy", "Medium", "Hard"]).optional(),
   status: huntStatusSchema,
   rewardType: rewardTypeSchema,
@@ -65,7 +58,7 @@ export const storedHuntSchema = z.object({
   is_private: z.boolean().optional(),
   coverImageCid: z.string().optional(),
   isFeaturedOfWeek: z.boolean().optional(),
-})
+});
 
 export const playerProgressSchema = z.object({
   hunt_id: z.number(),
@@ -73,7 +66,7 @@ export const playerProgressSchema = z.object({
   current_clue_index: z.number(),
   completed: z.boolean(),
   reward_claimed: z.boolean(),
-})
+});
 
 export const achievementIdSchema = z.enum([
   "first_hunt_completed",
@@ -86,7 +79,7 @@ export const achievementIdSchema = z.enum([
   "speed_hunter",
   "veteran",
   "legend",
-])
+]);
 
 export const achievementSchema = z.object({
   id: achievementIdSchema,
@@ -95,7 +88,7 @@ export const achievementSchema = z.object({
   icon: z.string(),
   rarity: z.enum(["common", "uncommon", "rare", "epic", "legendary"]),
   condition: z.string(),
-})
+});
 
 /** Convenience map so callers can look up a schema by domain name. */
 export const schemas = {
@@ -104,4 +97,4 @@ export const schemas = {
   storedHunt: storedHuntSchema,
   playerProgress: playerProgressSchema,
   achievement: achievementSchema,
-} as const
+} as const;

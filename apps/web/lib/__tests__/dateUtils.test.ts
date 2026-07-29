@@ -1,11 +1,6 @@
-import { afterEach, beforeEach,describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  formatDate,
-  formatISOString,
-  formatTimestamp,
-  getCountdown,
-} from "../dateUtils";
+import { formatDate, formatISOString, formatTimestamp, getCountdown } from "../dateUtils";
 
 describe("dateUtils", () => {
   afterEach(() => {

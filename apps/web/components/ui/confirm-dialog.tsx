@@ -55,7 +55,10 @@ export function ConfirmDialog({
           </DialogClose>
           <Button
             variant={variant === "destructive" ? "destructive" : "primary"}
-            onClick={() => { onConfirm(); onOpenChange(false); }}
+            onClick={() => {
+              onConfirm();
+              onOpenChange(false);
+            }}
             disabled={loading}
           >
             {loading ? "Loading..." : confirmLabel}

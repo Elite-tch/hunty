@@ -1,21 +1,21 @@
-import { logger } from "@/lib/logger"
+import { logger } from "@/lib/logger";
 
-import { MONITORING } from "./config"
-import type { AlertChannel,AlertEvent } from "./types"
+import { MONITORING } from "./config";
+import type { AlertChannel, AlertEvent } from "./types";
 
-const sentAlerts = new Set<string>()
-const alertCooldownMs = MONITORING.alerts.cooldownMinutes * 60 * 1000
+const sentAlerts = new Set<string>();
+const alertCooldownMs = MONITORING.alerts.cooldownMinutes * 60 * 1000;
 
 function isDuplicate(event: AlertEvent): boolean {
-  const key = `${event.level}-${event.title}`
-  if (sentAlerts.has(key)) return true
-  sentAlerts.add(key)
-  setTimeout(() => sentAlerts.delete(key), alertCooldownMs)
-  return false
+  const key = `${event.level}-${event.title}`;
+  if (sentAlerts.has(key)) return true;
+  sentAlerts.add(key);
+  setTimeout(() => sentAlerts.delete(key), alertCooldownMs);
+  return false;
 }
 
 async function sendEmail(event: AlertEvent): Promise<boolean> {
-  if (!MONITORING.alerts.channels.email.enabled) return false
+  if (!MONITORING.alerts.channels.email.enabled) return false;
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -29,18 +29,19 @@ async function sendEmail(event: AlertEvent): Promise<boolean> {
         subject: `[${event.level.toUpperCase()}] ${event.title}`,
         text: `${event.message}\n\nSource: ${event.source}\nTime: ${event.timestamp}${event.metadata ? `\nMetadata: ${JSON.stringify(event.metadata, null, 2)}` : ""}`,
       }),
-    })
-    return response.ok
+    });
+    return response.ok;
   } catch (error) {
-    logger.error("[Alerts] Email send failed:", error)
-    return false
+    logger.error("[Alerts] Email send failed:", error);
+    return false;
   }
 }
 
 async function sendSlack(event: AlertEvent): Promise<boolean> {
-  if (!MONITORING.alerts.channels.slack.enabled) return false
+  if (!MONITORING.alerts.channels.slack.enabled) return false;
   try {
-    const color = event.level === "critical" ? "#ff0000" : event.level === "warning" ? "#ffa500" : "#3498db"
+    const color =
+      event.level === "critical" ? "#ff0000" : event.level === "warning" ? "#ffa500" : "#3498db";
     const response = await fetch(MONITORING.alerts.channels.slack.webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -60,19 +61,19 @@ async function sendSlack(event: AlertEvent): Promise<boolean> {
           },
         ],
       }),
-    })
-    return response.ok
+    });
+    return response.ok;
   } catch (error) {
-    logger.error("[Alerts] Slack send failed:", error)
-    return false
+    logger.error("[Alerts] Slack send failed:", error);
+    return false;
   }
 }
 
 async function sendDiscord(event: AlertEvent): Promise<boolean> {
-  if (!MONITORING.alerts.channels.discord.enabled) return false
+  if (!MONITORING.alerts.channels.discord.enabled) return false;
   try {
     const color =
-      event.level === "critical" ? 0xff0000 : event.level === "warning" ? 0xffa500 : 0x3498db
+      event.level === "critical" ? 0xff0000 : event.level === "warning" ? 0xffa500 : 0x3498db;
     const response = await fetch(MONITORING.alerts.channels.discord.webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,11 +93,11 @@ async function sendDiscord(event: AlertEvent): Promise<boolean> {
           },
         ],
       }),
-    })
-    return response.ok
+    });
+    return response.ok;
   } catch (error) {
-    logger.error("[Alerts] Discord send failed:", error)
-    return false
+    logger.error("[Alerts] Discord send failed:", error);
+    return false;
   }
 }
 
@@ -104,38 +105,33 @@ const channelDispatchers: Record<AlertChannel, (event: AlertEvent) => Promise<bo
   email: sendEmail,
   slack: sendSlack,
   discord: sendDiscord,
-}
+};
 
-export async function dispatchAlert(
-  event: AlertEvent,
-  channels?: AlertChannel[],
-): Promise<void> {
+export async function dispatchAlert(event: AlertEvent, channels?: AlertChannel[]): Promise<void> {
   if (isDuplicate(event)) {
-    logger.debug(`[Alerts] Skipping duplicate: ${event.title}`)
-    return
+    logger.debug(`[Alerts] Skipping duplicate: ${event.title}`);
+    return;
   }
 
-  logger.info(`[Alerts] Dispatching: [${event.level}] ${event.title}`)
+  logger.info(`[Alerts] Dispatching: [${event.level}] ${event.title}`);
 
-  const targets = channels ?? (["email", "slack", "discord"] as AlertChannel[])
+  const targets = channels ?? (["email", "slack", "discord"] as AlertChannel[]);
 
   const results = await Promise.allSettled(
-    targets.map((channel) => channelDispatchers[channel](event)),
-  )
+    targets.map((channel) => channelDispatchers[channel](event))
+  );
 
-  const failures = results.filter(
-    (r): r is PromiseRejectedResult => r.status === "rejected",
-  )
+  const failures = results.filter((r): r is PromiseRejectedResult => r.status === "rejected");
   if (failures.length > 0) {
-    logger.error(`[Alerts] ${failures.length} channel(s) failed to deliver alert`)
+    logger.error(`[Alerts] ${failures.length} channel(s) failed to deliver alert`);
   }
 }
 
 function generateId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID()
+    return crypto.randomUUID();
   }
-  return `alert-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+  return `alert-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
 export async function sendTestAlert(): Promise<string> {
@@ -147,8 +143,8 @@ export async function sendTestAlert(): Promise<string> {
     source: "monitoring-system",
     timestamp: new Date().toISOString(),
     metadata: { test: true, version: process.env.NEXT_PUBLIC_APP_VERSION || "0.1.0" },
-  }
+  };
 
-  await dispatchAlert(event)
-  return event.id
+  await dispatchAlert(event);
+  return event.id;
 }

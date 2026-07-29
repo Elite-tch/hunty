@@ -9,17 +9,10 @@ function AllProviders({ children }: { children: React.ReactNode }) {
       queries: { retry: false, staleTime: Infinity },
     },
   });
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
-export function render(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
-) {
+export function render(ui: ReactElement, options?: Omit<RenderOptions, "wrapper">) {
   const user = userEvent.setup();
   return { user, ...rtlRender(ui, { wrapper: AllProviders, ...options }) };
 }

@@ -1,24 +1,27 @@
-"use client"
+"use client";
 
-import { Bell, BellOff, Calendar,ChevronDown, ChevronUp, Users } from "lucide-react"
-import React, { useEffect,useState } from "react"
+import { Bell, BellOff, Calendar, ChevronDown, ChevronUp, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
-import { getNotificationPreferences, setNotificationPreferences } from "@/lib/notifications/notificationPreferences"
-import type { NotificationPreferences } from "@/lib/notifications/types"
-import { PushNotificationToggle } from "@/components/PushNotificationToggle"
-import { syncPreferencesToServer } from "@/lib/notifications/webPush"
+import {
+  getNotificationPreferences,
+  setNotificationPreferences,
+} from "@/lib/notifications/notificationPreferences";
+import type { NotificationPreferences } from "@/lib/notifications/types";
+import { PushNotificationToggle } from "@/components/PushNotificationToggle";
+import { syncPreferencesToServer } from "@/lib/notifications/webPush";
 
 interface NotificationSettingsProps {
-  onClose?: () => void
+  onClose?: () => void;
   /** Wallet address used for push subscription — pass from the connected wallet context */
-  walletAddress?: string | null
+  walletAddress?: string | null;
 }
 
 export function NotificationSettings({ onClose, walletAddress = null }: NotificationSettingsProps) {
-  const [prefs, setPrefs] = useState<NotificationPreferences>(getNotificationPreferences())
+  const [prefs, setPrefs] = useState<NotificationPreferences>(getNotificationPreferences());
 
   useEffect(() => {
-    setNotificationPreferences(prefs)
+    setNotificationPreferences(prefs);
     // Re-sync push preferences to server whenever they change
     if (walletAddress && prefs.pushEnabled) {
       syncPreferencesToServer(walletAddress, {
@@ -29,17 +32,17 @@ export function NotificationSettings({ onClose, walletAddress = null }: Notifica
         firstCompletion: prefs.pushFirstCompletion,
       }).catch(() => {
         // Non-fatal — local prefs already saved
-      })
+      });
     }
-  }, [prefs, walletAddress])
+  }, [prefs, walletAddress]);
 
   const toggle = (key: keyof NotificationPreferences) => {
-    setPrefs((prev) => ({ ...prev, [key]: !prev[key] as boolean }))
-  }
+    setPrefs((prev) => ({ ...prev, [key]: !prev[key] as boolean }));
+  };
 
   const setThreshold = (value: number) => {
-    setPrefs((prev) => ({ ...prev, threshold: Math.max(1, value) }))
-  }
+    setPrefs((prev) => ({ ...prev, threshold: Math.max(1, value) }));
+  };
 
   return (
     <div className="space-y-4">
@@ -137,7 +140,7 @@ export function NotificationSettings({ onClose, walletAddress = null }: Notifica
         </>
       )}
     </div>
-  )
+  );
 }
 
 function ToggleRow({
@@ -147,11 +150,11 @@ function ToggleRow({
   checked,
   onChange,
 }: {
-  icon: React.ReactNode
-  label: string
-  description: string
-  checked: boolean
-  onChange: () => void
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: () => void;
 }) {
   return (
     <div className="flex items-center justify-between">
@@ -179,9 +182,9 @@ function ToggleRow({
         />
       </button>
     </div>
-  )
+  );
 }
 
 function cn(...inputs: (string | boolean | undefined | null)[]): string {
-  return inputs.filter(Boolean).join(" ")
+  return inputs.filter(Boolean).join(" ");
 }

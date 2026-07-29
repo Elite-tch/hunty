@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { HUNT_CATEGORIES, type HuntCategoryId } from "@/lib/categories"
-import { cn } from "@/lib/utils"
+import { HUNT_CATEGORIES, type HuntCategoryId } from "@/lib/categories";
+import { cn } from "@/lib/utils";
 
 interface HuntCategoryFilterProps {
-  category: HuntCategoryId | "all"
-  onCategoryChange: (category: HuntCategoryId | "all") => void
-  tagQuery: string
-  onTagQueryChange: (tag: string) => void
-  className?: string
+  category: HuntCategoryId | "all";
+  onCategoryChange: (category: HuntCategoryId | "all") => void;
+  tagQuery: string;
+  onTagQueryChange: (tag: string) => void;
+  className?: string;
 }
 
 export function HuntCategoryFilter({
@@ -46,7 +46,7 @@ export function HuntCategoryFilter({
         aria-label="Filter by tag"
       />
     </div>
-  )
+  );
 }
 
 function FilterChip({
@@ -56,11 +56,11 @@ function FilterChip({
   color,
   bg,
 }: {
-  active: boolean
-  onClick: () => void
-  label: string
-  color?: string
-  bg?: string
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  color?: string;
+  bg?: string;
 }) {
   return (
     <button
@@ -68,7 +68,9 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
-        active ? "border-transparent" : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10",
+        active
+          ? "border-transparent"
+          : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
       )}
       style={
         active && color && bg
@@ -80,5 +82,5 @@ function FilterChip({
     >
       {label}
     </button>
-  )
+  );
 }

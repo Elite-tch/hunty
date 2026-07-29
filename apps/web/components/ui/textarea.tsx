@@ -1,7 +1,7 @@
-import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const textareaVariants = cva(
   // Base — shared across all variants
@@ -13,15 +13,14 @@ const textareaVariants = cva(
         default:
           "border-input dark:bg-input/30 border bg-transparent shadow-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         /** Borderless — blends into surrounding surface */
-        ghost:
-          "border-none bg-transparent focus-visible:ring-0",
+        ghost: "border-none bg-transparent focus-visible:ring-0",
       },
     },
     defaultVariants: {
       variant: "default",
     },
   }
-)
+);
 
 function Textarea({
   className,
@@ -34,7 +33,7 @@ function Textarea({
       className={cn(textareaVariants({ variant }), className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Textarea, textareaVariants }
+export { Textarea, textareaVariants };

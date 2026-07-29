@@ -1,32 +1,32 @@
-"use client"
+"use client";
 
-import { Award } from "lucide-react"
-import React from "react"
+import { Award } from "lucide-react";
+import React from "react";
 
-import type { SeasonBadge as SeasonBadgeType } from "@/lib/types"
-import { cn } from "@/lib/utils"
+import type { SeasonBadge as SeasonBadgeType } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface SeasonBadgeProps {
-  badge: SeasonBadgeType
-  className?: string
-  showRank?: boolean
+  badge: SeasonBadgeType;
+  className?: string;
+  showRank?: boolean;
 }
 
 export function SeasonBadge({ badge, className, showRank = true }: SeasonBadgeProps) {
   const getRankColor = (rank?: number) => {
-    if (!rank) return "bg-slate-500"
-    if (rank === 1) return "bg-yellow-500"
-    if (rank === 2) return "bg-gray-400"
-    if (rank === 3) return "bg-amber-700"
-    return "bg-slate-500"
-  }
+    if (!rank) return "bg-slate-500";
+    if (rank === 1) return "bg-yellow-500";
+    if (rank === 2) return "bg-gray-400";
+    if (rank === 3) return "bg-amber-700";
+    return "bg-slate-500";
+  };
 
   const getRankLabel = (rank?: number) => {
-    if (!rank) return ""
-    const suffixes = ["th", "st", "nd", "rd"]
-    const suffix = rank <= 3 ? suffixes[rank] : suffixes[0]
-    return `${rank}${suffix}`
-  }
+    if (!rank) return "";
+    const suffixes = ["th", "st", "nd", "rd"];
+    const suffix = rank <= 3 ? suffixes[rank] : suffixes[0];
+    return `${rank}${suffix}`;
+  };
 
   return (
     <div
@@ -47,5 +47,5 @@ export function SeasonBadge({ badge, className, showRank = true }: SeasonBadgePr
         </>
       )}
     </div>
-  )
+  );
 }

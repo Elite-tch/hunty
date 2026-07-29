@@ -14,4 +14,4 @@ export type {
   SharedCardProps as CardProps,
   SharedBadgeProps as BadgeProps,
   SharedEmptyStateProps as EmptyStateProps,
-} from "@hunty/types"
+} from "@hunty/types";

@@ -5,48 +5,50 @@ markdown## Steps to Resolve
    - Create `.github/workflows/ci.yml` in the repo root
 
 2. **Configure workflow triggers**
+
 ```yaml
-   on:
-     push:
-       branches: ["*"]
-     pull_request:
-       branches: ["*"]
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
 ```
 
 3. **Define the CI job steps**
+
 ```yaml
-   jobs:
-     ci:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v4
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-         - name: Setup pnpm
-           uses: pnpm/action-setup@v3
-           with:
-             version: 8
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
-         - name: Setup Node.js
-           uses: actions/setup-node@v4
-           with:
-             node-version: 20
-             cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
 
-         - name: Install dependencies
-           run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-         - name: TypeScript type check
-           run: pnpm tsc --noEmit
+      - name: TypeScript type check
+        run: pnpm tsc --noEmit
 
-         - name: Lint
-           run: pnpm lint
+      - name: Lint
+        run: pnpm lint
 
-         - name: Unit tests
-           run: pnpm test
+      - name: Unit tests
+        run: pnpm test
 
-         - name: E2E tests (PRs to main only)
-           if: github.base_ref == 'main'
-           run: pnpm test:e2e
+      - name: E2E tests (PRs to main only)
+        if: github.base_ref == 'main'
+        run: pnpm test:e2e
 ```
 
 4. **Enable branch protection**
@@ -55,11 +57,13 @@ markdown## Steps to Resolve
    - Select the `ci` job as a required check
 
 5. **Add CI badge to README**
+
 ```markdown
-   ![CI](https://github.com/Samuel1-ona/hunty/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Samuel1-ona/hunty/actions/workflows/ci.yml/badge.svg)
 ```
 
 ## Acceptance Checklist
+
 - [ ] CI runs on every push and PR
 - [ ] PRs cannot merge if CI fails (branch protection rule)
 - [ ] Status badge added to README
@@ -71,38 +75,39 @@ markdown## Steps to Resolve
    - Create `.github/dependabot.yml` in the repo root
 
 2. **Configure updates for both apps**
-```yaml
-   version: 2
-   updates:
-     # Web app (root)
-     - package-ecosystem: "npm"
-       directory: "/"
-       schedule:
-         interval: "weekly"
-         day: "monday"
-       groups:
-         minor-and-patch:
-           update-types:
-             - "minor"
-             - "patch"
-       reviewers:
-         - "Samuel1-ona"
-       open-pull-requests-limit: 10
 
-     # Mobile app
-     - package-ecosystem: "npm"
-       directory: "/mobile"
-       schedule:
-         interval: "weekly"
-         day: "monday"
-       groups:
-         minor-and-patch:
-           update-types:
-             - "minor"
-             - "patch"
-       reviewers:
-         - "Samuel1-ona"
-       open-pull-requests-limit: 5
+```yaml
+version: 2
+updates:
+  # Web app (root)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    reviewers:
+      - "Samuel1-ona"
+    open-pull-requests-limit: 10
+
+  # Mobile app
+  - package-ecosystem: "npm"
+    directory: "/mobile"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    reviewers:
+      - "Samuel1-ona"
+    open-pull-requests-limit: 5
 ```
 
 3. **Verify it's working**
@@ -111,6 +116,7 @@ markdown## Steps to Resolve
    - Dependabot PRs should start appearing the following Monday
 
 ## Acceptance Checklist
+
 - [ ] `dependabot.yml` covers both `/` and `/mobile`
 - [ ] Weekly schedule configured
 - [ ] Minor/patch updates grouped to reduce PR noise
@@ -120,19 +126,22 @@ Issue #377 — [INFRA] Automated Bundle Size Analysis
 markdown## Steps to Resolve
 
 1. **Install bundle analyzer for local dev**
+
 ```bash
    pnpm add -D @next/bundle-analyzer
 ```
 
 2. **Update `next.config.js` to support `pnpm analyze`**
+
 ```js
-   const withBundleAnalyzer = require("@next/bundle-analyzer")({
-     enabled: process.env.ANALYZE === "true",
-   });
-   module.exports = withBundleAnalyzer({});
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+module.exports = withBundleAnalyzer({});
 ```
 
 3. **Add the analyze script to `package.json`**
+
 ```json
    "scripts": {
      "analyze": "ANALYZE=true next build"
@@ -140,11 +149,13 @@ markdown## Steps to Resolve
 ```
 
 4. **Install `size-limit` for CI enforcement**
+
 ```bash
    pnpm add -D @size-limit/preset-app size-limit
 ```
 
 5. **Configure size limits in `package.json`**
+
 ```json
    "size-limit": [
      {
@@ -157,15 +168,18 @@ markdown## Steps to Resolve
      }
    ]
 ```
-   > Run `pnpm build && pnpm size-limit` locally first to get baseline numbers before setting limits.
+
+> Run `pnpm build && pnpm size-limit` locally first to get baseline numbers before setting limits.
 
 6. **Add a `bundle-size` step to the CI workflow** (`.github/workflows/ci.yml`)
+
 ```yaml
-   - name: Check bundle size
-     run: pnpm build && pnpm size-limit
+- name: Check bundle size
+  run: pnpm build && pnpm size-limit
 ```
 
 ## Acceptance Checklist
+
 - [ ] `pnpm analyze` works locally and opens the bundle visualizer
 - [ ] `size-limit` limits are set based on current build output
 - [ ] CI fails if any bundle exceeds the configured limit
@@ -174,7 +188,9 @@ Issue #385 — [FEAT] Video Walkthrough Clue
 markdown## Steps to Resolve
 
 ### 1. Update the `Clue` type
+
 Add the optional `videoCid` field to the clue type definition:
+
 ```ts
 // types/hunt.ts (or wherever Clue is defined)
 export type Clue = {
@@ -184,8 +200,10 @@ export type Clue = {
 ```
 
 ### 2. Update the HuntForm clue editor (creator side)
+
 - Add a video file input in the clue editor component
 - On file select, upload to IPFS and store the returned CID
+
 ```tsx
 // Validate format and size before upload
 const ALLOWED_TYPES = ["video/mp4", "video/webm"];
@@ -200,17 +218,19 @@ const handleVideoUpload = async (file: File) => {
 ```
 
 ### 3. Render the video player in `PlayGame.tsx`
+
 ```tsx
 {clue.videoCid && (
-  
-    
-    
+
+
+
     Your browser does not support the video tag.
-  
+
 )}
 ```
 
 ### 4. Respect user preferences
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   video {
@@ -219,12 +239,15 @@ const handleVideoUpload = async (file: File) => {
   }
 }
 ```
+
 Also ensure `autoplay` is **not** set on the `<video>` element.
 
 ### 5. Test non-video clues are unaffected
+
 - Verify clues without `videoCid` render identically to before
 
 ## Acceptance Checklist
+
 - [ ] Creator can upload a video (MP4/WebM, max 50MB) to a clue
 - [ ] Video plays inline on the hunt play page
 - [ ] Video respects `prefers-reduced-motion` / reduced-data preferences

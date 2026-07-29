@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star,Trophy } from "lucide-react";
+import { Star, Trophy } from "lucide-react";
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 
@@ -79,9 +79,7 @@ export function NftGallery({ nfts }: NftGalleryProps) {
   if (nfts.length === 0) {
     return (
       <EmptyState
-        icon={
-          <Trophy className="w-10 h-10 text-slate-500 dark:text-slate-400" />
-        }
+        icon={<Trophy className="w-10 h-10 text-slate-500 dark:text-slate-400" />}
         title="Complete hunts to earn NFTs"
         description="Your NFT gallery is empty right now. Finish a scavenger hunt to unlock your first collectible reward."
         action={{ label: "Browse hunts", href: "/" }}
@@ -94,10 +92,14 @@ export function NftGallery({ nfts }: NftGalleryProps) {
       {/* Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         {/* View toggle */}
-        <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+        >
           {viewMode === "grid" ? "Switch to List" : "Switch to Grid"}
         </Button>
-        
+
         <div className="flex flex-wrap items-center gap-2">
           {/* Hunt filter */}
           <DropdownMenu>
@@ -129,50 +131,61 @@ export function NftGallery({ nfts }: NftGalleryProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
-                Sort: {sortOption === "newest" ? "Newest" : sortOption === "rarest" ? "Rarest" : "Alphabetical"}
+                Sort:{" "}
+                {sortOption === "newest"
+                  ? "Newest"
+                  : sortOption === "rarest"
+                    ? "Rarest"
+                    : "Alphabetical"}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40">
               <DropdownMenuItem onClick={() => setSortOption("newest")}>Newest</DropdownMenuItem>
               <DropdownMenuItem onClick={() => setSortOption("rarest")}>Rarest</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortOption("alphabetical")}>Alphabetical</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOption("alphabetical")}>
+                Alphabetical
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
       {/* Gallery */}
-      <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "flex flex-col space-y-4"}>
+      <div
+        className={
+          viewMode === "grid"
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            : "flex flex-col space-y-4"
+        }
+      >
         {displayedNfts.map((nft, idx) => (
           <motion.div
             key={nft.id}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
             transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : { delay: idx * 0.05, duration: 0.4 }
+              prefersReducedMotion ? { duration: 0 } : { delay: idx * 0.05, duration: 0.4 }
             }
-            whileHover={
-              prefersReducedMotion
-                ? undefined
-                : { y: -8, transition: { duration: 0.2 } }
-            }
+            whileHover={prefersReducedMotion ? undefined : { y: -8, transition: { duration: 0.2 } }}
             onClick={() => handleNftClick(nft)}
             className="cursor-pointer group"
           >
-            <Card className={cn(
-              "relative overflow-hidden rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-xl transition-all duration-300",
-              viewMode === "list" && "flex"
-            )}>
-              <CardContent className={cn("p-0", viewMode === "list" && "flex items-center p-4 w-full")}>
+            <Card
+              className={cn(
+                "relative overflow-hidden rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-xl transition-all duration-300",
+                viewMode === "list" && "flex"
+              )}
+            >
+              <CardContent
+                className={cn("p-0", viewMode === "list" && "flex items-center p-4 w-full")}
+              >
                 {/* Badge */}
                 <div className="absolute top-3 right-3 z-10">
                   <div
                     className={cn(
                       "p-1.5 rounded-full",
                       nft.claimed ? "bg-emerald-500" : "bg-amber-500",
-                      "shadow-lg shadow-emerald-500/20",
+                      "shadow-lg shadow-emerald-500/20"
                     )}
                   >
                     <Star className="w-3 h-3 text-white fill-white" />
@@ -180,13 +193,24 @@ export function NftGallery({ nfts }: NftGalleryProps) {
                 </div>
 
                 {/* Image */}
-                <div className={cn(
-                  "aspect-square w-full bg-linear-to-br from-slate-50 to-indigo-50/30 flex items-center justify-center p-6 relative overflow-hidden",
-                  viewMode === "list" && "w-24 h-24 flex-shrink-0 mr-4 rounded-2xl"
-                )}>
+                <div
+                  className={cn(
+                    "aspect-square w-full bg-linear-to-br from-slate-50 to-indigo-50/30 flex items-center justify-center p-6 relative overflow-hidden",
+                    viewMode === "list" && "w-24 h-24 flex-shrink-0 mr-4 rounded-2xl"
+                  )}
+                >
                   <div className="absolute inset-0 bg-radial-[at_50%_50%] from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <motion.div className="relative w-full h-full drop-shadow-xl" whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 300 }}>
-                    <Image src={resolveImageSrc(nft.imageUri)} alt={nft.name} fill className="object-contain" />
+                  <motion.div
+                    className="relative w-full h-full drop-shadow-xl"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <Image
+                      src={resolveImageSrc(nft.imageUri)}
+                      alt={nft.name}
+                      fill
+                      className="object-contain"
+                    />
                   </motion.div>
                 </div>
 
@@ -199,8 +223,12 @@ export function NftGallery({ nfts }: NftGalleryProps) {
                     {nft.name}
                   </h3>
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-[11px] font-medium text-slate-400">#{nft.id.toString().padStart(4, "0")}</span>
-                    <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">View Details</span>
+                    <span className="text-[11px] font-medium text-slate-400">
+                      #{nft.id.toString().padStart(4, "0")}
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
+                      View Details
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -209,7 +237,11 @@ export function NftGallery({ nfts }: NftGalleryProps) {
         ))}
       </div>
 
-      <NftDetailModal nft={selectedNft} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <NftDetailModal
+        nft={selectedNft}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 }

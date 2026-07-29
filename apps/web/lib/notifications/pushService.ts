@@ -7,37 +7,37 @@
  * Only import this module in server-side code (API routes, Server Actions).
  */
 
-import webpush, { type PushSubscription as WebPushSubscription } from "web-push"
-import { logger } from "@/lib/logger"
-import type { PushEventType, PushPayload, WebPushSubscriptionRecord } from "./types"
-import { PUSH_EVENT_PREFERENCE_KEY } from "./types"
+import webpush, { type PushSubscription as WebPushSubscription } from "web-push";
+import { logger } from "@/lib/logger";
+import type { PushEventType, PushPayload, WebPushSubscriptionRecord } from "./types";
+import { PUSH_EVENT_PREFERENCE_KEY } from "./types";
 import {
   getSubscriptionsForWallet,
   getSubscriptionsByWallets,
   removeSubscription,
-} from "./subscriptionStore"
+} from "./subscriptionStore";
 
 // ─── VAPID Configuration ──────────────────────────────────────────────────────
 
-let vapidConfigured = false
+let vapidConfigured = false;
 
 function ensureVapidConfigured(): void {
-  if (vapidConfigured) return
+  if (vapidConfigured) return;
 
-  const publicKey = process.env.VAPID_PUBLIC_KEY
-  const privateKey = process.env.VAPID_PRIVATE_KEY
-  const subject = process.env.VAPID_SUBJECT ?? "mailto:admin@hunty.app"
+  const publicKey = process.env.VAPID_PUBLIC_KEY;
+  const privateKey = process.env.VAPID_PRIVATE_KEY;
+  const subject = process.env.VAPID_SUBJECT ?? "mailto:admin@hunty.app";
 
   if (!publicKey || !privateKey) {
     logger.warn(
       "[pushService] VAPID keys not configured — push notifications will be skipped. " +
         "Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY in your environment."
-    )
-    return
+    );
+    return;
   }
 
-  webpush.setVapidDetails(subject, publicKey, privateKey)
-  vapidConfigured = true
+  webpush.setVapidDetails(subject, publicKey, privateKey);
+  vapidConfigured = true;
 }
 
 // ─── Payload Builders ─────────────────────────────────────────────────────────
@@ -46,10 +46,10 @@ export function buildPayload(
   type: PushEventType,
   context: Record<string, string | number>
 ): PushPayload {
-  const huntName = String(context.huntName ?? "a hunt")
-  const overtakerName = String(context.overtakerName ?? "another player")
-  const playerName = String(context.playerName ?? "A player")
-  const huntId = context.huntId
+  const huntName = String(context.huntName ?? "a hunt");
+  const overtakerName = String(context.overtakerName ?? "another player");
+  const playerName = String(context.playerName ?? "A player");
+  const huntId = context.huntId;
 
   switch (type) {
     case "hunt_start":
@@ -59,7 +59,7 @@ export function buildPayload(
         tag: `hunt-start-${huntId}`,
         url: huntId ? `/hunt/${huntId}` : "/",
         data: { type, huntId },
-      }
+      };
 
     case "hunt_cancelled":
       return {
@@ -68,7 +68,7 @@ export function buildPayload(
         tag: `hunt-cancelled-${huntId}`,
         url: "/",
         data: { type, huntId },
-      }
+      };
 
     case "leaderboard_overtake":
       return {
@@ -77,7 +77,7 @@ export function buildPayload(
         tag: `overtake-${huntId}`,
         url: huntId ? `/hunt/${huntId}` : "/",
         data: { type, huntId },
-      }
+      };
 
     case "player_registered":
       return {
@@ -86,7 +86,7 @@ export function buildPayload(
         tag: `player-registered-${huntId}-${Date.now()}`,
         url: huntId ? `/dashboard` : "/dashboard",
         data: { type, huntId },
-      }
+      };
 
     case "first_completion":
       return {
@@ -95,7 +95,7 @@ export function buildPayload(
         tag: `first-completion-${huntId}`,
         url: `/dashboard`,
         data: { type, huntId },
-      }
+      };
 
     default:
       return {
@@ -103,7 +103,7 @@ export function buildPayload(
         body: "You have a new notification.",
         tag: `hunty-${Date.now()}`,
         url: "/",
-      }
+      };
   }
 }
 
@@ -119,13 +119,13 @@ export async function sendPushToWallet(
   payload: PushPayload,
   eventType?: PushEventType
 ): Promise<void> {
-  ensureVapidConfigured()
-  if (!vapidConfigured) return
+  ensureVapidConfigured();
+  if (!vapidConfigured) return;
 
-  const records = getSubscriptionsForWallet(walletAddress)
-  if (records.length === 0) return
+  const records = getSubscriptionsForWallet(walletAddress);
+  if (records.length === 0) return;
 
-  await sendToRecords(records, payload, eventType)
+  await sendToRecords(records, payload, eventType);
 }
 
 /**
@@ -138,13 +138,13 @@ export async function sendPushToWallets(
   payload: PushPayload,
   eventType?: PushEventType
 ): Promise<void> {
-  ensureVapidConfigured()
-  if (!vapidConfigured) return
+  ensureVapidConfigured();
+  if (!vapidConfigured) return;
 
-  const records = getSubscriptionsByWallets(walletAddresses)
-  if (records.length === 0) return
+  const records = getSubscriptionsByWallets(walletAddresses);
+  if (records.length === 0) return;
 
-  await sendToRecords(records, payload, eventType)
+  await sendToRecords(records, payload, eventType);
 }
 
 /**
@@ -155,8 +155,8 @@ export async function notifyWallet(
   type: PushEventType,
   context: Record<string, string | number>
 ): Promise<void> {
-  const payload = buildPayload(type, context)
-  await sendPushToWallet(walletAddress, payload, type)
+  const payload = buildPayload(type, context);
+  await sendPushToWallet(walletAddress, payload, type);
 }
 
 /**
@@ -167,8 +167,8 @@ export async function notifyWallets(
   type: PushEventType,
   context: Record<string, string | number>
 ): Promise<void> {
-  const payload = buildPayload(type, context)
-  await sendPushToWallets(walletAddresses, payload, type)
+  const payload = buildPayload(type, context);
+  await sendPushToWallets(walletAddresses, payload, type);
 }
 
 // ─── Internal ─────────────────────────────────────────────────────────────────
@@ -181,43 +181,35 @@ async function sendToRecords(
   // Filter by per-recipient preferences when we know the event type
   const eligible = eventType
     ? records.filter((r) => {
-        const prefs = r.preferences
-        if (!prefs) return true // no stored prefs → allow (default opt-in)
-        const key = PUSH_EVENT_PREFERENCE_KEY[eventType]
-        const flag = prefs[key]
-        return flag !== false // undefined → allow, false → skip
+        const prefs = r.preferences;
+        if (!prefs) return true; // no stored prefs → allow (default opt-in)
+        const key = PUSH_EVENT_PREFERENCE_KEY[eventType];
+        const flag = prefs[key];
+        return flag !== false; // undefined → allow, false → skip
       })
-    : records
+    : records;
 
-  if (eligible.length === 0) return
+  if (eligible.length === 0) return;
 
-  const jsonPayload = JSON.stringify(payload)
+  const jsonPayload = JSON.stringify(payload);
 
   const results = await Promise.allSettled(
     eligible.map((record) =>
       webpush
-        .sendNotification(
-          record.subscription as WebPushSubscription,
-          jsonPayload
-        )
+        .sendNotification(record.subscription as WebPushSubscription, jsonPayload)
         .catch((err: { statusCode?: number }) => {
           // 410 Gone / 404 Not Found → subscription is expired, remove it
           if (err?.statusCode === 410 || err?.statusCode === 404) {
-            removeSubscription(record.subscription.endpoint as string)
-            logger.info(
-              "[pushService] Removed stale subscription:",
-              record.walletAddress
-            )
+            removeSubscription(record.subscription.endpoint as string);
+            logger.info("[pushService] Removed stale subscription:", record.walletAddress);
           }
-          throw err
+          throw err;
         })
     )
-  )
+  );
 
-  const failures = results.filter((r) => r.status === "rejected")
+  const failures = results.filter((r) => r.status === "rejected");
   if (failures.length > 0) {
-    logger.warn(
-      `[pushService] ${failures.length}/${eligible.length} push notifications failed`
-    )
+    logger.warn(`[pushService] ${failures.length}/${eligible.length} push notifications failed`);
   }
 }

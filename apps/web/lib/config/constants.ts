@@ -32,7 +32,7 @@ export const HUNT_LIMITS = {
   MAX_ANSWER_LENGTH: 200,
   /** Maximum length of a hint text. */
   MAX_HINT_LENGTH: 300,
-} as const
+} as const;
 
 // ─── Time Limits ────────────────────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ export const TIME_LIMITS = {
   MAX_HUNT_DURATION_S: 90 * 24 * 60 * 60,
   /** Minimum time between clue answer submissions per wallet (ms). */
   MIN_SUBMISSION_INTERVAL_MS: 5_000,
-} as const
+} as const;
 
 // ─── Blockchain Constants ───────────────────────────────────────────────────
 
@@ -60,14 +60,14 @@ export const BLOCKCHAIN = {
   MAINNET_NETWORK_PASSPHRASE: "Public Global Stellar Network ; September 2015",
   /** Stellar Expert explorer base URL. */
   STELLAR_EXPLORER_BASE_URL: "https://stellar.expert/explorer",
-} as const
+} as const;
 
 /** Environment variable names for contract addresses. */
 export const CONTRACT_ENV_VARS = {
   HUNTY_CORE: "NEXT_PUBLIC_HUNTY_CORE_ADDRESS",
   REWARD_MANAGER: "NEXT_PUBLIC_REWARD_MANAGER_ADDRESS",
   NFT_REWARD: "NEXT_PUBLIC_NFT_REWARD_ADDRESS",
-} as const
+} as const;
 
 // ─── UI Constants ───────────────────────────────────────────────────────────
 
@@ -84,7 +84,7 @@ export const UI = {
   ARCADE_PAGE_SIZE: 12,
   /** Maximum number of leaderboard entries displayed. */
   LEADERBOARD_PAGE_SIZE: 50,
-} as const
+} as const;
 
 /** Tailwind CSS breakpoint values (px). */
 export const BREAKPOINTS = {
@@ -93,7 +93,7 @@ export const BREAKPOINTS = {
   lg: 1024,
   xl: 1280,
   "2xl": 1536,
-} as const
+} as const;
 
 // ─── Player Count ───────────────────────────────────────────────────────────
 
@@ -102,7 +102,7 @@ export const PLAYER_COUNT = {
   TRENDING_THRESHOLD: 50,
   /** How long a fetched player count is considered fresh (ms). */
   CACHE_TTL_MS: 60_000,
-} as const
+} as const;
 
 // ─── API Rate Limiting ──────────────────────────────────────────────────────
 
@@ -119,7 +119,7 @@ export const RATE_LIMITS = {
   WRITE_WALLET_LIMIT: 50,
   /** Admin endpoint: requests per window per IP. */
   ADMIN_IP_LIMIT: 20,
-} as const
+} as const;
 
 // ─── Feature Flags ──────────────────────────────────────────────────────────
 
@@ -141,9 +141,9 @@ export const FEATURE_FLAGS = {
   SEASONAL_LEADERBOARD: process.env.NEXT_PUBLIC_FEATURE_SEASONAL === "true",
   /** Enable drag-and-drop clue reordering in the hunt wizard. */
   DRAG_DROP_CLUES: process.env.NEXT_PUBLIC_FEATURE_DRAG_DROP === "true",
-} as const
+} as const;
 
-export type FeatureFlag = keyof typeof FEATURE_FLAGS
+export type FeatureFlag = keyof typeof FEATURE_FLAGS;
 
 // ─── Anti-Cheat Defaults ────────────────────────────────────────────────────
 
@@ -156,4 +156,4 @@ export const ANTI_CHEAT = {
   MIN_CLUE_INTERVAL_MS: 5_000,
   /** Threshold for flagging rapid successive submissions. */
   RAPID_SUBMISSION_THRESHOLD: 3,
-} as const
+} as const;

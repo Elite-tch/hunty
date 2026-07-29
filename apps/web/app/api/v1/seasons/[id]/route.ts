@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { getSeasonById, updateSeasonStatus, archiveSeason, getCurrentSeasonLeaderboard } from "@/lib/seasonStore";
+import {
+  getSeasonById,
+  updateSeasonStatus,
+  archiveSeason,
+  getCurrentSeasonLeaderboard,
+} from "@/lib/seasonStore";
 import { rateLimit, getIP, rateLimitResponse } from "@/lib/rate-limit";
 import { NotFoundError, ValidationError } from "@/lib/api/errors";
 import { withErrorHandling } from "@/lib/api/withErrorHandling";
@@ -7,7 +12,12 @@ import { withErrorHandling } from "@/lib/api/withErrorHandling";
 type Context = { params: Promise<{ id: string }> };
 
 import { getIP, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { archiveSeason, getCurrentSeasonLeaderboard,getSeasonById, updateSeasonStatus } from "@/lib/seasonStore";
+import {
+  archiveSeason,
+  getCurrentSeasonLeaderboard,
+  getSeasonById,
+  updateSeasonStatus,
+} from "@/lib/seasonStore";
 
 /**
  * GET /api/v1/seasons/[id]

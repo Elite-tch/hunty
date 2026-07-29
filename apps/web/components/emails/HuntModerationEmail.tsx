@@ -1,9 +1,9 @@
-import * as React from "react"
+import * as React from "react";
 
 interface HuntModerationEmailProps {
-  huntName: string
-  action: "approved" | "rejected"
-  reason?: string
+  huntName: string;
+  action: "approved" | "rejected";
+  reason?: string;
 }
 
 export const HuntModerationEmail: React.FC<Readonly<HuntModerationEmailProps>> = ({
@@ -11,7 +11,7 @@ export const HuntModerationEmail: React.FC<Readonly<HuntModerationEmailProps>> =
   action,
   reason,
 }) => {
-  const approved = action === "approved"
+  const approved = action === "approved";
   return (
     <div
       style={{
@@ -46,13 +46,13 @@ export const HuntModerationEmail: React.FC<Readonly<HuntModerationEmailProps>> =
           <p style={{ fontSize: "16px", lineHeight: "24px", color: "#4b5563" }}>
             {approved ? (
               <>
-                Your hunt <strong>{huntName}</strong> passed moderation and is ready to go live in the
-                Game Arcade.
+                Your hunt <strong>{huntName}</strong> passed moderation and is ready to go live in
+                the Game Arcade.
               </>
             ) : (
               <>
-                Your hunt <strong>{huntName}</strong> was not approved. Please review the feedback below
-                and submit again after making changes.
+                Your hunt <strong>{huntName}</strong> was not approved. Please review the feedback
+                below and submit again after making changes.
               </>
             )}
           </p>
@@ -73,5 +73,5 @@ export const HuntModerationEmail: React.FC<Readonly<HuntModerationEmailProps>> =
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

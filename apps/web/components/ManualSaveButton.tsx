@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Save, CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
-import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import type { SaveStatus } from "@/hooks/useHuntDraftAutoSave"
+import { useEffect, useState } from "react";
+import { Save, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import type { SaveStatus } from "@/hooks/useHuntDraftAutoSave";
 
 interface ManualSaveButtonProps {
   /** Current lifecycle state reported by useHuntDraftAutoSave. */
-  saveStatus: SaveStatus
+  saveStatus: SaveStatus;
   /** Called when the user clicks the button — should call saveNow(). */
-  onSave: () => Promise<void>
+  onSave: () => Promise<void>;
   /** Optional additional className for layout positioning. */
-  className?: string
+  className?: string;
 }
 
 /**
@@ -25,47 +25,43 @@ interface ManualSaveButtonProps {
  *
  * The button is disabled while a save is already in progress.
  */
-export function ManualSaveButton({
-  saveStatus,
-  onSave,
-  className,
-}: ManualSaveButtonProps) {
-  const [localStatus, setLocalStatus] = useState<SaveStatus>(saveStatus)
+export function ManualSaveButton({ saveStatus, onSave, className }: ManualSaveButtonProps) {
+  const [localStatus, setLocalStatus] = useState<SaveStatus>(saveStatus);
 
   // Mirror the parent status so we can show a brief success icon before
   // reverting to idle.
   useEffect(() => {
-    setLocalStatus(saveStatus)
+    setLocalStatus(saveStatus);
 
     if (saveStatus === "saved") {
       toast.success("Draft saved!", {
         description: "Your progress has been saved to this device.",
         duration: 2_500,
-      })
+      });
       // Revert to idle after the toast duration
-      const t = setTimeout(() => setLocalStatus("idle"), 2_500)
-      return () => clearTimeout(t)
+      const t = setTimeout(() => setLocalStatus("idle"), 2_500);
+      return () => clearTimeout(t);
     }
 
     if (saveStatus === "error") {
       toast.error("Save failed", {
         description: "Could not save your draft. Please try again.",
         duration: 4_000,
-      })
+      });
     }
-  }, [saveStatus])
+  }, [saveStatus]);
 
   const handleClick = async () => {
-    if (localStatus === "saving") return
-    setLocalStatus("saving")
+    if (localStatus === "saving") return;
+    setLocalStatus("saving");
     try {
-      await onSave()
+      await onSave();
     } catch {
-      setLocalStatus("error")
+      setLocalStatus("error");
     }
-  }
+  };
 
-  const isDisabled = localStatus === "saving"
+  const isDisabled = localStatus === "saving";
 
   return (
     <Button
@@ -78,8 +74,8 @@ export function ManualSaveButton({
         localStatus === "saving"
           ? "Saving draft…"
           : localStatus === "saved"
-          ? "Draft saved"
-          : "Save draft"
+            ? "Draft saved"
+            : "Save draft"
       }
       aria-busy={localStatus === "saving"}
       className={[
@@ -94,7 +90,7 @@ export function ManualSaveButton({
       <StatusIcon status={localStatus} />
       {statusLabel(localStatus)}
     </Button>
-  )
+  );
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -102,40 +98,25 @@ export function ManualSaveButton({
 function StatusIcon({ status }: { status: SaveStatus }) {
   switch (status) {
     case "saving":
-      return (
-        <Loader2
-          className="h-3.5 w-3.5 animate-spin"
-          aria-hidden
-        />
-      )
+      return <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />;
     case "saved":
-      return (
-        <CheckCircle2
-          className="h-3.5 w-3.5 text-emerald-500"
-          aria-hidden
-        />
-      )
+      return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" aria-hidden />;
     case "error":
-      return (
-        <AlertCircle
-          className="h-3.5 w-3.5 text-red-500"
-          aria-hidden
-        />
-      )
+      return <AlertCircle className="h-3.5 w-3.5 text-red-500" aria-hidden />;
     default:
-      return <Save className="h-3.5 w-3.5" aria-hidden />
+      return <Save className="h-3.5 w-3.5" aria-hidden />;
   }
 }
 
 function statusLabel(status: SaveStatus): string {
   switch (status) {
     case "saving":
-      return "Saving…"
+      return "Saving…";
     case "saved":
-      return "Saved"
+      return "Saved";
     case "error":
-      return "Save failed"
+      return "Save failed";
     default:
-      return "Save draft"
+      return "Save draft";
   }
 }

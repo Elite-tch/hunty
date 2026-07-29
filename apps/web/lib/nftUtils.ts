@@ -56,8 +56,7 @@ export async function fetchPlayerNfts(address: string): Promise<NftReward[]> {
       name: "Soroban Sage",
       description:
         "Awarded to players who demonstrate exceptional knowledge of smart contract riddles.",
-      imageUri:
-        "ipfs://QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+      imageUri: "ipfs://QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
       earnedAt: "2026-03-05T09:45:00Z",
       claimed: true,
       huntName: "Stellar Developer Hunt",
@@ -97,11 +96,7 @@ export function filterByHunt(nfts: NftReward[], hunt: string | null): NftReward[
 }
 
 /** Filter NFTs by date range (ISO strings). */
-export function filterByDate(
-  nfts: NftReward[],
-  start?: string,
-  end?: string,
-): NftReward[] {
+export function filterByDate(nfts: NftReward[], start?: string, end?: string): NftReward[] {
   return nfts.filter((n) => {
     const earned = new Date(n.earnedAt).getTime();
     const afterStart = start ? earned >= new Date(start).getTime() : true;

@@ -1,7 +1,7 @@
-import { matchesClueAnswer } from './clueAnswerVerification';
-import type { Clue } from './types';
+import { matchesClueAnswer } from "./clueAnswerVerification";
+import type { Clue } from "./types";
 
-const HUNTY_QR_PREFIX = 'hunty:v1:';
+const HUNTY_QR_PREFIX = "hunty:v1:";
 
 type HuntyQrPayload = {
   h?: number;
@@ -17,31 +17,29 @@ export type ParsedQrPayload =
   | { ok: true; answer?: string; hash?: string; huntId?: number; clueId?: number }
   | { ok: false; error: string };
 
-export type QrVerifyResult =
-  | { match: true; answer: string }
-  | { match: false; reason: string };
+export type QrVerifyResult = { match: true; answer: string } | { match: false; reason: string };
 
 function decodeBase64Url(value: string): string {
-  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
-  const padding = normalized.length % 4 === 0 ? '' : '='.repeat(4 - (normalized.length % 4));
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padding = normalized.length % 4 === 0 ? "" : "=".repeat(4 - (normalized.length % 4));
 
-  if (typeof globalThis.atob === 'function') {
+  if (typeof globalThis.atob === "function") {
     return globalThis.atob(normalized + padding);
   }
 
-  return Buffer.from(normalized + padding, 'base64').toString('utf8');
+  return Buffer.from(normalized + padding, "base64").toString("utf8");
 }
 
 function encodeBase64Url(value: string): string {
-  if (typeof globalThis.btoa === 'function') {
-    return globalThis.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  if (typeof globalThis.btoa === "function") {
+    return globalThis.btoa(value).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
   }
 
-  return Buffer.from(value, 'utf8')
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '');
+  return Buffer.from(value, "utf8")
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 }
 
 function normalizePayload(payload: HuntyQrPayload): ParsedQrPayload {
@@ -51,15 +49,15 @@ function normalizePayload(payload: HuntyQrPayload): ParsedQrPayload {
   const hash = payload.hash;
 
   if (!answer && !hash) {
-    return { ok: false, error: 'QR payload is missing an answer or hash' };
+    return { ok: false, error: "QR payload is missing an answer or hash" };
   }
 
   return {
     ok: true,
-    huntId: typeof huntId === 'number' ? huntId : undefined,
-    clueId: typeof clueId === 'number' ? clueId : undefined,
-    answer: typeof answer === 'string' ? answer : undefined,
-    hash: typeof hash === 'string' ? hash : undefined,
+    huntId: typeof huntId === "number" ? huntId : undefined,
+    clueId: typeof clueId === "number" ? clueId : undefined,
+    answer: typeof answer === "string" ? answer : undefined,
+    hash: typeof hash === "string" ? hash : undefined,
   };
 }
 
@@ -69,11 +67,11 @@ function parseHuntyUrl(raw: string): ParsedQrPayload {
     const huntId = checkpointMatch ? Number(checkpointMatch[1]) : undefined;
     const clueId = checkpointMatch ? Number(checkpointMatch[2]) : undefined;
 
-    const queryIndex = raw.indexOf('?');
-    const query = queryIndex >= 0 ? raw.slice(queryIndex + 1) : '';
+    const queryIndex = raw.indexOf("?");
+    const query = queryIndex >= 0 ? raw.slice(queryIndex + 1) : "";
     const params = new URLSearchParams(query);
-    const answerParam = params.get('a') ?? params.get('answer') ?? undefined;
-    const hashParam = params.get('hash') ?? undefined;
+    const answerParam = params.get("a") ?? params.get("answer") ?? undefined;
+    const hashParam = params.get("hash") ?? undefined;
 
     let answer = answerParam ?? undefined;
     if (answerParam) {
@@ -87,7 +85,7 @@ function parseHuntyUrl(raw: string): ParsedQrPayload {
       hash: hashParam ?? undefined,
     });
   } catch {
-    return { ok: false, error: 'Invalid Hunty QR URL' };
+    return { ok: false, error: "Invalid Hunty QR URL" };
   }
 }
 
@@ -95,7 +93,7 @@ function parseHuntyUrl(raw: string): ParsedQrPayload {
 export function parseQrPayload(raw: string): ParsedQrPayload {
   const trimmed = raw.trim();
   if (!trimmed) {
-    return { ok: false, error: 'QR code is empty' };
+    return { ok: false, error: "QR code is empty" };
   }
 
   if (trimmed.startsWith(HUNTY_QR_PREFIX)) {
@@ -103,19 +101,19 @@ export function parseQrPayload(raw: string): ParsedQrPayload {
       const decoded = decodeBase64Url(trimmed.slice(HUNTY_QR_PREFIX.length));
       return normalizePayload(JSON.parse(decoded) as HuntyQrPayload);
     } catch {
-      return { ok: false, error: 'Unable to decrypt QR payload' };
+      return { ok: false, error: "Unable to decrypt QR payload" };
     }
   }
 
-  if (trimmed.startsWith('hunty://')) {
+  if (trimmed.startsWith("hunty://")) {
     return parseHuntyUrl(trimmed);
   }
 
-  if (trimmed.startsWith('{')) {
+  if (trimmed.startsWith("{")) {
     try {
       return normalizePayload(JSON.parse(trimmed) as HuntyQrPayload);
     } catch {
-      return { ok: false, error: 'Invalid QR JSON payload' };
+      return { ok: false, error: "Invalid QR JSON payload" };
     }
   }
 
@@ -129,7 +127,7 @@ export function encodeHuntyQrPayload(payload: {
   answer: string;
 }): string {
   const encoded = encodeBase64Url(
-    JSON.stringify({ h: payload.huntId, c: payload.clueId, a: payload.answer }),
+    JSON.stringify({ h: payload.huntId, c: payload.clueId, a: payload.answer })
   );
   return `${HUNTY_QR_PREFIX}${encoded}`;
 }
@@ -141,7 +139,7 @@ export function encodeHuntyQrPayload(payload: {
 export async function verifyQrAgainstClue(
   raw: string,
   clue: Clue,
-  huntId: number,
+  huntId: number
 ): Promise<QrVerifyResult> {
   const parsed = parseQrPayload(raw);
   if (!parsed.ok) {
@@ -149,21 +147,21 @@ export async function verifyQrAgainstClue(
   }
 
   if (parsed.huntId != null && parsed.huntId !== huntId) {
-    return { match: false, reason: 'QR code belongs to a different hunt' };
+    return { match: false, reason: "QR code belongs to a different hunt" };
   }
 
   if (parsed.clueId != null && parsed.clueId !== clue.id) {
-    return { match: false, reason: 'QR code belongs to a different clue' };
+    return { match: false, reason: "QR code belongs to a different clue" };
   }
 
   const candidate = parsed.hash ?? parsed.answer;
   if (!candidate) {
-    return { match: false, reason: 'QR code does not contain a clue answer' };
+    return { match: false, reason: "QR code does not contain a clue answer" };
   }
 
   const match = await matchesClueAnswer(candidate, clue, huntId);
   if (!match) {
-    return { match: false, reason: 'QR code does not match this clue checkpoint' };
+    return { match: false, reason: "QR code does not match this clue checkpoint" };
   }
 
   const answer = parsed.answer ?? candidate;

@@ -37,24 +37,25 @@ app/
 
 All 10 required achievements are configured with metadata:
 
-| ID | Title | Description | Icon | Rarity | Condition |
-|---|---|---|---|---|---|
-| `first_hunt_completed` | First Steps | Complete your first hunt | 🎯 | Common | Complete 1 hunt |
-| `first_win` | Victory Lap | Win your first hunt | 🏆 | Common | Win 1 hunt |
-| `five_wins` | Rising Star | Win 5 hunts | ⭐ | Uncommon | Win 5 hunts |
-| `ten_wins` | Champion | Win 10 hunts | 👑 | Rare | Win 10 hunts |
-| `twenty_five_wins` | Unstoppable | Win 25 hunts | 🔥 | Epic | Win 25 hunts |
-| `first_nft` | Collector | Earn your first NFT | 🎨 | Uncommon | Claim 1 NFT reward |
-| `high_scorer` | Sharpshooter | Achieve highest score in a month | 🎪 | Rare | Top score in a calendar month |
-| `speed_hunter` | Lightning Fast | Complete a hunt in record time | ⚡ | Rare | Complete a hunt in under 5 minutes |
-| `veteran` | Veteran | Complete 50 hunts | 🛡️ | Epic | Complete 50 hunts |
-| `legend` | Legend | Win 100 hunts | 💎 | Legendary | Win 100 hunts |
+| ID                     | Title          | Description                      | Icon | Rarity    | Condition                          |
+| ---------------------- | -------------- | -------------------------------- | ---- | --------- | ---------------------------------- |
+| `first_hunt_completed` | First Steps    | Complete your first hunt         | 🎯   | Common    | Complete 1 hunt                    |
+| `first_win`            | Victory Lap    | Win your first hunt              | 🏆   | Common    | Win 1 hunt                         |
+| `five_wins`            | Rising Star    | Win 5 hunts                      | ⭐   | Uncommon  | Win 5 hunts                        |
+| `ten_wins`             | Champion       | Win 10 hunts                     | 👑   | Rare      | Win 10 hunts                       |
+| `twenty_five_wins`     | Unstoppable    | Win 25 hunts                     | 🔥   | Epic      | Win 25 hunts                       |
+| `first_nft`            | Collector      | Earn your first NFT              | 🎨   | Uncommon  | Claim 1 NFT reward                 |
+| `high_scorer`          | Sharpshooter   | Achieve highest score in a month | 🎪   | Rare      | Top score in a calendar month      |
+| `speed_hunter`         | Lightning Fast | Complete a hunt in record time   | ⚡   | Rare      | Complete a hunt in under 5 minutes |
+| `veteran`              | Veteran        | Complete 50 hunts                | 🛡️   | Epic      | Complete 50 hunts                  |
+| `legend`               | Legend         | Win 100 hunts                    | 💎   | Legendary | Win 100 hunts                      |
 
 ## 🔧 Core Components
 
 ### 1. Achievement Config (`lib/achievements/config.ts`)
 
 Defines all achievements with:
+
 - **id**: Unique identifier (TypeScript union type)
 - **title**: Display name
 - **description**: User-friendly description
@@ -63,6 +64,7 @@ Defines all achievements with:
 - **condition**: Human-readable requirement
 
 Includes rarity color mappings for UI:
+
 - Common: slate (gray)
 - Uncommon: green
 - Rare: blue
@@ -100,27 +102,30 @@ clearAchievements(address: string): void
 ```
 
 **Storage:**
+
 - Uses browser `localStorage` with key format: `hunty_achievements_{playerAddress}`
 - Stores earned achievements with timestamps
 - Persists across sessions
 
 **Data Structure:**
+
 ```typescript
 interface PlayerAchievements {
-  address: string
-  earned: EarnedAchievement[]
-  lastUpdated: number
+  address: string;
+  earned: EarnedAchievement[];
+  lastUpdated: number;
 }
 
 interface EarnedAchievement {
-  id: AchievementId
-  earnedAt: number // Unix timestamp
+  id: AchievementId;
+  earnedAt: number; // Unix timestamp
 }
 ```
 
 ### 3. BadgeWall Component (`components/BadgeWall.tsx`)
 
 **Features:**
+
 - Displays all 10 achievements in a responsive grid (2-5 columns)
 - Earned achievements: Full color with gradient based on rarity
 - Unearned achievements: Grayed out with 50% opacity
@@ -135,15 +140,17 @@ interface EarnedAchievement {
 - Empty state message
 
 **Props:**
+
 ```typescript
 interface BadgeWallProps {
-  playerAddress: string
+  playerAddress: string;
 }
 ```
 
 ### 4. GameCompleteModal Integration (`components/GameCompleteModal.tsx`)
 
 **Achievement Flow:**
+
 1. When hunt completes and modal opens:
    - Confetti animation triggers
    - `checkAndAwardAchievements()` called with player stats
@@ -162,12 +169,14 @@ interface BadgeWallProps {
 ### 5. Profile Page Integration (`app/profile/page.tsx`)
 
 **Layout:**
+
 - Player statistics section
 - NFT rewards gallery
 - **BadgeWall component** showing all achievements
 - Hunt history (completed and in-progress)
 
 **Achievement Section:**
+
 ```tsx
 <section aria-label="Achievements" className="mt-8">
   <BadgeWall playerAddress={publicKey} />
@@ -214,6 +223,7 @@ interface BadgeWallProps {
    - Doesn't affect other players' achievements
 
 **Run Tests:**
+
 ```bash
 npm test -- lib/achievements/service.test.ts
 ```
@@ -221,18 +231,21 @@ npm test -- lib/achievements/service.test.ts
 ## 🎨 Styling & UX
 
 **Technologies Used:**
+
 - Tailwind CSS v4 for styling
 - Radix UI components (Tooltip, Card, Dialog)
 - Lucide React icons
 - Canvas Confetti for celebration animation
 
 **Color Scheme:**
+
 - Gradient backgrounds based on rarity
 - Responsive grid layout
 - Dark mode support
 - Smooth transitions and hover effects
 
 **Accessibility:**
+
 - Semantic HTML with aria-labels
 - Tooltip descriptions for all achievements
 - Keyboard navigation support
@@ -270,6 +283,7 @@ npm test -- lib/achievements/service.test.ts
 ## 📊 Storage Pattern
 
 Follows existing Hunty patterns:
+
 - **Client-side storage**: localStorage for achievements
 - **On-chain ready**: Can be extended to Soroban contracts
 - **Wallet-based**: Achievements tied to Stellar address
@@ -293,17 +307,17 @@ Potential improvements documented in README:
 ### Check and Award Achievements
 
 ```typescript
-import { checkAndAwardAchievements } from "@/lib/achievements/service"
+import { checkAndAwardAchievements } from "@/lib/achievements/service";
 
 const newAchievements = checkAndAwardAchievements(playerAddress, {
   totalHuntsCompleted: 5,
   totalHuntsWon: 3,
   totalNftsEarned: 1,
   fastestCompletionSeconds: 250,
-})
+});
 
 if (newAchievements.length > 0) {
-  console.log("New achievements:", newAchievements)
+  console.log("New achievements:", newAchievements);
 }
 ```
 
@@ -318,16 +332,17 @@ import { BadgeWall } from "@/components/BadgeWall"
 ### Check Individual Achievement
 
 ```typescript
-import { hasAchievement } from "@/lib/achievements/service"
+import { hasAchievement } from "@/lib/achievements/service";
 
 if (hasAchievement(playerAddress, "first_hunt_completed")) {
-  console.log("Player completed first hunt!")
+  console.log("Player completed first hunt!");
 }
 ```
 
 ## 🔍 Type Safety
 
 Full TypeScript support with:
+
 - `AchievementId` union type for all achievement IDs
 - `Achievement` interface for achievement metadata
 - `EarnedAchievement` interface for earned records
@@ -349,6 +364,7 @@ Full TypeScript support with:
 ## 🐛 Bug Fixes Applied
 
 Fixed syntax error in `lib/stellarErrors.ts`:
+
 - Added missing key `tx_insufficient_balance` in TX_CODE_MAP
 - Resolved "const declarations must be initialized" error
 
@@ -382,6 +398,7 @@ All requirements met:
 ## 🎓 Learning Resources
 
 The implementation demonstrates:
+
 - TypeScript union types and interfaces
 - React hooks (useState, useEffect)
 - localStorage API usage

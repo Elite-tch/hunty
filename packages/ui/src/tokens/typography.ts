@@ -6,7 +6,7 @@ export const fontSizes = {
   xl: 24,
   "2xl": 28,
   "3xl": 32,
-} as const
+} as const;
 
 export const fontWeights = {
   normal: "400",
@@ -14,7 +14,7 @@ export const fontWeights = {
   semibold: "600",
   bold: "700",
   extrabold: "800",
-} as const
+} as const;
 
 export const lineHeights = {
   xs: 16,
@@ -24,7 +24,7 @@ export const lineHeights = {
   xl: 32,
   "2xl": 36,
   "3xl": 40,
-} as const
+} as const;
 
-export type FontSizeToken = keyof typeof fontSizes
-export type FontWeightToken = keyof typeof fontWeights
+export type FontSizeToken = keyof typeof fontSizes;
+export type FontWeightToken = keyof typeof fontWeights;

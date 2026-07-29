@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useMemo } from "react"
-import { cn } from "@/lib/utils"
-import { getIdenticonSpec } from "@/lib/walletAddress"
+import { useMemo } from "react";
+import { cn } from "@/lib/utils";
+import { getIdenticonSpec } from "@/lib/walletAddress";
 
 interface WalletIdenticonProps {
   /** Full Stellar address the avatar is derived from. */
-  address: string
+  address: string;
   /** Rendered width and height in pixels. Default 24. */
-  size?: number
-  className?: string
+  size?: number;
+  className?: string;
 }
 
 /**
@@ -23,10 +23,12 @@ interface WalletIdenticonProps {
  * the image is hidden from assistive tech rather than duplicating that label.
  */
 export function WalletIdenticon({ address, size = 24, className }: WalletIdenticonProps) {
-  const { cells, size: grid, foreground, background } = useMemo(
-    () => getIdenticonSpec(address),
-    [address],
-  )
+  const {
+    cells,
+    size: grid,
+    foreground,
+    background,
+  } = useMemo(() => getIdenticonSpec(address), [address]);
 
   return (
     <svg
@@ -49,8 +51,8 @@ export function WalletIdenticon({ address, size = 24, className }: WalletIdentic
             height={1}
             fill={foreground}
           />
-        ) : null,
+        ) : null
       )}
     </svg>
-  )
+  );
 }

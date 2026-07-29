@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { getLevelTierForXp, getPlayerLevel, getXpProgress } from "@/lib/level"
-import { cn } from "@/lib/utils"
+import { getLevelTierForXp, getPlayerLevel, getXpProgress } from "@/lib/level";
+import { cn } from "@/lib/utils";
 
 interface LevelBadgeProps {
-  playerAddress?: string
-  xp?: number
-  className?: string
+  playerAddress?: string;
+  xp?: number;
+  className?: string;
 }
 
 export function LevelBadge({ playerAddress, xp, className }: LevelBadgeProps) {
-  const levelData = playerAddress ? getPlayerLevel(playerAddress) : null
-  const displayXp = xp ?? levelData?.totalXp ?? 0
-  const tier = getLevelTierForXp(displayXp)
+  const levelData = playerAddress ? getPlayerLevel(playerAddress) : null;
+  const displayXp = xp ?? levelData?.totalXp ?? 0;
+  const tier = getLevelTierForXp(displayXp);
 
   return (
     <div
@@ -29,18 +29,18 @@ export function LevelBadge({ playerAddress, xp, className }: LevelBadgeProps) {
       <span className="text-white/80">•</span>
       <span>{tier.title}</span>
     </div>
-  )
+  );
 }
 
 interface LevelProgressProps {
-  playerAddress: string
-  className?: string
+  playerAddress: string;
+  className?: string;
 }
 
 export function LevelProgress({ playerAddress, className }: LevelProgressProps) {
-  const levelData = getPlayerLevel(playerAddress)
-  const tier = getLevelTierForXp(levelData.totalXp)
-  const progressData = getXpProgress(levelData.totalXp)
+  const levelData = getPlayerLevel(playerAddress);
+  const tier = getLevelTierForXp(levelData.totalXp);
+  const progressData = getXpProgress(levelData.totalXp);
 
   return (
     <div className={cn("w-full", className)}>
@@ -59,5 +59,5 @@ export function LevelProgress({ playerAddress, className }: LevelProgressProps) 
         />
       </div>
     </div>
-  )
+  );
 }

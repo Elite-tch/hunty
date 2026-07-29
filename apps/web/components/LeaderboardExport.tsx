@@ -42,8 +42,9 @@ export function LeaderboardExport({ huntId }: LeaderboardExportProps) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = res.headers.get("content-disposition")?.match(/filename="?([^"]+)"?/)?.[1]
-          ?? `hunt-${huntId}-leaderboard.${format}`;
+        a.download =
+          res.headers.get("content-disposition")?.match(/filename="?([^"]+)"?/)?.[1] ??
+          `hunt-${huntId}-leaderboard.${format}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -63,7 +64,8 @@ export function LeaderboardExport({ huntId }: LeaderboardExportProps) {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-slate-900">Export leaderboard data</h3>
         <p className="text-sm text-slate-600">
-          Download ranks, wallets, scores, and completion timestamps. Filter by date range (optional).
+          Download ranks, wallets, scores, and completion timestamps. Filter by date range
+          (optional).
         </p>
       </div>
 
@@ -89,11 +91,7 @@ export function LeaderboardExport({ huntId }: LeaderboardExportProps) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button
-          variant="default"
-          onClick={() => download("csv")}
-          disabled={downloading !== null}
-        >
+        <Button variant="default" onClick={() => download("csv")} disabled={downloading !== null}>
           {downloading === "csv" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
@@ -101,11 +99,7 @@ export function LeaderboardExport({ huntId }: LeaderboardExportProps) {
           )}
           <span>Export CSV</span>
         </Button>
-        <Button
-          variant="outline"
-          onClick={() => download("json")}
-          disabled={downloading !== null}
-        >
+        <Button variant="outline" onClick={() => download("json")} disabled={downloading !== null}>
           {downloading === "json" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

@@ -1,15 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  ChevronDown,
-  ChevronRight,
-  HelpCircle,
-  ShieldCheck,
-  Smartphone,
-  X,
-} from "lucide-react";
-import { useEffect,useState } from "react";
+import { ChevronDown, ChevronRight, HelpCircle, ShieldCheck, Smartphone, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,13 +14,8 @@ interface WalletBottomSheetProps {
   onConnect: (provider: WalletProvider) => Promise<{ error?: string }>;
 }
 
-export function WalletBottomSheet({
-  isOpen,
-  onClose,
-  onConnect,
-}: WalletBottomSheetProps) {
-  const [connectingProvider, setConnectingProvider] =
-    useState<WalletProvider | null>(null);
+export function WalletBottomSheet({ isOpen, onClose, onConnect }: WalletBottomSheetProps) {
+  const [connectingProvider, setConnectingProvider] = useState<WalletProvider | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showEducation, setShowEducation] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -70,9 +58,7 @@ export function WalletBottomSheet({
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
-            transition={
-              prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }
-            }
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
             onClick={onClose}
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
           />
@@ -191,11 +177,7 @@ export function WalletBottomSheet({
               <div className="mt-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 p-6 border border-slate-100 dark:border-slate-800">
                 <button
                   onClick={() => setShowEducation(!showEducation)}
-                  aria-label={
-                    showEducation
-                      ? "Hide wallet education"
-                      : "Show wallet education"
-                  }
+                  aria-label={showEducation ? "Hide wallet education" : "Show wallet education"}
                   className="flex w-full items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
@@ -207,7 +189,7 @@ export function WalletBottomSheet({
                   <ChevronDown
                     className={cn(
                       "h-5 w-5 text-slate-400 transition-transform",
-                      showEducation && "rotate-180",
+                      showEducation && "rotate-180"
                     )}
                   />
                 </button>
@@ -215,20 +197,10 @@ export function WalletBottomSheet({
                 <AnimatePresence>
                   {showEducation && (
                     <motion.div
-                      initial={
-                        prefersReducedMotion ? false : { height: 0, opacity: 0 }
-                      }
-                      animate={
-                        prefersReducedMotion
-                          ? {}
-                          : { height: "auto", opacity: 1 }
-                      }
-                      exit={
-                        prefersReducedMotion ? {} : { height: 0, opacity: 0 }
-                      }
-                      transition={
-                        prefersReducedMotion ? { duration: 0 } : undefined
-                      }
+                      initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                      animate={prefersReducedMotion ? {} : { height: "auto", opacity: 1 }}
+                      exit={prefersReducedMotion ? {} : { height: 0, opacity: 0 }}
+                      transition={prefersReducedMotion ? { duration: 0 } : undefined}
                       className="overflow-hidden"
                     >
                       <div className="pt-6 space-y-6">
@@ -242,9 +214,8 @@ export function WalletBottomSheet({
                                 Why a wallet?
                               </h4>
                               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                                Hunty is decentralized. We don&apos;t store your
-                                keys or access your funds. Wallets act as your
-                                digital ID and vault.
+                                Hunty is decentralized. We don&apos;t store your keys or access your
+                                funds. Wallets act as your digital ID and vault.
                               </p>
                             </div>
                           </div>
@@ -262,26 +233,21 @@ export function WalletBottomSheet({
                                   <span className="font-bold text-slate-900 dark:text-white">
                                     1.
                                   </span>
-                                  <span>
-                                    Install xBull or Lobstr from the App Store.
-                                  </span>
+                                  <span>Install xBull or Lobstr from the App Store.</span>
                                 </div>
                                 <div className="flex gap-2">
                                   <span className="font-bold text-slate-900 dark:text-white">
                                     2.
                                   </span>
-                                  <span>
-                                    Create an account and save your Secret
-                                    Phrase safely.
-                                  </span>
+                                  <span>Create an account and save your Secret Phrase safely.</span>
                                 </div>
                                 <div className="flex gap-2">
                                   <span className="font-bold text-slate-900 dark:text-white">
                                     3.
                                   </span>
                                   <span>
-                                    Come back here and tap &ldquo;Connect&rdquo;
-                                    to link your account.
+                                    Come back here and tap &ldquo;Connect&rdquo; to link your
+                                    account.
                                   </span>
                                 </div>
                               </div>
@@ -291,9 +257,8 @@ export function WalletBottomSheet({
 
                         <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-900/30">
                           <p className="text-xs text-indigo-700 dark:text-indigo-300 leading-relaxed">
-                            <strong>Safe & Secure:</strong> Your private keys
-                            never leave your device. You only authorize specific
-                            actions like joining a hunt.
+                            <strong>Safe & Secure:</strong> Your private keys never leave your
+                            device. You only authorize specific actions like joining a hunt.
                           </p>
                         </div>
                       </div>

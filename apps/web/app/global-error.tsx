@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
+import { useEffect } from "react";
 
-import { logger } from "@/lib/logger"
+import { logger } from "@/lib/logger";
 
 export default function GlobalError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   useEffect(() => {
-    logger.error("[GlobalError] Fatal error:", error)
+    logger.error("[GlobalError] Fatal error:", error);
     // Sentry-ready: pass error to your Sentry DSN when configured.
     // Sentry.captureException(error)
-  }, [error])
+  }, [error]);
 
   return (
     <html lang="en">
@@ -58,5 +58,5 @@ export default function GlobalError({
         </div>
       </body>
     </html>
-  )
+  );
 }

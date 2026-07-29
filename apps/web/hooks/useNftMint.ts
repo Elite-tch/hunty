@@ -55,18 +55,15 @@ export function useNftMint(): UseNftMintResult {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  const estimate = useCallback(
-    async (huntId: number, recipientAddress?: string) => {
-      setError(null);
-      try {
-        const estimate = await estimateMintFee(huntId, recipientAddress);
-        setFeeEstimate(estimate);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Fee estimation failed");
-      }
-    },
-    []
-  );
+  const estimate = useCallback(async (huntId: number, recipientAddress?: string) => {
+    setError(null);
+    try {
+      const estimate = await estimateMintFee(huntId, recipientAddress);
+      setFeeEstimate(estimate);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Fee estimation failed");
+    }
+  }, []);
 
   const mint = useCallback<UseNftMintResult["mint"]>(async (input) => {
     setError(null);

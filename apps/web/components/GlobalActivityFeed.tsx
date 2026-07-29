@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CheckCircle2, Heart,Loader2, Trophy } from "lucide-react";
+import { CheckCircle2, Heart, Loader2, Trophy } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -9,7 +9,7 @@ import {
   type ActivityEvent,
   anonymizeAddress,
   getRecentActivity,
-} from "@/lib/contracts/activityFeed"
+} from "@/lib/contracts/activityFeed";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 
@@ -57,7 +57,7 @@ function ActivityItem({
             ? "bg-gradient-to-br from-[#39A437] to-[#194F0C] text-white"
             : isSponsored
               ? "bg-gradient-to-br from-pink-500 to-pink-700 text-white"
-              : "bg-gradient-to-br from-[#3737A4] to-[#0C0C4F] text-white",
+              : "bg-gradient-to-br from-[#3737A4] to-[#0C0C4F] text-white"
         )}
       >
         {isCompleted ? (
@@ -139,10 +139,9 @@ export function GlobalActivityFeed({
           newEvents
             .filter((evt) => evt.type === "HuntCompleted")
             .forEach((evt) => {
-              toast.success(
-                `${anonymizeAddress(evt.address)} completed ${evt.huntTitle}!`,
-                { duration: 4000 },
-              );
+              toast.success(`${anonymizeAddress(evt.address)} completed ${evt.huntTitle}!`, {
+                duration: 4000,
+              });
             });
         }
 
@@ -177,10 +176,7 @@ export function GlobalActivityFeed({
   }, [limit, pollIntervalMs]);
 
   return (
-    <section
-      aria-label="Global Activity Feed"
-      className="w-full max-w-2xl mx-auto"
-    >
+    <section aria-label="Global Activity Feed" className="w-full max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3 px-1">
         <span className="relative flex h-2.5 w-2.5">
@@ -190,12 +186,8 @@ export function GlobalActivityFeed({
         <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 tracking-wide uppercase">
           Live Activity
         </h2>
-        {loading && (
-          <Loader2 className="w-3.5 h-3.5 text-slate-400 animate-spin ml-1" />
-        )}
-        {error && (
-          <span className="text-[11px] text-red-400 ml-auto">{error}</span>
-        )}
+        {loading && <Loader2 className="w-3.5 h-3.5 text-slate-400 animate-spin ml-1" />}
+        {error && <span className="text-[11px] text-red-400 ml-auto">{error}</span>}
       </div>
 
       {/* Feed */}
@@ -228,6 +220,3 @@ export function GlobalActivityFeed({
     </section>
   );
 }
-
-
-

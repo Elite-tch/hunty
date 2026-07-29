@@ -1,34 +1,30 @@
-"use client"
+"use client";
 
-import { AlertCircle, CheckCircle2, Loader2,Send } from "lucide-react"
-import React, { useState } from "react"
+import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
+import React, { useState } from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import {
-  isValidStellarAddress,
-  transferNft,
-  type TransferResult,
-} from "@/lib/nft/transfer"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { isValidStellarAddress, transferNft, type TransferResult } from "@/lib/nft/transfer";
 
-import type { NftRewardDetail } from "./NftDetailModal"
+import type { NftRewardDetail } from "./NftDetailModal";
 
 interface NftTransferModalProps {
-  nft: NftRewardDetail | null
-  senderAddress: string
-  isOpen: boolean
-  onClose: () => void
-  onTransferComplete?: (result: TransferResult) => void
+  nft: NftRewardDetail | null;
+  senderAddress: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onTransferComplete?: (result: TransferResult) => void;
 }
 
-type TransferStep = "input" | "confirm" | "processing" | "success" | "error"
+type TransferStep = "input" | "confirm" | "processing" | "success" | "error";
 
 export function NftTransferModal({
   nft,
@@ -37,56 +33,56 @@ export function NftTransferModal({
   onClose,
   onTransferComplete,
 }: NftTransferModalProps) {
-  const [recipient, setRecipient] = useState("")
-  const [memo, setMemo] = useState("")
-  const [step, setStep] = useState<TransferStep>("input")
-  const [error, setError] = useState("")
-  const [result, setResult] = useState<TransferResult | null>(null)
+  const [recipient, setRecipient] = useState("");
+  const [memo, setMemo] = useState("");
+  const [step, setStep] = useState<TransferStep>("input");
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<TransferResult | null>(null);
 
-  if (!nft) return null
+  if (!nft) return null;
 
-  const recipientValid = recipient.length > 0 && isValidStellarAddress(recipient)
-  const isSelf = recipient === senderAddress
+  const recipientValid = recipient.length > 0 && isValidStellarAddress(recipient);
+  const isSelf = recipient === senderAddress;
 
   const handleConfirm = () => {
     if (!recipientValid) {
-      setError("Please enter a valid Stellar address")
-      return
+      setError("Please enter a valid Stellar address");
+      return;
     }
     if (isSelf) {
-      setError("Cannot transfer to yourself")
-      return
+      setError("Cannot transfer to yourself");
+      return;
     }
-    setError("")
-    setStep("confirm")
-  }
+    setError("");
+    setStep("confirm");
+  };
 
   const handleTransfer = async () => {
-    setStep("processing")
+    setStep("processing");
     try {
       const transferResult = await transferNft({
         nftId: nft.id,
         recipientAddress: recipient,
         senderAddress,
         memo: memo || undefined,
-      })
-      setResult(transferResult)
-      setStep("success")
-      onTransferComplete?.(transferResult)
+      });
+      setResult(transferResult);
+      setStep("success");
+      onTransferComplete?.(transferResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Transfer failed")
-      setStep("error")
+      setError(err instanceof Error ? err.message : "Transfer failed");
+      setStep("error");
     }
-  }
+  };
 
   const handleClose = () => {
-    setRecipient("")
-    setMemo("")
-    setStep("input")
-    setError("")
-    setResult(null)
-    onClose()
-  }
+    setRecipient("");
+    setMemo("");
+    setStep("input");
+    setError("");
+    setResult(null);
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -168,7 +164,9 @@ export function NftTransferModal({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">To</span>
-                  <span className="font-mono text-xs">{recipient.slice(0, 8)}...{recipient.slice(-8)}</span>
+                  <span className="font-mono text-xs">
+                    {recipient.slice(0, 8)}...{recipient.slice(-8)}
+                  </span>
                 </div>
                 {memo && (
                   <div className="flex justify-between">
@@ -178,13 +176,21 @@ export function NftTransferModal({
                 )}
               </div>
               <p className="text-xs text-amber-600 bg-amber-50 rounded-lg p-3">
-                This action is irreversible. The NFT will be permanently transferred to the recipient.
+                This action is irreversible. The NFT will be permanently transferred to the
+                recipient.
               </p>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep("input")} className="flex-1 rounded-xl">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep("input")}
+                  className="flex-1 rounded-xl"
+                >
                   Back
                 </Button>
-                <Button onClick={handleTransfer} className="flex-1 bg-indigo-600 hover:bg-indigo-700 rounded-xl">
+                <Button
+                  onClick={handleTransfer}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 rounded-xl"
+                >
                   Confirm Transfer
                 </Button>
               </div>
@@ -232,5 +238,5 @@ export function NftTransferModal({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useEffect } from "react"
+import Link from "next/link";
+import { useEffect } from "react";
 
-import { logger } from "@/lib/logger"
+import { logger } from "@/lib/logger";
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   useEffect(() => {
-    logger.error("[RouteError] Unhandled error:", error)
+    logger.error("[RouteError] Unhandled error:", error);
     // Sentry-ready: Sentry.captureException(error)
-  }, [error])
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-[#0b0c10] text-white pb-24 flex items-center justify-center">
@@ -57,8 +57,19 @@ export default function Error({
             onClick={reset}
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-3 rounded-md transition-colors"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              aria-hidden
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"
+              />
             </svg>
             Try again
           </button>
@@ -71,5 +82,5 @@ export default function Error({
         </div>
       </main>
     </div>
-  )
+  );
 }

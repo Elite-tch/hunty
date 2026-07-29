@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { Footer } from "@/components/Footer";
 
@@ -39,7 +39,10 @@ describe("Footer", () => {
   describe("interaction", () => {
     it("has correct href on Help link", () => {
       render(<Footer />);
-      expect(screen.getByRole("link", { name: /help & troubleshooting/i })).toHaveAttribute("href", "/help");
+      expect(screen.getByRole("link", { name: /help & troubleshooting/i })).toHaveAttribute(
+        "href",
+        "/help"
+      );
     });
 
     it("Help link has hover transition classes", () => {

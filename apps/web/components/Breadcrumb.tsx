@@ -86,10 +86,7 @@ export default function Breadcrumb({
     [pathname, customLabels, resolver]
   );
 
-  const visible = useMemo(
-    () => truncateBreadcrumbs(crumbs, maxVisible),
-    [crumbs, maxVisible]
-  );
+  const visible = useMemo(() => truncateBreadcrumbs(crumbs, maxVisible), [crumbs, maxVisible]);
 
   if (crumbs.length <= 1) return null; // Don't render on the homepage
 
@@ -113,10 +110,7 @@ export default function Breadcrumb({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav
-        aria-label="Breadcrumb"
-        className={`hunty-breadcrumb ${className}`}
-      >
+      <nav aria-label="Breadcrumb" className={`hunty-breadcrumb ${className}`}>
         <ol
           itemScope
           itemType="https://schema.org/BreadcrumbList"

@@ -145,9 +145,7 @@ export function createKeyboardHandler(config: ShortcutConfig) {
       };
       const path = sequenceMap[key.toLowerCase()];
       if (path) {
-        const action = config.actions.find(
-          (a) => a.keys === `G + ${key.toUpperCase()}`
-        );
+        const action = config.actions.find((a) => a.keys === `G + ${key.toUpperCase()}`);
         if (action) {
           e.preventDefault();
           action.handler();

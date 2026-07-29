@@ -42,13 +42,11 @@ export const useWalletStore = create<WalletState>()(
       walletBalance: null,
       isConnected: false,
 
-      setWallet: (address) =>
-        set({ walletAddress: address, isConnected: Boolean(address) }),
+      setWallet: (address) => set({ walletAddress: address, isConnected: Boolean(address) }),
 
       setBalance: (balance) => set({ walletBalance: balance }),
 
-      clearWallet: () =>
-        set({ walletAddress: "", walletBalance: null, isConnected: false }),
+      clearWallet: () => set({ walletAddress: "", walletBalance: null, isConnected: false }),
     }),
     {
       name: "hunty-wallet",
@@ -60,8 +58,8 @@ export const useWalletStore = create<WalletState>()(
           state.isConnected = true;
         }
       },
-    },
-  ),
+    }
+  )
 );
 
 // ─── Player Progress Store ────────────────────────────────────────────────────
@@ -92,14 +90,14 @@ export const usePlayerStore = create<PlayerState>()((set) => ({
     set((state) =>
       state.currentProgress
         ? { currentProgress: { ...state.currentProgress, current_clue_index: index } }
-        : state,
+        : state
     ),
 
   markCompleted: () =>
     set((state) =>
       state.currentProgress
         ? { currentProgress: { ...state.currentProgress, completed: true } }
-        : state,
+        : state
     ),
 
   clearProgress: () => set({ currentProgress: null }),

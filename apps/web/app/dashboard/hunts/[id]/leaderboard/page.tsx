@@ -1,34 +1,34 @@
-"use client"
+"use client";
 
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useEffect, useState } from "react"
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { Header } from "@/components/Header"
-import { LeaderboardExport } from "@/components/LeaderboardExport"
-import { LeaderboardTable } from "@/components/LeaderBoardTable"
-import { Button } from "@/components/ui/button"
-import { getHuntById } from "@/lib/huntStore"
-import type { StoredHunt } from "@/lib/types"
+import { Header } from "@/components/Header";
+import { LeaderboardExport } from "@/components/LeaderboardExport";
+import { LeaderboardTable } from "@/components/LeaderBoardTable";
+import { Button } from "@/components/ui/button";
+import { getHuntById } from "@/lib/huntStore";
+import type { StoredHunt } from "@/lib/types";
 
 interface LeaderboardPageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }
 
 export default function LeaderboardPage({ params }: LeaderboardPageProps) {
-  const [hunt, setHunt] = useState<StoredHunt | null>(null)
-  const [huntId, setHuntId] = useState<number | null>(null)
+  const [hunt, setHunt] = useState<StoredHunt | null>(null);
+  const [huntId, setHuntId] = useState<number | null>(null);
 
   useEffect(() => {
     const resolveParams = async () => {
-      const { id } = await params
-      const huntIdNum = parseInt(id, 10)
-      setHuntId(huntIdNum)
-      const huntData = getHuntById(huntIdNum)
-      setHunt(huntData || null)
-    }
-    resolveParams()
-  }, [params])
+      const { id } = await params;
+      const huntIdNum = parseInt(id, 10);
+      setHuntId(huntIdNum);
+      const huntData = getHuntById(huntIdNum);
+      setHunt(huntData || null);
+    };
+    resolveParams();
+  }, [params]);
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-blue-100 via-purple-100 to-[#f9f9ff] pb-12">
@@ -54,9 +54,7 @@ export default function LeaderboardPage({ params }: LeaderboardPageProps) {
               <h1 className="mb-2 text-3xl font-bold bg-gradient-to-br from-[#3737A4] to-[#0C0C4F] bg-clip-text text-transparent">
                 Leaderboard
               </h1>
-              <p className="text-slate-600">
-                {hunt.title}
-              </p>
+              <p className="text-slate-600">{hunt.title}</p>
             </div>
 
             <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
@@ -71,9 +69,7 @@ export default function LeaderboardPage({ params }: LeaderboardPageProps) {
                 </p>
               </div>
 
-              {huntId !== null && (
-                <LeaderboardTable huntId={huntId} />
-              )}
+              {huntId !== null && <LeaderboardTable huntId={huntId} />}
             </div>
 
             {huntId !== null && (
@@ -101,16 +97,12 @@ export default function LeaderboardPage({ params }: LeaderboardPageProps) {
         ) : (
           <div className="bg-white rounded-2xl p-8 text-center border border-slate-200">
             <p className="text-slate-600 font-medium">Hunt not found</p>
-            <Button
-              asChild
-              variant="outline"
-              className="mt-4"
-            >
+            <Button asChild variant="outline" className="mt-4">
               <Link href="/dashboard">Return to Dashboard</Link>
             </Button>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

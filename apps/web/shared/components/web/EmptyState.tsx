@@ -1,20 +1,27 @@
-import type { SharedEmptyStateProps } from '@shared/types/components'
-import * as React from 'react'
+import type { SharedEmptyStateProps } from "@shared/types/components";
+import * as React from "react";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
-import { Button } from './Button'
+import { Button } from "./Button";
 
 export interface EmptyStateProps extends SharedEmptyStateProps {
-  className?: string
+  className?: string;
 }
 
-export function EmptyState({ icon, title, description, action, testID, className }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  testID,
+  className,
+}: EmptyStateProps) {
   return (
     <div
       data-testid={testID}
       className={cn(
-        'flex flex-col items-center justify-center gap-4 px-8 py-16 text-center',
+        "flex flex-col items-center justify-center gap-4 px-8 py-16 text-center",
         className
       )}
     >
@@ -24,13 +31,8 @@ export function EmptyState({ icon, title, description, action, testID, className
       <h3 className="text-xl font-bold text-foreground">{title}</h3>
       <p className="max-w-sm text-sm text-muted-foreground">{description}</p>
       {action && (
-        <Button
-          label={action.label}
-          variant="primary"
-          size="md"
-          onClick={action.onPress}
-        />
+        <Button label={action.label} variant="primary" size="md" onClick={action.onPress} />
       )}
     </div>
-  )
+  );
 }

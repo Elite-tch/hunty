@@ -1,4 +1,4 @@
-import { expect,test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import { injectMockWallet, seedHuntData } from "./helpers/mock-wallet";
 
@@ -28,42 +28,35 @@ test.describe("Dashboard & Hunt Management", () => {
     await page.goto("/dashboard");
 
     // The "Draft Hunt" card should have an "Add Clues" button
-    await expect(
-      page.getByRole("button", { name: /add clues/i }).first()
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /add clues/i }).first()).toBeVisible();
   });
 
   test("Add Clues modal opens and allows input", async ({ page }) => {
     await page.goto("/dashboard");
 
     // Click Add Clues on a draft hunt
-    await page.getByRole("button", { name: /add clues/i }).first().click();
+    await page
+      .getByRole("button", { name: /add clues/i })
+      .first()
+      .click();
 
     // The clue modal should open with the hunt title in the heading
     await expect(page.getByRole("heading", { name: /add clues/i })).toBeVisible();
-    await expect(
-      page.getByPlaceholder("e.g. What has keys but no locks?")
-    ).toBeVisible();
+    await expect(page.getByPlaceholder("e.g. What has keys but no locks?")).toBeVisible();
 
     // Fill in a clue
-    await page
-      .getByPlaceholder("e.g. What has keys but no locks?")
-      .fill("What is 1+1?");
+    await page.getByPlaceholder("e.g. What has keys but no locks?").fill("What is 1+1?");
     await page.getByPlaceholder("keyboard").fill("2");
 
     // The Save Clues button should become enabled
-    await expect(
-      page.getByRole("button", { name: /save clues/i })
-    ).toBeEnabled();
+    await expect(page.getByRole("button", { name: /save clues/i })).toBeEnabled();
   });
 
   test("active hunt shows Leaderboard button", async ({ page }) => {
     await page.goto("/dashboard");
 
     // Active hunts should have a Leaderboard button
-    await expect(
-      page.getByRole("button", { name: /leaderboard/i }).first()
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /leaderboard/i }).first()).toBeVisible();
   });
 
   test("back navigation returns to home page", async ({ page }) => {

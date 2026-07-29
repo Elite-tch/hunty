@@ -9,7 +9,14 @@ import {
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator,Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,

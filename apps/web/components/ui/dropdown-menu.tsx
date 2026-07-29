@@ -36,10 +36,7 @@ export function DropdownMenu({ children }: DropdownMenuProps) {
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
     };
@@ -63,9 +60,7 @@ export function DropdownMenu({ children }: DropdownMenuProps) {
           child.type === DropdownMenuContent
         ) {
           return (
-            <AnimatePresence>
-              {open && React.cloneElement(child, { setOpen })}
-            </AnimatePresence>
+            <AnimatePresence>{open && React.cloneElement(child, { setOpen })}</AnimatePresence>
           );
         }
         return child;
@@ -74,35 +69,22 @@ export function DropdownMenu({ children }: DropdownMenuProps) {
   );
 }
 
-export function DropdownMenuTrigger({
-  children,
-  onClick,
-}: DropdownMenuTriggerProps) {
+export function DropdownMenuTrigger({ children, onClick }: DropdownMenuTriggerProps) {
   return <div onClick={onClick}>{children}</div>;
 }
 
-export function DropdownMenuContent({
-  children,
-  className,
-  setOpen,
-}: DropdownMenuContentProps) {
+export function DropdownMenuContent({ children, className, setOpen }: DropdownMenuContentProps) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
-      initial={
-        prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }
-      }
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.95 }}
       animate={prefersReducedMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
       exit={prefersReducedMotion ? {} : { opacity: 0, y: 10, scale: 0.95 }}
-      transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : { duration: 0.2, ease: "easeOut" }
-      }
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: "easeOut" }}
       className={cn(
         "absolute bottom-full left-0 right-0 mb-2 z-50 min-w-[8rem] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 text-slate-950 shadow-xl dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50",
-        className,
+        className
       )}
     >
       {React.Children.map(children, (child) => {
@@ -120,17 +102,13 @@ export function DropdownMenuContent({
   );
 }
 
-export function DropdownMenuItem({
-  children,
-  className,
-  onClick,
-}: DropdownMenuItemProps) {
+export function DropdownMenuItem({ children, className, onClick }: DropdownMenuItemProps) {
   return (
     <div
       onClick={onClick}
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-xl px-3 py-2 text-sm outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-        className,
+        className
       )}
     >
       {children}

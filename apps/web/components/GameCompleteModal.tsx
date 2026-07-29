@@ -1,29 +1,40 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { useReducedMotion } from "framer-motion"
-import Image from "next/image"
-import confetti from "canvas-confetti"
-import { AlertCircle, Clock3, Download, Lightbulb, Loader2, Medal, MessageCircle, Share2, Star, Twitter } from "lucide-react"
+import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import confetti from "canvas-confetti";
+import {
+  AlertCircle,
+  Clock3,
+  Download,
+  Lightbulb,
+  Loader2,
+  Medal,
+  MessageCircle,
+  Share2,
+  Star,
+  Twitter,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Coin from "@/components/icons/Coin"
-import Replay from "@/components/icons/Replay"
-import { RewardsPanel } from "@/components/RewardsPanel"
-import { NftMintProgress } from "@/components/NftMintProgress"
-import { AchievementCertificate } from "@/components/AchievementCertificate"
-import { LevelUpModal } from "./LevelUpModal"
-import { useQuery } from "@tanstack/react-query"
-import { checkRegistrationStatus } from "@/lib/contracts/player-registration"
-import { SOROBAN_READ_STALE_TIME_MS } from "@/lib/soroban/queryConfig"
-import { useXlmUsdPrice } from "@/hooks/useXlmUsdPrice"
+} from "@/components/ui/dropdown-menu";
+import Coin from "@/components/icons/Coin";
+import Replay from "@/components/icons/Replay";
+import { RewardsPanel } from "@/components/RewardsPanel";
+import { NftMintProgress } from "@/components/NftMintProgress";
+import { AchievementCertificate } from "@/components/AchievementCertificate";
+import { LevelUpModal } from "./LevelUpModal";
+import { useQuery } from "@tanstack/react-query";
+import { checkRegistrationStatus } from "@/lib/contracts/player-registration";
+import { SOROBAN_READ_STALE_TIME_MS } from "@/lib/soroban/queryConfig";
+import { useXlmUsdPrice } from "@/hooks/useXlmUsdPrice";
 import {
   buildDeepLink,
   downloadElementAsImage,
@@ -31,27 +42,27 @@ import {
   shareOnFarcaster,
   shareOnTelegram,
   shareOnWhatsApp,
-} from "@/lib/downloadAsImage"
-import { toast } from "sonner"
-import { ACHIEVEMENTS } from "@/lib/achievements/config"
-import { checkAndAwardAchievements } from "@/lib/achievements/service"
-import { logger } from "@/lib/logger"
-import type { HuntAttemptRecord, RewardReceipt } from "@/lib/types"
-import { queryCachePolicy, queryKeys } from "@/lib/queryKeys"
-import { awardXpFromHunt, getLevelTierForXp, getPlayerLevel } from "@/lib/level"
-import { formatDuration, getPlayerAttempts } from "@/lib/huntAttemptHistory"
-import { cn } from "@/lib/utils"
+} from "@/lib/downloadAsImage";
+import { toast } from "sonner";
+import { ACHIEVEMENTS } from "@/lib/achievements/config";
+import { checkAndAwardAchievements } from "@/lib/achievements/service";
+import { logger } from "@/lib/logger";
+import type { HuntAttemptRecord, RewardReceipt } from "@/lib/types";
+import { queryCachePolicy, queryKeys } from "@/lib/queryKeys";
+import { awardXpFromHunt, getLevelTierForXp, getPlayerLevel } from "@/lib/level";
+import { formatDuration, getPlayerAttempts } from "@/lib/huntAttemptHistory";
+import { cn } from "@/lib/utils";
 
 interface GameCompleteModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onGoHome: () => void
-  onReplay: () => void
-  onViewLeaderboard: () => void
-  reward: number
-  rewardReceipt?: RewardReceipt | null
-  huntId?: number
-  playerAddress?: string
+  isOpen: boolean;
+  onClose: () => void;
+  onGoHome: () => void;
+  onReplay: () => void;
+  onViewLeaderboard: () => void;
+  reward: number;
+  rewardReceipt?: RewardReceipt | null;
+  huntId?: number;
+  playerAddress?: string;
 }
 
 export function GameCompleteModal({
@@ -65,63 +76,57 @@ export function GameCompleteModal({
   huntId,
   playerAddress,
 }: GameCompleteModalProps) {
-  const { price: xlmUsdPrice } = useXlmUsdPrice()
+  const { price: xlmUsdPrice } = useXlmUsdPrice();
 
   const currencyFormatter = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 2,
-  })
+  });
 
-  const usdEquivalent =
-    xlmUsdPrice != null ? currencyFormatter.format(reward * xlmUsdPrice) : null
+  const usdEquivalent = xlmUsdPrice != null ? currencyFormatter.format(reward * xlmUsdPrice) : null;
 
-  const certificateRef = useRef<HTMLDivElement>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const prefersReducedMotion = useReducedMotion()
-  const [newAchievements, setNewAchievements] = useState<string[]>([])
+  const certificateRef = useRef<HTMLDivElement>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+  const [newAchievements, setNewAchievements] = useState<string[]>([]);
   const [levelUpData, setLevelUpData] = useState<{
-    oldLevel: number
-    newLevel: number
-    oldTier: ReturnType<typeof getLevelTierForXp>
-    newTier: ReturnType<typeof getLevelTierForXp>
-  } | null>(null)
-  const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
-  const [latestAttempt, setLatestAttempt] = useState<HuntAttemptRecord | null>(null)
+    oldLevel: number;
+    newLevel: number;
+    oldTier: ReturnType<typeof getLevelTierForXp>;
+    newTier: ReturnType<typeof getLevelTierForXp>;
+  } | null>(null);
+  const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
+  const [latestAttempt, setLatestAttempt] = useState<HuntAttemptRecord | null>(null);
 
   // ─── Review form state ────────────────────────────────────────────────────
-  const [selectedRating, setSelectedRating] = useState<number>(0)
-  const [hoverRating, setHoverRating] = useState<number>(0)
-  const [reviewText, setReviewText] = useState("")
-  const [reviewSubmitting, setReviewSubmitting] = useState(false)
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
-  const [reviewError, setReviewError] = useState<string | null>(null)
+  const [selectedRating, setSelectedRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
   // ─── Derived stats from the latest attempt ────────────────────────────────
-  const completionTimeLabel = latestAttempt
-    ? formatDuration(latestAttempt.totalTimeSeconds)
-    : "—"
+  const completionTimeLabel = latestAttempt ? formatDuration(latestAttempt.totalTimeSeconds) : "—";
 
   const totalHintsUsed = latestAttempt
     ? latestAttempt.clues.reduce((sum, c) => sum + (c.hintsUsed ?? 0), 0)
-    : 0
+    : 0;
 
   // Rank is not tracked locally; show a dash until the leaderboard is opened
-  const rankLabel = "—"
+  const rankLabel = "—";
 
   const { data: registrationStatus } = useQuery({
     queryKey: queryKeys.registration.status(huntId, playerAddress),
     queryFn: () =>
       huntId && playerAddress ? checkRegistrationStatus(huntId, playerAddress) : null,
     enabled: isOpen && !!huntId && !!playerAddress,
-    staleTime: Math.max(
-      SOROBAN_READ_STALE_TIME_MS,
-      queryCachePolicy.registrationStatus.staleTime
-    ),
+    staleTime: Math.max(SOROBAN_READ_STALE_TIME_MS, queryCachePolicy.registrationStatus.staleTime),
     gcTime: queryCachePolicy.registrationStatus.gcTime,
     refetchInterval: queryCachePolicy.registrationStatus.refetchInterval,
     refetchIntervalInBackground: true,
-  })
+  });
 
   const playerProgress = registrationStatus?.progressData
     ? {
@@ -130,20 +135,20 @@ export function GameCompleteModal({
         hunt_id: huntId,
         reward_amount: reward,
       }
-    : undefined
+    : undefined;
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
 
     if (!prefersReducedMotion) {
-      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } })
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
 
     // Load the most recent attempt for this hunt so we can derive stats
     if (playerAddress && huntId) {
-      const attempts = getPlayerAttempts(playerAddress)
-      const match = attempts.find((a) => a.huntId === huntId) ?? null
-      setLatestAttempt(match)
+      const attempts = getPlayerAttempts(playerAddress);
+      const match = attempts.find((a) => a.huntId === huntId) ?? null;
+      setLatestAttempt(match);
     }
 
     if (playerAddress) {
@@ -153,77 +158,77 @@ export function GameCompleteModal({
           totalHuntsWon: 1,
           totalNftsEarned: 0,
           fastestCompletionSeconds: undefined,
-        })
+        });
         if (earned.length > 0) {
-          setNewAchievements(earned)
+          setNewAchievements(earned);
           earned.forEach((achievementId) => {
-            const achievement = ACHIEVEMENTS[achievementId as keyof typeof ACHIEVEMENTS]
+            const achievement = ACHIEVEMENTS[achievementId as keyof typeof ACHIEVEMENTS];
             if (achievement) {
               toast.success(`🎉 Achievement Unlocked: ${achievement.title}!`, {
                 description: achievement.description,
                 duration: 5000,
-              })
+              });
             }
-          })
+          });
         }
       } catch (error) {
-        logger.error("Failed to check achievements:", error)
+        logger.error("Failed to check achievements:", error);
       }
 
       try {
-        const oldLevelData = getPlayerLevel(playerAddress)
-        const oldTier = getLevelTierForXp(oldLevelData.totalXp)
-        const { xpEarned, levelUpOccurred } = awardXpFromHunt(playerAddress, reward)
+        const oldLevelData = getPlayerLevel(playerAddress);
+        const oldTier = getLevelTierForXp(oldLevelData.totalXp);
+        const { xpEarned, levelUpOccurred } = awardXpFromHunt(playerAddress, reward);
 
         if (levelUpOccurred) {
-          const newLevelData = getPlayerLevel(playerAddress)
-          const newTier = getLevelTierForXp(newLevelData.totalXp)
+          const newLevelData = getPlayerLevel(playerAddress);
+          const newTier = getLevelTierForXp(newLevelData.totalXp);
           setLevelUpData({
             oldLevel: oldTier.level,
             newLevel: newTier.level,
             oldTier,
             newTier,
-          })
-          setIsLevelUpModalOpen(true)
+          });
+          setIsLevelUpModalOpen(true);
         }
 
-        toast.success(`✨ +${xpEarned} XP earned!`, { duration: 3000 })
+        toast.success(`✨ +${xpEarned} XP earned!`, { duration: 3000 });
       } catch (error) {
-        logger.error("Failed to award XP:", error)
+        logger.error("Failed to award XP:", error);
       }
     }
-  }, [isOpen, playerAddress, huntId, prefersReducedMotion, reward])
+  }, [isOpen, playerAddress, huntId, prefersReducedMotion, reward]);
 
   // Reset review form when the modal re-opens for a new hunt
   useEffect(() => {
     if (isOpen) {
-      setSelectedRating(0)
-      setHoverRating(0)
-      setReviewText("")
-      setReviewSubmitting(false)
-      setReviewSubmitted(false)
-      setReviewError(null)
+      setSelectedRating(0);
+      setHoverRating(0);
+      setReviewText("");
+      setReviewSubmitting(false);
+      setReviewSubmitted(false);
+      setReviewError(null);
     }
-  }, [isOpen, huntId])
+  }, [isOpen, huntId]);
 
   // ─── Review submission ────────────────────────────────────────────────────
   const handleRateHunt = (rating: number) => {
-    setSelectedRating(rating)
-    setReviewError(null)
-  }
+    setSelectedRating(rating);
+    setReviewError(null);
+  };
 
   const handleSubmitReview = async () => {
     if (!playerAddress || !huntId) {
-      setReviewError("Connect your wallet to leave a review.")
-      return
+      setReviewError("Connect your wallet to leave a review.");
+      return;
     }
     if (selectedRating === 0) {
-      setReviewError("Please select a star rating first.")
-      return
+      setReviewError("Please select a star rating first.");
+      return;
     }
 
-    setReviewSubmitting(true)
-    setReviewError(null)
+    setReviewSubmitting(true);
+    setReviewError(null);
 
     try {
       // Register completion server-side so the review gate passes
@@ -231,7 +236,7 @@ export function GameCompleteModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playerAddress }),
-      })
+      });
 
       const res = await fetch(`/api/v1/hunts/${huntId}/reviews`, {
         method: "POST",
@@ -241,51 +246,51 @@ export function GameCompleteModal({
           rating: selectedRating,
           text: reviewText.trim() || undefined,
         }),
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to submit review")
+        throw new Error(data.error || "Failed to submit review");
       }
 
-      setReviewSubmitted(true)
-      toast.success("Review submitted — thanks for the feedback!")
+      setReviewSubmitted(true);
+      toast.success("Review submitted — thanks for the feedback!");
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "An error occurred while submitting your review."
-      setReviewError(message)
+        err instanceof Error ? err.message : "An error occurred while submitting your review.";
+      setReviewError(message);
     } finally {
-      setReviewSubmitting(false)
+      setReviewSubmitting(false);
     }
-  }
+  };
 
   // ─── Share achievement ────────────────────────────────────────────────────
   const handleShareAchievement = async (
     platform?: "twitter" | "farcaster" | "telegram" | "whatsapp"
   ) => {
-    if (!certificateRef.current) return
-    setIsGenerating(true)
+    if (!certificateRef.current) return;
+    setIsGenerating(true);
     try {
-      const filename = `hunty-achievement-${huntId}.png`
-      await downloadElementAsImage(certificateRef.current, { filename })
+      const filename = `hunty-achievement-${huntId}.png`;
+      await downloadElementAsImage(certificateRef.current, { filename });
 
       const shareText = `I just completed "${
         registrationStatus?.progressData?.hunt_id ? `Hunt #${huntId}` : "a Scavenger Hunt"
-      }" on @huntyapp! Check it out:`
-      const shareUrl = buildDeepLink(`/hunt/${huntId}`)
+      }" on @huntyapp! Check it out:`;
+      const shareUrl = buildDeepLink(`/hunt/${huntId}`);
 
-      if (platform === "twitter") shareOnTwitter(shareText, shareUrl)
-      else if (platform === "farcaster") shareOnFarcaster(shareText, shareUrl)
-      else if (platform === "telegram") shareOnTelegram(shareText, shareUrl)
-      else if (platform === "whatsapp") shareOnWhatsApp(shareText, shareUrl)
-      else toast.success("Achievement image downloaded! You can now share it manually.")
+      if (platform === "twitter") shareOnTwitter(shareText, shareUrl);
+      else if (platform === "farcaster") shareOnFarcaster(shareText, shareUrl);
+      else if (platform === "telegram") shareOnTelegram(shareText, shareUrl);
+      else if (platform === "whatsapp") shareOnWhatsApp(shareText, shareUrl);
+      else toast.success("Achievement image downloaded! You can now share it manually.");
     } catch (error) {
-      logger.error("Failed to share achievement:", error)
-      toast.error("Failed to generate achievement image.")
+      logger.error("Failed to share achievement:", error);
+      toast.error("Failed to generate achievement image.");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   return (
     <>
@@ -344,9 +349,7 @@ export function GameCompleteModal({
                   <Coin />
                   <span className="font-bold text-lg">{reward}</span>
                 </div>
-                {usdEquivalent && (
-                  <span className="text-sm text-slate-500">≈ {usdEquivalent}</span>
-                )}
+                {usdEquivalent && <span className="text-sm text-slate-500">≈ {usdEquivalent}</span>}
               </div>
             </div>
 
@@ -361,8 +364,7 @@ export function GameCompleteModal({
                   </p>
                   {rewardReceipt.rank && (
                     <p>
-                      Winner rank:{" "}
-                      <span className="font-semibold">#{rewardReceipt.rank}</span>
+                      Winner rank: <span className="font-semibold">#{rewardReceipt.rank}</span>
                     </p>
                   )}
                   <p className="break-all">
@@ -380,7 +382,7 @@ export function GameCompleteModal({
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {newAchievements.map((achievementId) => {
-                    const achievement = ACHIEVEMENTS[achievementId as keyof typeof ACHIEVEMENTS]
+                    const achievement = ACHIEVEMENTS[achievementId as keyof typeof ACHIEVEMENTS];
                     return achievement ? (
                       <div
                         key={achievementId}
@@ -396,7 +398,7 @@ export function GameCompleteModal({
                           </p>
                         </div>
                       </div>
-                    ) : null
+                    ) : null;
                   })}
                 </div>
               </div>
@@ -412,11 +414,7 @@ export function GameCompleteModal({
 
             {/* NFT mint progress */}
             <div className="mt-6 border-t border-slate-100 pt-6">
-              <NftMintProgress
-                huntId={huntId ?? 0}
-                rank={1}
-                recipientAddress={playerAddress}
-              />
+              <NftMintProgress huntId={huntId ?? 0} rank={1} recipientAddress={playerAddress} />
             </div>
 
             {/* Nav buttons */}
@@ -615,9 +613,7 @@ export function GameCompleteModal({
                   : "Explorer"
               }
               huntTitle={
-                registrationStatus?.progressData?.hunt_id
-                  ? `Hunt #${huntId}`
-                  : "Scavenger Hunt"
+                registrationStatus?.progressData?.hunt_id ? `Hunt #${huntId}` : "Scavenger Hunt"
               }
               points={reward}
               rank={1}
@@ -637,5 +633,5 @@ export function GameCompleteModal({
         />
       )}
     </>
-  )
+  );
 }

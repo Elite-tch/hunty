@@ -1,4 +1,4 @@
-import { DynaPuff,Hanken_Grotesk } from 'next/font/google';
+import { DynaPuff, Hanken_Grotesk } from "next/font/google";
 
 /**
  * Primary UI font (Hanken Grotesk).
@@ -17,9 +17,9 @@ import { DynaPuff,Hanken_Grotesk } from 'next/font/google';
  *   request, reducing the period during which the fallback is visible.
  */
 export const hankenGrotesk = Hanken_Grotesk({
-  variable: '--font-hanken-grotesk',
-  subsets: ['latin'],
-  display: 'swap',
+  variable: "--font-hanken-grotesk",
+  subsets: ["latin"],
+  display: "swap",
   adjustFontFallback: true,
   preload: true,
 });
@@ -30,9 +30,9 @@ export const hankenGrotesk = Hanken_Grotesk({
  * consistency.
  */
 export const dynapuff = DynaPuff({
-  variable: '--font-dynapuff',
-  subsets: ['latin'],
-  weight: '400',
-  display: 'swap',
+  variable: "--font-dynapuff",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
   adjustFontFallback: true,
 });

@@ -1,4 +1,4 @@
-import { beforeEach,describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   clearStoredWalletSession,
@@ -133,11 +133,11 @@ describe("walletAdapter", () => {
     it("getPublicKey should return correct address format on success", async () => {
       const mockAddress = "GABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
       getAddress.mockResolvedValue({ address: mockAddress, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
       const publicKey = await adapter.getPublicKey();
-      
+
       expect(publicKey).toBe(mockAddress);
       expect(getAddress).toHaveBeenCalled();
     });
@@ -145,30 +145,30 @@ describe("walletAdapter", () => {
     it("getPublicKey should throw error when freighter returns error", async () => {
       const mockError = "Wallet locked";
       getAddress.mockResolvedValue({ address: undefined, error: mockError });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.getPublicKey()).rejects.toThrow(mockError);
     });
 
     it("getPublicKey should throw error when freighter returns no address", async () => {
       getAddress.mockResolvedValue({ address: undefined, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.getPublicKey()).rejects.toThrow("Freighter wallet not available");
     });
 
     it("signTransaction should return signed XDR on success", async () => {
       const mockSignedXdr = "AAAA...";
       signTransaction.mockResolvedValue({ signedTxXdr: mockSignedXdr, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
       const result = await adapter.signTransaction("test_xdr");
-      
+
       expect(result).toBe(mockSignedXdr);
       expect(signTransaction).toHaveBeenCalledWith("test_xdr");
     });
@@ -176,20 +176,22 @@ describe("walletAdapter", () => {
     it("signTransaction should reject when wallet is locked (error in response)", async () => {
       const mockError = "User rejected transaction";
       signTransaction.mockResolvedValue({ signedTxXdr: undefined, error: mockError });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.signTransaction("test_xdr")).rejects.toThrow(mockError);
     });
 
     it("signTransaction should throw error when no signed XDR returned", async () => {
       signTransaction.mockResolvedValue({ signedTxXdr: undefined, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
-      await expect(adapter.signTransaction("test_xdr")).rejects.toThrow("Freighter cannot sign transaction");
+
+      await expect(adapter.signTransaction("test_xdr")).rejects.toThrow(
+        "Freighter cannot sign transaction"
+      );
     });
 
     it("should throw error when window is undefined", () => {
@@ -210,10 +212,10 @@ describe("walletAdapter", () => {
     it("should connect to freighter and return public key", async () => {
       const mockAddress = "GABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
       getAddress.mockResolvedValue({ address: mockAddress, error: undefined });
-      
+
       vi.stubGlobal("window", {});
       const publicKey = await connectWalletProvider("freighter");
-      
+
       expect(publicKey).toBe(mockAddress);
       expect(getAddress).toHaveBeenCalled();
     });
@@ -221,30 +223,36 @@ describe("walletAdapter", () => {
     it("should throw error when freighter returns error", async () => {
       const mockError = "User rejected";
       getAddress.mockResolvedValue({ address: undefined, error: mockError });
-      
+
       vi.stubGlobal("window", {});
-      
+
       await expect(connectWalletProvider("freighter")).rejects.toThrow(mockError);
     });
 
     it("should throw error when freighter returns no address", async () => {
       getAddress.mockResolvedValue({ address: undefined, error: undefined });
-      
+
       vi.stubGlobal("window", {});
-      
-      await expect(connectWalletProvider("freighter")).rejects.toThrow("Freighter wallet not available");
+
+      await expect(connectWalletProvider("freighter")).rejects.toThrow(
+        "Freighter wallet not available"
+      );
     });
 
     it("should throw error when window is undefined", async () => {
       vi.stubGlobal("window", undefined);
-      
-      await expect(connectWalletProvider("freighter")).rejects.toThrow("Browser environment required");
+
+      await expect(connectWalletProvider("freighter")).rejects.toThrow(
+        "Browser environment required"
+      );
     });
 
     it("should throw error for lobstr provider", async () => {
       vi.stubGlobal("window", {});
-      
-      await expect(connectWalletProvider("lobstr")).rejects.toThrow("Lobstr integration via this adapter is currently mobile-only.");
+
+      await expect(connectWalletProvider("lobstr")).rejects.toThrow(
+        "Lobstr integration via this adapter is currently mobile-only."
+      );
     });
   });
 
@@ -261,40 +269,42 @@ describe("walletAdapter", () => {
 
     it("should map freighter not available error to user-friendly message", async () => {
       getAddress.mockResolvedValue({ address: undefined, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.getPublicKey()).rejects.toThrow("Freighter wallet not available");
     });
 
     it("should map freighter error to original error message", async () => {
       const mockError = "Extension not installed";
       getAddress.mockResolvedValue({ address: undefined, error: mockError });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.getPublicKey()).rejects.toThrow(mockError);
     });
 
     it("should map signTransaction error to user-friendly message", async () => {
       const mockError = "Transaction rejected";
       signTransaction.mockResolvedValue({ signedTxXdr: undefined, error: mockError });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
+
       await expect(adapter.signTransaction("test_xdr")).rejects.toThrow(mockError);
     });
 
     it("should map missing signed XDR to user-friendly message", async () => {
       signTransaction.mockResolvedValue({ signedTxXdr: undefined, error: undefined });
-      
+
       localStorageMock.getItem.mockReturnValue(null);
       const adapter = getActiveWalletAdapter();
-      
-      await expect(adapter.signTransaction("test_xdr")).rejects.toThrow("Freighter cannot sign transaction");
+
+      await expect(adapter.signTransaction("test_xdr")).rejects.toThrow(
+        "Freighter cannot sign transaction"
+      );
     });
   });
 });

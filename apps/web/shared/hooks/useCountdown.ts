@@ -1,4 +1,4 @@
-import { useEffect,useState } from 'react'
+import { useEffect, useState } from "react";
 
 /**
  * Platform-agnostic countdown hook.
@@ -7,42 +7,40 @@ import { useEffect,useState } from 'react'
  *
  * @param endUnixSeconds - deadline as Unix timestamp in seconds
  */
-export function useCountdown(
-  endUnixSeconds: number | undefined | null
-): string | null {
+export function useCountdown(endUnixSeconds: number | undefined | null): string | null {
   const [display, setDisplay] = useState<string | null>(() =>
     endUnixSeconds != null ? format(endUnixSeconds) : null
-  )
+  );
 
   useEffect(() => {
     if (endUnixSeconds == null) {
-      setDisplay(null)
-      return
+      setDisplay(null);
+      return;
     }
 
-    setDisplay(format(endUnixSeconds))
+    setDisplay(format(endUnixSeconds));
 
     const interval = setInterval(() => {
-      const value = format(endUnixSeconds)
-      setDisplay(value)
-      if (value === null) clearInterval(interval)
-    }, 1000)
+      const value = format(endUnixSeconds);
+      setDisplay(value);
+      if (value === null) clearInterval(interval);
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [endUnixSeconds])
+    return () => clearInterval(interval);
+  }, [endUnixSeconds]);
 
-  return display
+  return display;
 }
 
 function format(endUnixSeconds: number): string | null {
-  const remaining = endUnixSeconds - Math.floor(Date.now() / 1000)
-  if (remaining <= 0) return null
+  const remaining = endUnixSeconds - Math.floor(Date.now() / 1000);
+  if (remaining <= 0) return null;
 
-  const h = Math.floor(remaining / 3600)
-  const m = Math.floor((remaining % 3600) / 60)
-  const s = remaining % 60
+  const h = Math.floor(remaining / 3600);
+  const m = Math.floor((remaining % 3600) / 60);
+  const s = remaining % 60;
 
-  if (h > 0) return `${h}h ${m}m ${s}s`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }

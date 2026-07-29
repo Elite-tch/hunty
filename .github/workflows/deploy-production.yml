@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., v1.0.0)'
+        description: "Release version (e.g., v1.0.0)"
         required: true
         type: string
 
@@ -24,8 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -40,7 +40,7 @@ jobs:
         uses: chrnorm/deployment-status@v2
         if: always()
         with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
+          token: "${{ secrets.GITHUB_TOKEN }}"
           environment-url: https://hunty.app
           state: ${{ job.status }}
           deployment-id: ${{ github.run_id }}

@@ -10,7 +10,7 @@ export const spacing = {
   10: 40,
   12: 48,
   16: 64,
-} as const
+} as const;
 
 export const radius = {
   none: 0,
@@ -20,7 +20,7 @@ export const radius = {
   xl: 12,
   "2xl": 16,
   full: 9999,
-} as const
+} as const;
 
-export type SpacingToken = keyof typeof spacing
-export type RadiusToken = keyof typeof radius
+export type SpacingToken = keyof typeof spacing;
+export type RadiusToken = keyof typeof radius;

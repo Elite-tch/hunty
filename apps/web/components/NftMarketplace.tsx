@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import {
   AlertCircle,
   CheckCircle2,
@@ -10,21 +10,21 @@ import {
   Tag,
   TrendingUp,
   X,
-} from "lucide-react"
-import Image from "next/image"
-import React, { useEffect,useState } from "react"
+} from "lucide-react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { resolveImageSrc } from "@/lib/ipfs"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { resolveImageSrc } from "@/lib/ipfs";
 import {
   buyNft,
   getActiveListings,
@@ -33,55 +33,55 @@ import {
   type MarketplaceListing,
   type SaleHistoryEntry,
   searchListings,
-} from "@/lib/nft/marketplace"
+} from "@/lib/nft/marketplace";
 
 interface NftMarketplaceProps {
-  buyerAddress: string
+  buyerAddress: string;
 }
 
 export function NftMarketplace({ buyerAddress }: NftMarketplaceProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [listings, setListings] = useState<MarketplaceListing[]>([])
-  const [selectedListing, setSelectedListing] = useState<MarketplaceListing | null>(null)
-  const [buyDialogOpen, setBuyDialogOpen] = useState(false)
-  const [buying, setBuying] = useState(false)
-  const [buyResult, setBuyResult] = useState<SaleHistoryEntry | null>(null)
-  const [error, setError] = useState("")
-  const [salesHistory, setSalesHistory] = useState<SaleHistoryEntry[]>([])
-  const [showHistory, setShowHistory] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [listings, setListings] = useState<MarketplaceListing[]>([]);
+  const [selectedListing, setSelectedListing] = useState<MarketplaceListing | null>(null);
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const [buying, setBuying] = useState(false);
+  const [buyResult, setBuyResult] = useState<SaleHistoryEntry | null>(null);
+  const [error, setError] = useState("");
+  const [salesHistory, setSalesHistory] = useState<SaleHistoryEntry[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
-    setListings(getActiveListings())
-    setSalesHistory(getSaleHistory().slice(0, 20))
-  }, [])
+    setListings(getActiveListings());
+    setSalesHistory(getSaleHistory().slice(0, 20));
+  }, []);
 
   const handleSearch = (q: string) => {
-    setSearchQuery(q)
-    setListings(q ? searchListings(q) : getActiveListings())
-  }
+    setSearchQuery(q);
+    setListings(q ? searchListings(q) : getActiveListings());
+  };
 
   const handleBuyClick = (listing: MarketplaceListing) => {
-    setSelectedListing(listing)
-    setBuyDialogOpen(true)
-    setBuyResult(null)
-    setError("")
-  }
+    setSelectedListing(listing);
+    setBuyDialogOpen(true);
+    setBuyResult(null);
+    setError("");
+  };
 
   const handleBuy = async () => {
-    if (!selectedListing) return
-    setBuying(true)
-    setError("")
+    if (!selectedListing) return;
+    setBuying(true);
+    setError("");
     try {
-      const result = buyNft(selectedListing.id, buyerAddress)
-      setBuyResult(result)
-      setListings(getActiveListings())
-      setSalesHistory(getSaleHistory().slice(0, 20))
+      const result = buyNft(selectedListing.id, buyerAddress);
+      setBuyResult(result);
+      setListings(getActiveListings());
+      setSalesHistory(getSaleHistory().slice(0, 20));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Purchase failed")
+      setError(err instanceof Error ? err.message : "Purchase failed");
     } finally {
-      setBuying(false)
+      setBuying(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -133,7 +133,7 @@ export function NftMarketplace({ buyerAddress }: NftMarketplaceProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {listings.map((listing, idx) => {
-            const trends = getPriceTrends(listing.nftId)
+            const trends = getPriceTrends(listing.nftId);
             return (
               <motion.div
                 key={listing.id}
@@ -179,7 +179,7 @@ export function NftMarketplace({ buyerAddress }: NftMarketplaceProps) {
                   </CardContent>
                 </Card>
               </motion.div>
-            )
+            );
           })}
         </div>
       )}
@@ -206,9 +206,7 @@ export function NftMarketplace({ buyerAddress }: NftMarketplaceProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Price</span>
-                  <span className="font-bold text-indigo-700">
-                    {selectedListing?.priceXlm} XLM
-                  </span>
+                  <span className="font-bold text-indigo-700">{selectedListing?.priceXlm} XLM</span>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -252,5 +250,5 @@ export function NftMarketplace({ buyerAddress }: NftMarketplaceProps) {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

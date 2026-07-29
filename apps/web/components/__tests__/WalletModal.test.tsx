@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach,describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WalletModal } from "@/components/WalletModal";
 import type { WalletProvider } from "@/lib/walletAdapter";
@@ -16,12 +16,7 @@ describe("WalletModal", () => {
   function renderModal(props?: Partial<React.ComponentProps<typeof WalletModal>>) {
     const user = userEvent.setup();
     const utils = render(
-      <WalletModal
-        isOpen={true}
-        onClose={mockOnClose}
-        onConnect={mockOnConnect}
-        {...props}
-      />
+      <WalletModal isOpen={true} onClose={mockOnClose} onConnect={mockOnConnect} {...props} />
     );
     return { user, ...utils };
   }
@@ -124,7 +119,10 @@ describe("WalletModal", () => {
       await user.click(screen.getByRole("button", { name: /freighter/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole("link", { name: /install freighter/i })).toHaveAttribute("href", "https://freighter.app");
+        expect(screen.getByRole("link", { name: /install freighter/i })).toHaveAttribute(
+          "href",
+          "https://freighter.app"
+        );
       });
     });
 
@@ -165,7 +163,9 @@ describe("WalletModal", () => {
 
       await user.click(screen.getByRole("button", { name: /freighter/i }));
 
-      expect(screen.getByText(/approve the connection request in your wallet/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/approve the connection request in your wallet/i)
+      ).toBeInTheDocument();
     });
   });
 
@@ -179,7 +179,10 @@ describe("WalletModal", () => {
 
     it("close button has descriptive aria-label", () => {
       renderModal();
-      expect(screen.getByRole("button", { name: /close wallet modal/i })).toHaveAttribute("aria-label", "Close wallet modal");
+      expect(screen.getByRole("button", { name: /close wallet modal/i })).toHaveAttribute(
+        "aria-label",
+        "Close wallet modal"
+      );
     });
 
     it("provider buttons are disabled during connection for keyboard users", async () => {
@@ -188,9 +191,9 @@ describe("WalletModal", () => {
 
       await user.click(screen.getByRole("button", { name: /freighter/i }));
 
-      const buttons = screen.getAllByRole("button").filter(b =>
-        /freighter|albedo|rabet/i.test(b.textContent || "")
-      );
+      const buttons = screen
+        .getAllByRole("button")
+        .filter((b) => /freighter|albedo|rabet/i.test(b.textContent || ""));
       buttons.forEach((btn) => expect(btn).toBeDisabled());
     });
 

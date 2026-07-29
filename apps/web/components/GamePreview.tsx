@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Eye } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Eye} from "lucide-react"
+import Link from "next/link";
+import { Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
-import PlayCircle from "@/components/icons/PlayCircle"
-import { Button } from "@/components/ui/button"
-import type { HuntCard } from "@/lib/types"
+import PlayCircle from "@/components/icons/PlayCircle";
+import { Button } from "@/components/ui/button";
+import type { HuntCard } from "@/lib/types";
 
-import { HuntCards } from "./HuntCards"
+import { HuntCards } from "./HuntCards";
 
 interface GamePreviewProps {
-  hunts: HuntCard[]
+  hunts: HuntCard[];
   /** Hunt ID to link to the full-page preview. When provided, "Preview" opens /hunt/:id/preview */
-  huntId?: number
+  huntId?: number;
 }
 
 export function GamePreview({ hunts, huntId }: GamePreviewProps) {
@@ -58,5 +58,5 @@ export function GamePreview({ hunts, huntId }: GamePreviewProps) {
 
       <HuntCards hunts={hunts} />
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
   // Base — shared across all variants
@@ -13,8 +13,7 @@ const inputVariants = cva(
         default:
           "border-input dark:bg-input/30 h-9 border bg-transparent shadow-xs focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         /** Borderless — sits inside a card or search bar */
-        ghost:
-          "border-none bg-transparent focus-visible:ring-0",
+        ghost: "border-none bg-transparent focus-visible:ring-0",
       },
       inputSize: {
         default: "h-9",
@@ -27,7 +26,7 @@ const inputVariants = cva(
       inputSize: "default",
     },
   }
-)
+);
 
 function Input({
   className,
@@ -43,7 +42,7 @@ function Input({
       className={cn(inputVariants({ variant, inputSize }), className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Input, inputVariants }
+export { Input, inputVariants };

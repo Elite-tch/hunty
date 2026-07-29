@@ -77,7 +77,7 @@ cp .env.example .env.local
 Open `.env.local` and configure your environment variables. See `.env.example` for detailed documentation of all available options. Key variables include:
 
 - **PINATA_JWT** - Required for IPFS file uploads
-- **RESEND_API_KEY** - Required for email notifications  
+- **RESEND_API_KEY** - Required for email notifications
 - **NEXT_PUBLIC_WC_PROJECT_ID** - Required for WalletConnect support
 - **DATABASE_URL** - PostgreSQL connection string
 - **Contract addresses** - Your deployed Soroban smart contract addresses

@@ -3,6 +3,7 @@
 ## Overview
 
 Complete EAS (Expo Application Services) setup for Hunty mobile app to enable:
+
 - Cloud-based native builds (Android APK/AAB, iOS IPA)
 - Over-the-air (OTA) updates without app rebuilding
 - Automated deployment to App Store and Play Store
@@ -15,6 +16,7 @@ Complete EAS (Expo Application Services) setup for Hunty mobile app to enable:
 ### 1. `mobile/eas.json` (Created/Fixed)
 
 **Changes:**
+
 - Repaired malformed JSON structure
 - Cleaned up conflicting build profile configurations
 - Added three distinct build profiles: development, preview, production
@@ -22,6 +24,7 @@ Complete EAS (Expo Application Services) setup for Hunty mobile app to enable:
 - Added submit configurations for both Android and iOS
 
 **Key Additions:**
+
 ```json
 {
   "build": {
@@ -40,12 +43,14 @@ Complete EAS (Expo Application Services) setup for Hunty mobile app to enable:
 ### 2. `mobile/app.config.ts` (Updated)
 
 **Changes:**
+
 - Updated bundle IDs from placeholder `com.yourorg.*` to `io.hunty.mobile.*`
 - Enhanced updates configuration with `fallbackToCacheTimeout` and `enabled` flags
 - Configured EAS project ID from environment variable `EAS_PROJECT_ID`
 - Configured update URL from environment variable `EXPO_UPDATE_URL`
 
 **Before:**
+
 ```typescript
 bundleId: "com.yourorg.hunty.dev",
 androidPackage: "com.yourorg.hunty.dev",
@@ -53,6 +58,7 @@ updates: { url: "https://u.expo.dev/YOUR_EAS_PROJECT_ID" }
 ```
 
 **After:**
+
 ```typescript
 bundleId: "io.hunty.mobile.dev",
 androidPackage: "io.hunty.mobile.dev",
@@ -66,11 +72,13 @@ updates: {
 ### 3. `mobile/package.json` (Updated)
 
 **Changes:**
+
 - Added `expo-updates` (~0.17.0) to dependencies for OTA update support
 - Added `eas-cli` (^3.74.0) to devDependencies
 - Added 17 new npm scripts for build, update, and submit workflows
 
 **New Scripts:**
+
 ```json
 {
   "build:android": "eas build --platform android --profile production",
@@ -93,6 +101,7 @@ updates: {
 ### 4. `mobile/.env.example` (Updated)
 
 **Changes:**
+
 - Added `EAS_PROJECT_ID` environment variable
 - Added `EXPO_UPDATE_URL` environment variable
 - Documented all EAS-related CI/CD secrets
@@ -100,11 +109,13 @@ updates: {
 ### 5. `README.md` (Updated)
 
 **Changes:**
+
 - Added mobile EAS Build & OTA setup examples to the Getting Started section
 
 ### 6. `mobile/EAS_BUILD_UPDATE_GUIDE.md` (New)
 
 Complete deployment guide covering:
+
 - Initial EAS setup and linking to Expo account
 - Build profile configurations and use cases
 - Build commands quick reference
@@ -158,6 +169,7 @@ eas init
 ### 2. Configure Credentials
 
 **Android (EAS-managed):**
+
 ```bash
 eas credentials --platform android
 # Upload your hunty-upload-key.jks
@@ -165,6 +177,7 @@ eas credentials --platform android
 ```
 
 **iOS (EAS-managed):**
+
 ```bash
 eas credentials --platform ios
 # Provide Apple ID, password/API key, and Team ID
@@ -205,21 +218,21 @@ pnpm run update:production
 
 ## Build Profiles
 
-| Profile | Dev Client | Distribution | Use Case |
-|---------|-----------|--------------|----------|
-| **development** | ✓ Yes | Internal | Developer testing |
-| **preview** | ✗ No | Internal | QA & staging |
-| **production** | ✗ No | Store | App Store/Play Store |
+| Profile         | Dev Client | Distribution | Use Case             |
+| --------------- | ---------- | ------------ | -------------------- |
+| **development** | ✓ Yes      | Internal     | Developer testing    |
+| **preview**     | ✗ No       | Internal     | QA & staging         |
+| **production**  | ✗ No       | Store        | App Store/Play Store |
 
 ---
 
 ## OTA Update Channels
 
-| Channel | Branch | Use Case | Deploy With |
-|---------|--------|----------|-------------|
+| Channel         | Branch        | Use Case    | Deploy With                   |
+| --------------- | ------------- | ----------- | ----------------------------- |
 | **development** | `development` | Dev testing | `pnpm run update:development` |
-| **preview** | `preview` | Staging/QA | `pnpm run update:preview` |
-| **production** | `production` | Users | `pnpm run update:production` |
+| **preview**     | `preview`     | Staging/QA  | `pnpm run update:preview`     |
+| **production**  | `production`  | Users       | `pnpm run update:production`  |
 
 Updates are matched to the native app version using the `"policy": "appVersion"` runtime version strategy.
 
@@ -230,12 +243,14 @@ Updates are matched to the native app version using the `"policy": "appVersion"`
 **Current:** `"policy": "appVersion"` — updates are compatible with the native build version.
 
 When to **rebuild** the native app:
+
 - Adding/removing native dependencies
 - Updating Expo SDK version
 - Changes to native config (iOS/Android sections in app.json)
 - Major framework updates
 
 When **OTA updates** suffice:
+
 - JavaScript/TypeScript changes
 - UI/UX modifications
 - Bug fixes
@@ -249,6 +264,7 @@ When **OTA updates** suffice:
 ### Android
 
 See [mobile/ANDROID_KEYSTORE.md](./mobile/ANDROID_KEYSTORE.md) for:
+
 - Keystore generation
 - EAS credential upload
 - CI/CD integration
@@ -257,6 +273,7 @@ See [mobile/ANDROID_KEYSTORE.md](./mobile/ANDROID_KEYSTORE.md) for:
 ### iOS
 
 Use `eas credentials --platform ios` to:
+
 - Configure Apple ID
 - Link App Store Connect
 - Manage signing certificates
@@ -296,6 +313,7 @@ npm run | grep -E "(build:|update:|submit:)"
 ## CI/CD Ready
 
 The setup is ready for integration with:
+
 - **GitHub Actions** - Build on push, update on merge
 - **GitLab CI** - EAS Build triggers
 - **Jenkins** - Custom build pipelines

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ThemeProvider } from "next-themes"
-import { useState } from "react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
+import { useState } from "react";
 
-import { WebVitalsReporter } from "@/components/WebVitalsReporter"
-import { queryCachePolicy } from "@/lib/queryKeys"
-import { WalletProvider } from "@/lib/context/WalletContext"
+import { WebVitalsReporter } from "@/components/WebVitalsReporter";
+import { queryCachePolicy } from "@/lib/queryKeys";
+import { WalletProvider } from "@/lib/context/WalletContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -22,7 +22,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           },
         },
       })
-  )
+  );
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
@@ -33,5 +33,5 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         </QueryClientProvider>
       </WalletProvider>
     </ThemeProvider>
-  )
+  );
 }

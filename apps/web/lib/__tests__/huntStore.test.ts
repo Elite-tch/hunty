@@ -40,7 +40,7 @@ import {
   updateHuntEndTime,
   updateHuntStatus,
 } from "@/lib/huntStore";
-import type { Clue,StoredHunt } from "@/lib/types";
+import type { Clue, StoredHunt } from "@/lib/types";
 
 describe("huntStore", () => {
   beforeEach(() => {
@@ -458,7 +458,7 @@ describe("huntStore", () => {
         saveCluesLocallyBatch([
           { huntId: 9789, question: "Valid", answer: "A1", points: 10 },
           { huntId: 9789, question: "", answer: "A2", points: 10 },
-        ]),
+        ])
       ).toThrow(/question is required/i);
 
       expect(getHuntById(9789)?.cluesCount).toBe(0);
@@ -489,7 +489,7 @@ describe("huntStore", () => {
         saveCluesLocallyBatch([
           { huntId: 9788, question: "Overflow", answer: "A", points: 10 },
           { huntId: 9788, question: "Overflow 2", answer: "B", points: 10 },
-        ]),
+        ])
       ).toThrow(/at most/i);
     });
   });
@@ -557,9 +557,7 @@ describe("huntStore", () => {
       addHunt(hunt2);
       const featured = getFeaturedHunts(2);
       expect(featured.length).toBeGreaterThan(0);
-      expect(featured[0].cluesCount).toBeGreaterThanOrEqual(
-        featured[1]?.cluesCount || 0,
-      );
+      expect(featured[0].cluesCount).toBeGreaterThanOrEqual(featured[1]?.cluesCount || 0);
     });
 
     it("respects limit parameter", () => {
@@ -569,9 +567,7 @@ describe("huntStore", () => {
 
     it("returns only active public hunts", () => {
       const featured = getFeaturedHunts(10);
-      expect(
-        featured.every((h) => h.status === "Active" && !h.is_private),
-      ).toBe(true);
+      expect(featured.every((h) => h.status === "Active" && !h.is_private)).toBe(true);
     });
 
     it("prioritizes hunts with more clues", () => {
@@ -1119,9 +1115,7 @@ describe("huntStore", () => {
       const stored = localStorage.getItem("hunty_clues");
       expect(stored).toBeTruthy();
       const parsed = JSON.parse(stored!);
-      const clue = parsed.find(
-        (c: Clue) => c.huntId === 946 && c.id === clueId,
-      );
+      const clue = parsed.find((c: Clue) => c.huntId === 946 && c.id === clueId);
       expect(clue?.answer).toBe("New Answer");
     });
   });

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2,X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -79,9 +79,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
             <span className="text-2xl">🚀</span>
             <div className="text-left flex-1">
               <div className="font-semibold text-base">Freighter</div>
-              <div className="text-xs opacity-75">
-                Stellar browser extension
-              </div>
+              <div className="text-xs opacity-75">Stellar browser extension</div>
             </div>
             {connecting && connectingProvider === "freighter" && (
               <Loader2 className="h-4 w-4 animate-spin ml-auto shrink-0" />
@@ -95,9 +93,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
             <span className="text-2xl">✨</span>
             <div className="text-left flex-1">
               <div className="font-semibold text-base">Albedo</div>
-              <div className="text-xs opacity-75">
-                Stellar delegated signer
-              </div>
+              <div className="text-xs opacity-75">Stellar delegated signer</div>
             </div>
             {connecting && connectingProvider === "albedo" && (
               <Loader2 className="h-4 w-4 animate-spin ml-auto shrink-0" />
@@ -111,9 +107,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
             <span className="text-2xl">🟢</span>
             <div className="text-left flex-1">
               <div className="font-semibold text-base">Rabet</div>
-              <div className="text-xs opacity-75">
-                Stellar browser extension
-              </div>
+              <div className="text-xs opacity-75">Stellar browser extension</div>
             </div>
             {connecting && connectingProvider === "rabet" && (
               <Loader2 className="h-4 w-4 animate-spin ml-auto shrink-0" />
@@ -127,9 +121,7 @@ export function WalletModal({ isOpen, onClose, onConnect }: WalletModalProps) {
             <span className="text-2xl">🐂</span>
             <div className="text-left flex-1">
               <div className="font-semibold text-base">xBull Wallet</div>
-              <div className="text-xs opacity-75">
-                Feature-rich Stellar wallet
-              </div>
+              <div className="text-xs opacity-75">Feature-rich Stellar wallet</div>
             </div>
             {connecting && connectingProvider === "xbull" && (
               <Loader2 className="h-4 w-4 animate-spin ml-auto shrink-0" />

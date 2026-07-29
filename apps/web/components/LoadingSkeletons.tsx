@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 type SkeletonCountProps = {
-  count?: number
-  className?: string
-}
+  count?: number;
+  className?: string;
+};
 
 export function HuntCardSkeleton({ className }: { className?: string }) {
   return (
@@ -31,17 +31,22 @@ export function HuntCardSkeleton({ className }: { className?: string }) {
         </div>
       </div>
     </Card>
-  )
+  );
 }
 
 export function HuntCardSkeletonGrid({ count = 4, className }: SkeletonCountProps) {
   return (
-    <div className={cn("grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+        className
+      )}
+    >
       {Array.from({ length: count }).map((_, index) => (
         <HuntCardSkeleton key={`hunt-card-skeleton-${index}`} />
       ))}
     </div>
-  )
+  );
 }
 
 export function LeaderboardRowSkeleton() {
@@ -58,7 +63,7 @@ export function LeaderboardRowSkeleton() {
         <Skeleton className="mx-auto h-5 w-8 bg-slate-200 dark:bg-slate-800" />
       </td>
     </tr>
-  )
+  );
 }
 
 export function LeaderboardTableSkeleton({ count = 5 }: { count?: number }) {
@@ -68,7 +73,7 @@ export function LeaderboardTableSkeleton({ count = 5 }: { count?: number }) {
         <LeaderboardRowSkeleton key={`leaderboard-row-skeleton-${index}`} />
       ))}
     </>
-  )
+  );
 }
 
 export function FormFieldSkeleton({ className }: { className?: string }) {
@@ -77,14 +82,17 @@ export function FormFieldSkeleton({ className }: { className?: string }) {
       <Skeleton className="h-4 w-28 bg-slate-200 dark:bg-slate-700" />
       <Skeleton className="h-11 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
     </div>
-  )
+  );
 }
 
 export function ProfileSectionSkeleton({ className }: { className?: string }) {
   return (
     <section
       aria-hidden="true"
-      className={cn("rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900", className)}
+      className={cn(
+        "rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900",
+        className
+      )}
     >
       <div className="mb-5 flex items-center gap-4">
         <Skeleton className="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-700" />
@@ -95,14 +103,17 @@ export function ProfileSectionSkeleton({ className }: { className?: string }) {
       </div>
       <div className="grid gap-3 sm:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div key={`profile-stat-skeleton-${index}`} className="rounded-xl border border-slate-100 p-3 dark:border-white/10">
+          <div
+            key={`profile-stat-skeleton-${index}`}
+            className="rounded-xl border border-slate-100 p-3 dark:border-white/10"
+          >
             <Skeleton className="mb-2 h-4 w-16 bg-slate-200 dark:bg-slate-700" />
             <Skeleton className="h-7 w-12 bg-slate-200 dark:bg-slate-700" />
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 export function ProfilePageSkeleton() {
@@ -114,7 +125,7 @@ export function ProfilePageSkeleton() {
         <ProfileSectionSkeleton />
       </div>
     </div>
-  )
+  );
 }
 
 export function HuntPageSkeletonLayout() {
@@ -131,12 +142,15 @@ export function HuntPageSkeletonLayout() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function FormPageSkeletonLayout() {
   return (
-    <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/10 dark:bg-slate-900" aria-label="Loading form">
+    <div
+      className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/10 dark:bg-slate-900"
+      aria-label="Loading form"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         <FormFieldSkeleton />
         <FormFieldSkeleton />
@@ -148,5 +162,5 @@ export function FormPageSkeletonLayout() {
         <Skeleton className="h-10 w-32 rounded-xl bg-slate-200 dark:bg-slate-700" />
       </div>
     </div>
-  )
+  );
 }

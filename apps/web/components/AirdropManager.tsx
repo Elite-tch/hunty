@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   AlertCircle,
@@ -10,18 +10,18 @@ import {
   Target,
   Users,
   XCircle,
-} from "lucide-react"
-import React, { useEffect,useState } from "react"
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   type AirdropConfig,
   type AirdropItemType,
@@ -31,34 +31,34 @@ import {
   createAirdrop,
   executeAirdrop,
   getAirdropsByCreator,
-} from "@/lib/nft/airdrop"
+} from "@/lib/nft/airdrop";
 
 interface AirdropManagerProps {
-  adminAddress: string
+  adminAddress: string;
 }
 
 export function AirdropManager({ adminAddress }: AirdropManagerProps) {
-  const [airdrops, setAirdrops] = useState<AirdropRecord[]>([])
-  const [createOpen, setCreateOpen] = useState(false)
-  const [executing, setExecuting] = useState<string | null>(null)
-  const [progress, setProgress] = useState<{ processed: number; total: number } | null>(null)
+  const [airdrops, setAirdrops] = useState<AirdropRecord[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [executing, setExecuting] = useState<string | null>(null);
+  const [progress, setProgress] = useState<{ processed: number; total: number } | null>(null);
 
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [itemType, setItemType] = useState<AirdropItemType>("token")
-  const [tokenAmount, setTokenAmount] = useState("")
-  const [nftId, setNftId] = useState("")
-  const [targetType, setTargetType] = useState<AirdropTargetType>("all_players")
-  const [huntId, setHuntId] = useState("")
-  const [walletListText, setWalletListText] = useState("")
-  const [error, setError] = useState("")
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [itemType, setItemType] = useState<AirdropItemType>("token");
+  const [tokenAmount, setTokenAmount] = useState("");
+  const [nftId, setNftId] = useState("");
+  const [targetType, setTargetType] = useState<AirdropTargetType>("all_players");
+  const [huntId, setHuntId] = useState("");
+  const [walletListText, setWalletListText] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    setAirdrops(getAirdropsByCreator(adminAddress))
-  }, [adminAddress])
+    setAirdrops(getAirdropsByCreator(adminAddress));
+  }, [adminAddress]);
 
   const handleCreate = () => {
-    setError("")
+    setError("");
     try {
       const config: AirdropConfig = {
         name,
@@ -76,58 +76,58 @@ export function AirdropManager({ adminAddress }: AirdropManagerProps) {
                 .map((w) => w.trim())
                 .filter(Boolean)
             : undefined,
-      }
-      createAirdrop(config)
-      setAirdrops(getAirdropsByCreator(adminAddress))
-      setCreateOpen(false)
-      resetForm()
+      };
+      createAirdrop(config);
+      setAirdrops(getAirdropsByCreator(adminAddress));
+      setCreateOpen(false);
+      resetForm();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create airdrop")
+      setError(err instanceof Error ? err.message : "Failed to create airdrop");
     }
-  }
+  };
 
   const handleExecute = async (airdropId: string) => {
-    setExecuting(airdropId)
-    setProgress(null)
+    setExecuting(airdropId);
+    setProgress(null);
     try {
       await executeAirdrop(airdropId, (processed, total) => {
-        setProgress({ processed, total })
-      })
-      setAirdrops(getAirdropsByCreator(adminAddress))
+        setProgress({ processed, total });
+      });
+      setAirdrops(getAirdropsByCreator(adminAddress));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Execution failed")
+      setError(err instanceof Error ? err.message : "Execution failed");
     } finally {
-      setExecuting(null)
-      setProgress(null)
+      setExecuting(null);
+      setProgress(null);
     }
-  }
+  };
 
   const handleCancel = (airdropId: string) => {
     try {
-      cancelAirdrop(airdropId, adminAddress)
-      setAirdrops(getAirdropsByCreator(adminAddress))
+      cancelAirdrop(airdropId, adminAddress);
+      setAirdrops(getAirdropsByCreator(adminAddress));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Cancel failed")
+      setError(err instanceof Error ? err.message : "Cancel failed");
     }
-  }
+  };
 
   const resetForm = () => {
-    setName("")
-    setDescription("")
-    setItemType("token")
-    setTokenAmount("")
-    setNftId("")
-    setTargetType("all_players")
-    setHuntId("")
-    setWalletListText("")
-    setError("")
-  }
+    setName("");
+    setDescription("");
+    setItemType("token");
+    setTokenAmount("");
+    setNftId("");
+    setTargetType("all_players");
+    setHuntId("");
+    setWalletListText("");
+    setError("");
+  };
 
   const targetIcon = {
     all_players: <Users className="w-4 h-4" />,
     hunt_completers: <Target className="w-4 h-4" />,
     wallet_list: <List className="w-4 h-4" />,
-  }
+  };
 
   const statusColor = {
     pending: "bg-amber-100 text-amber-700",
@@ -135,13 +135,16 @@ export function AirdropManager({ adminAddress }: AirdropManagerProps) {
     completed: "bg-emerald-100 text-emerald-700",
     failed: "bg-red-100 text-red-700",
     cancelled: "bg-slate-100 text-slate-500",
-  }
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-900">Airdrops</h2>
-        <Button onClick={() => setCreateOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 rounded-xl">
+        <Button
+          onClick={() => setCreateOpen(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 rounded-xl"
+        >
           <Gift className="w-4 h-4 mr-2" />
           Create Airdrop
         </Button>
@@ -172,7 +175,9 @@ export function AirdropManager({ adminAddress }: AirdropManagerProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="font-bold text-slate-900 truncate">{airdrop.name}</h3>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${statusColor[airdrop.status]}`}>
+                  <span
+                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${statusColor[airdrop.status]}`}
+                  >
                     {airdrop.status}
                   </span>
                 </div>
@@ -300,23 +305,25 @@ export function AirdropManager({ adminAddress }: AirdropManagerProps) {
             <div>
               <label className="text-sm font-medium text-slate-700 mb-2 block">Target</label>
               <div className="flex gap-2 flex-wrap">
-                {(["all_players", "hunt_completers", "wallet_list"] as AirdropTargetType[]).map((t) => (
-                  <Button
-                    key={t}
-                    type="button"
-                    variant={targetType === t ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setTargetType(t)}
-                    className="rounded-xl text-xs"
-                  >
-                    {targetIcon[t]}
-                    <span className="ml-1">
-                      {t === "all_players" && "All Players"}
-                      {t === "hunt_completers" && "Hunt Completers"}
-                      {t === "wallet_list" && "Wallet List"}
-                    </span>
-                  </Button>
-                ))}
+                {(["all_players", "hunt_completers", "wallet_list"] as AirdropTargetType[]).map(
+                  (t) => (
+                    <Button
+                      key={t}
+                      type="button"
+                      variant={targetType === t ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setTargetType(t)}
+                      className="rounded-xl text-xs"
+                    >
+                      {targetIcon[t]}
+                      <span className="ml-1">
+                        {t === "all_players" && "All Players"}
+                        {t === "hunt_completers" && "Hunt Completers"}
+                        {t === "wallet_list" && "Wallet List"}
+                      </span>
+                    </Button>
+                  )
+                )}
               </div>
             </div>
 
@@ -355,5 +362,5 @@ export function AirdropManager({ adminAddress }: AirdropManagerProps) {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import { X } from "lucide-react"
-import { autocompleteTags, normalizeTag, suggestTagsFromContent } from "@/lib/tags"
-import { cn } from "@/lib/utils"
+import { useMemo, useState } from "react";
+import { X } from "lucide-react";
+import { autocompleteTags, normalizeTag, suggestTagsFromContent } from "@/lib/tags";
+import { cn } from "@/lib/utils";
 
 interface TagInputProps {
-  tags: string[]
-  onChange: (tags: string[]) => void
+  tags: string[];
+  onChange: (tags: string[]) => void;
   /** Known tags for autocomplete (from other hunts / corpus). */
-  corpus?: string[]
+  corpus?: string[];
   /** Content used to suggest tags. */
-  suggestFrom?: { title?: string; description?: string; questions?: string[] }
-  maxTags?: number
-  className?: string
-  placeholder?: string
+  suggestFrom?: { title?: string; description?: string; questions?: string[] };
+  maxTags?: number;
+  className?: string;
+  placeholder?: string;
 }
 
 export function TagInput({
@@ -26,31 +26,28 @@ export function TagInput({
   className,
   placeholder = "Add a tag…",
 }: TagInputProps) {
-  const [draft, setDraft] = useState("")
+  const [draft, setDraft] = useState("");
 
   const suggestions = useMemo(() => {
-    const auto = autocompleteTags(draft, [...corpus, ...tags], 8)
-    const content =
-      suggestFrom && !draft
-        ? suggestTagsFromContent(suggestFrom, tags, 6)
-        : []
-    const merged = [...auto]
+    const auto = autocompleteTags(draft, [...corpus, ...tags], 8);
+    const content = suggestFrom && !draft ? suggestTagsFromContent(suggestFrom, tags, 6) : [];
+    const merged = [...auto];
     for (const t of content) {
-      if (!merged.includes(t) && !tags.includes(t)) merged.push(t)
+      if (!merged.includes(t) && !tags.includes(t)) merged.push(t);
     }
-    return merged.filter((t) => !tags.includes(t)).slice(0, 8)
-  }, [draft, corpus, tags, suggestFrom])
+    return merged.filter((t) => !tags.includes(t)).slice(0, 8);
+  }, [draft, corpus, tags, suggestFrom]);
 
   const addTag = (raw: string) => {
-    const tag = normalizeTag(raw)
-    if (!tag || tags.includes(tag) || tags.length >= maxTags) return
-    onChange([...tags, tag])
-    setDraft("")
-  }
+    const tag = normalizeTag(raw);
+    if (!tag || tags.includes(tag) || tags.length >= maxTags) return;
+    onChange([...tags, tag]);
+    setDraft("");
+  };
 
   const removeTag = (tag: string) => {
-    onChange(tags.filter((t) => t !== tag))
-  }
+    onChange(tags.filter((t) => t !== tag));
+  };
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -77,10 +74,10 @@ export function TagInput({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === ",") {
-              e.preventDefault()
-              addTag(draft)
+              e.preventDefault();
+              addTag(draft);
             } else if (e.key === "Backspace" && !draft && tags.length) {
-              removeTag(tags[tags.length - 1])
+              removeTag(tags[tags.length - 1]);
             }
           }}
           placeholder={tags.length >= maxTags ? "Tag limit reached" : placeholder}
@@ -104,5 +101,5 @@ export function TagInput({
         </div>
       )}
     </div>
-  )
+  );
 }

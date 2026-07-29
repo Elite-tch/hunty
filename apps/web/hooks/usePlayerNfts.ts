@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 export interface NftAttribute {
-  trait_type: string
-  value: string
+  trait_type: string;
+  value: string;
 }
 
 export interface NftItem {
-  id: string
-  name: string
-  description: string
-  image: string
-  huntName: string
-  earnedAt: string
-  attributes: NftAttribute[]
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  huntName: string;
+  earnedAt: string;
+  attributes: NftAttribute[];
 }
 
 export function usePlayerNfts() {
-  const [address, setAddress] = useState<string>("GABC123DEF456")
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+  const [address, setAddress] = useState<string>("GABC123DEF456");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [nfts, setNfts] = useState<NftItem[]>([
     {
       id: "1",
@@ -30,7 +30,7 @@ export function usePlayerNfts() {
       attributes: [
         { trait_type: "Rarity", value: "Legendary" },
         { trait_type: "Points", value: "100" },
-      ]
+      ],
     },
     {
       id: "2",
@@ -42,9 +42,9 @@ export function usePlayerNfts() {
       attributes: [
         { trait_type: "Rarity", value: "Rare" },
         { trait_type: "Points", value: "50" },
-      ]
-    }
-  ])
+      ],
+    },
+  ]);
 
-  return { address, nfts, loading, error }
+  return { address, nfts, loading, error };
 }

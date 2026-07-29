@@ -1,21 +1,21 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 // @ts-expect-error supertest has no types installed
-import request from 'supertest';
-import { describe, expect,it } from 'vitest';
+import request from "supertest";
+import { describe, expect, it } from "vitest";
 
-import { GET as getFeatured } from '../../app/api/admin/featured/route';
-import { GET as getAnalytics } from '../../app/api/analytics/route';
-import { GET as getIpfs } from '../../app/api/ipfs/route';
-import { GET as getLeaderboard } from '../../app/api/v1/hunts/[id]/leaderboard/route';
+import { GET as getFeatured } from "../../app/api/admin/featured/route";
+import { GET as getAnalytics } from "../../app/api/analytics/route";
+import { GET as getIpfs } from "../../app/api/ipfs/route";
+import { GET as getLeaderboard } from "../../app/api/v1/hunts/[id]/leaderboard/route";
 // Import handlers from the app directory.
-import { GET as getHunts } from '@/app/api/v1/hunts/route';
-import { GET as getLeaderboard } from '@/app/api/v1/hunts/[id]/leaderboard/route';
-import { GET as getPublicLeaderboard } from '@/app/api/v1/hunts/[id]/leaderboard/public/route';
-import { GET as getLeaderboardOgImage } from '@/app/api/og/leaderboard/route';
-import { GET as getFeatured } from '@/app/api/admin/featured/route';
-import { POST as postIpfs } from '@/app/api/ipfs/route';
-import { GET as getAnalytics } from '@/app/api/analytics/performance/route';
-import { GET as getHunts } from '../../app/api/v1/hunts/route';
+import { GET as getHunts } from "@/app/api/v1/hunts/route";
+import { GET as getLeaderboard } from "@/app/api/v1/hunts/[id]/leaderboard/route";
+import { GET as getPublicLeaderboard } from "@/app/api/v1/hunts/[id]/leaderboard/public/route";
+import { GET as getLeaderboardOgImage } from "@/app/api/og/leaderboard/route";
+import { GET as getFeatured } from "@/app/api/admin/featured/route";
+import { POST as postIpfs } from "@/app/api/ipfs/route";
+import { GET as getAnalytics } from "@/app/api/analytics/performance/route";
+import { GET as getHunts } from "../../app/api/v1/hunts/route";
 
 function handlerToExpress(handler: any) {
   return async (req: any, res: any) => {
@@ -26,7 +26,7 @@ function handlerToExpress(handler: any) {
       for (const [key, value] of Object.entries(req.headers)) {
         if (value !== undefined) {
           if (Array.isArray(value)) {
-            value.forEach(v => headers.append(key, v));
+            value.forEach((v) => headers.append(key, v));
           } else {
             headers.set(key, String(value));
           }
@@ -36,7 +36,7 @@ function handlerToExpress(handler: any) {
       if (method !== "GET" && method !== "HEAD" && req.body) {
         body = typeof req.body === "object" ? JSON.stringify(req.body) : req.body;
       }
-      
+
       const webRequest = new Request(url, {
         method,
         headers,
@@ -52,7 +52,7 @@ function handlerToExpress(handler: any) {
       }
 
       const result = await handler(webRequest, { params });
-      
+
       if (result instanceof Response) {
         res.statusCode = result.status;
         result.headers.forEach((value, key) => {
@@ -83,75 +83,77 @@ function handlerToExpress(handler: any) {
   };
 }
 
-describe('API Integration Tests', () => {
-  it('GET /api/v1/hunts should return paginated hunts', async () => {
+describe("API Integration Tests", () => {
+  it("GET /api/v1/hunts should return paginated hunts", async () => {
     const app = request(handlerToExpress(getHunts));
-    const response = await app.get('/api/v1/hunts?limit=5');
+    const response = await app.get("/api/v1/hunts?limit=5");
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('data');
-    expect(response.body).toHaveProperty('pagination');
+    expect(response.body).toHaveProperty("data");
+    expect(response.body).toHaveProperty("pagination");
   });
 
-  it('GET /api/v1/hunts/:id/leaderboard returns leaderboard data', async () => {
+  it("GET /api/v1/hunts/:id/leaderboard returns leaderboard data", async () => {
     const app = request(handlerToExpress(getLeaderboard));
-    const response = await app.get('/api/v1/hunts/123/leaderboard');
+    const response = await app.get("/api/v1/hunts/123/leaderboard");
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('data');
-    expect(response.body).toHaveProperty('pagination');
+    expect(response.body).toHaveProperty("data");
+    expect(response.body).toHaveProperty("pagination");
   });
 
-  it('GET /api/v1/hunts/:id/leaderboard/public returns public leaderboard payload', async () => {
+  it("GET /api/v1/hunts/:id/leaderboard/public returns public leaderboard payload", async () => {
     const app = request(handlerToExpress(getPublicLeaderboard));
-    const response = await app.get('/api/v1/hunts/123/leaderboard/public');
+    const response = await app.get("/api/v1/hunts/123/leaderboard/public");
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('hunt');
-    expect(response.body).toHaveProperty('leaderboard');
-    expect(response.body).toHaveProperty('embedUrl');
+    expect(response.body).toHaveProperty("hunt");
+    expect(response.body).toHaveProperty("leaderboard");
+    expect(response.body).toHaveProperty("embedUrl");
   });
 
-  it('GET /api/og/leaderboard returns an image response', async () => {
+  it("GET /api/og/leaderboard returns an image response", async () => {
     const app = request(handlerToExpress(getLeaderboardOgImage));
-    const response = await app.get('/api/og/leaderboard?huntId=123&wallet=GABC123');
+    const response = await app.get("/api/og/leaderboard?huntId=123&wallet=GABC123");
     expect(response.status).toBe(200);
-    expect(response.headers['content-type']).toContain('image');
+    expect(response.headers["content-type"]).toContain("image");
   });
 
-  it('GET /api/admin/featured returns featured items', async () => {
+  it("GET /api/admin/featured returns featured items", async () => {
     const app = request(handlerToExpress(getFeatured));
-    const response = await app.get('/api/admin/featured');
+    const response = await app.get("/api/admin/featured");
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('featuredHuntId');
+    expect(response.body).toHaveProperty("featuredHuntId");
   });
 
-  it('POST /api/ipfs returns 503 if not configured', async () => {
+  it("POST /api/ipfs returns 503 if not configured", async () => {
     const app = request(handlerToExpress(postIpfs));
-    const response = await app.post('/api/ipfs');
+    const response = await app.post("/api/ipfs");
     expect(response.status).toBe(503);
-    expect(response.body).toHaveProperty('error');
+    expect(response.body).toHaveProperty("error");
   });
 
-  it('GET /api/analytics returns analytics data', async () => {
+  it("GET /api/analytics returns analytics data", async () => {
     const app = request(handlerToExpress(getAnalytics));
-    const response = await app.get('/api/analytics');
+    const response = await app.get("/api/analytics");
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('metrics');
+    expect(response.body).toHaveProperty("metrics");
   });
 
-  it('Unauthorized access returns 401 when applicable', async () => {
+  it("Unauthorized access returns 401 when applicable", async () => {
     const app = request(handlerToExpress(getHunts));
-    const response = await app.get('/api/v1/hunts');
+    const response = await app.get("/api/v1/hunts");
     if (response.status === 401) {
-      expect(response.body).toHaveProperty('error');
+      expect(response.body).toHaveProperty("error");
     } else {
       expect([200, 403]).toContain(response.status);
     }
   });
 
-  it('Error response follows format', async () => {
-    const errorHandler = async () => { throw new Error('Test error'); };
+  it("Error response follows format", async () => {
+    const errorHandler = async () => {
+      throw new Error("Test error");
+    };
     const app = request(handlerToExpress(errorHandler));
-    const response = await app.get('/api/error');
+    const response = await app.get("/api/error");
     expect(response.status).toBeGreaterThanOrEqual(400);
-    expect(response.body).toHaveProperty('error');
+    expect(response.body).toHaveProperty("error");
   });
 });
